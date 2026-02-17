@@ -1,0 +1,65 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ _('Edit Project') }}: {{ project.title }}</h1>
+    <div class="card">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.title.label }}
+                {{ form.title(class="form-control", placeholder=_('Enter project title')) }}
+                {% for error in form.title.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.description.label }}
+                {{ form.description(class="form-control", rows="5", placeholder=_('Describe the project details')) }}
+                {% for error in form.description.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.category.label }}
+                {{ form.category(class="form-control", placeholder=_('Optional project category')) }}
+                {% for error in form.category.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.voting_deadline.label }}
+                {{ form.voting_deadline(class="form-control") }}
+                {% for error in form.voting_deadline.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.start_date.label }}
+                {{ form.start_date(class="form-control") }}
+                {% for error in form.start_date.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.end_date.label }}
+                {{ form.end_date(class="form-control") }}
+                {% for error in form.end_date.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.status.label }}
+                {{ form.status(class="form-control") }}
+                {% for error in form.status.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+    </div>
+    <a href="{{ url_for('project', project_id=project.id, locale=get_locale()) }}" class="btn btn-outline-info">{{ _('Back to Project') }}</a>
+</div>
+{% endblock %}

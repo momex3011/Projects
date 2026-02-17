@@ -1,0 +1,45 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ _('Admin Dashboard') }}</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <h2>{{ _('Recent Projects') }}</h2>
+                {% if projects %}
+                    <ul class="list-group">
+                        {% for project in projects %}
+                            <li class="list-group-item">
+                                <a href="{{ url_for('project', project_id=project.id, locale=get_locale())  }}">{{ project.title }}</a>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: {{ project.voting_progress() }}%; background-color: #28a745;" title="{{ '%.0f'|format(project.voting_progress()) }}% {{ _('of voting period elapsed') }}"></div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>{{ _('No recent projects.') }}</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <h2>{{ _('Pending Votes') }}</h2>
+                {% if pending_votes %}
+                    <ul class="list-group">
+                        {% for project in pending_votes %}
+                            <li class="list-group-item">
+                                <a href="{{ url_for('project', project_id=project.id, locale=get_locale())  }}">{{ project.title }}</a>
+                                <small>{{ _('Voting ends') }}: {{ project.voting_deadline.strftime('%Y-%m-%d %H:%M') }}</small>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>{{ _('No pending votes.') }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

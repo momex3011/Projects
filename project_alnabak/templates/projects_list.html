@@ -1,0 +1,63 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ _('Projects') }}</h1>
+    <div class="card">
+        <form method="GET" action="{{ url_for('projects_list', locale=get_locale()) }}" novalidate>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    {{ g.search_filter_form.search_term.label }}
+                    {{ g.search_filter_form.search_term(class="form-control", placeholder=_('Search projects')) }}
+                </div>
+                <div class="form-group col-md-2">
+                    {{ g.search_filter_form.status.label }}
+                    {{ g.search_filter_form.status(class="form-control") }}
+                </div>
+                <div class="form-group col-md-3">
+                    {{ g.search_filter_form.category.label }}
+                    {{ g.search_filter_form.category(class="form-control", placeholder=_('Filter by category')) }}
+                </div>
+                <div class="form-group col-md-3">
+                    {{ g.search_filter_form.tracker_id.label }}
+                    {{ g.search_filter_form.tracker_id(class="form-control") }}
+                </div>
+            </div>
+            <div class="form-group">
+                {{ g.search_filter_form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+    </div>
+    {% for project in projects.items %}
+        <div class="card">
+            <h2><a href="{{ url_for('project', project_id=project.id, locale=get_locale()) }}">{{ project.title }}</a></h2>
+            <p>{{ project.description|truncate(200) }}</p>
+            <p><strong>{{ _('Status') }}:</strong> {{ project.status }}</p>
+            <div class="progress">
+                <div class="progress-bar" style="width: {{ project.progress() }}%;"></div>
+            </div>
+        </div>
+    {% else %}
+        <p>{{ _('No projects found.') }}</p>
+    {% endfor %}
+    <div class="pagination">
+        {% if projects.has_prev %}
+            <a href="{{ url_for('projects_list', page=projects.prev_num, locale=get_locale(), **request.args) }}" class="btn btn-outline-info">« {{ _('Previous') }}</a>
+        {% endif %}
+        {% for page_num in projects.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+            {% if page_num %}
+                {% if projects.page == page_num %}
+                    <span class="btn btn-info">{{ page_num }}</span>
+                {% else %}
+                    <a href="{{ url_for('projects_list', page=page_num, locale=get_locale(),  **request.args) }}" class="btn btn-outline-info">{{ page_num }}</a>
+                {% endif %}
+            {% else %}
+                ...
+            {% endif %}
+        {% endfor %}
+        {% if projects.has_next %}
+            <a href="{{ url_for('projects_list', page=projects.next_num, locale=get_locale(), **request.args) }}" class="btn btn-outline-info">{{ _('Next') }} »</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

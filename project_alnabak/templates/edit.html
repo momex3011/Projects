@@ -1,0 +1,54 @@
+{% extends 'admin/model/edit.html' %}
+{% block form_row %}
+    {% if field.short_description %}
+    <div class="form-group {% if field.errors %}has-error{% endif %}">
+      <label class="col-md-3 col-lg-2 control-label">
+        {{ field.label }}
+        {% if field.flags.required %}<span class="required">*</span>{% endif %}
+      </label>
+      <div class="col-md-9 col-lg-10">
+        {% if field.type == 'BooleanField' %}
+              <div class="form-check">
+                  {{ field(**kwargs) }}
+                <label class="form-check-label" for="{{ field.id }}">{{ field.label.text }}</label>
+              </div>
+
+        {% else %}
+          {{ field(**kwargs) }}
+          {% if field.errors %}
+              {% for error in field.errors %}
+                  <div class="help-block">
+                      {{ error }}
+                  </div>
+              {% endfor %}
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+    {% else %}
+    <div class="form-group {% if field.errors %}has-error{% endif %}">
+        <label class="col-md-3 col-lg-2 control-label">
+            {{ field.label }}
+            {% if field.flags.required %}<span class="required">*</span>{% endif %}
+        </label>
+        <div class="col-md-9 col-lg-10">
+            {% if field.type == 'BooleanField' %}
+              <div class="form-check">
+                {{ field(**kwargs) }}
+                <label class="form-check-label" for="{{ field.id }}">{{ field.label.text }}</label>
+              </div>
+            {% else %}
+                {{ field(**kwargs) }}
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        <div class="help-block">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endif %}
+
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}

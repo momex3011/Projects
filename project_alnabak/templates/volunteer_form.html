@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+{% from '_macros.html' import render_field %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ _('Volunteer for') }} {{ project.title }}</h1>
+    <div class="card">
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            {{ render_field(form.name) }}
+            {{ render_field(form.additional_info) }}
+            <div class="form-group">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+        <a href="{{ url_for('project', project_id=project.id, locale=get_locale()) }}" class="btn btn-outline-info">{{ _('Back to Project') }}</a>
+    </div>
+</div>
+{% endblock %}

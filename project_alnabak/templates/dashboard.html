@@ -1,0 +1,69 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="dashboard-header">
+        <h1 class="welcome-message">{{ _('Welcome admin!') }}</h1>
+        <div>
+            <a href="{{ url_for('set_language', locale='en') }}" class="btn btn-sm">{{ _('EN') }}</a>
+            <a href="{{ url_for('set_language', locale='ar') }}" class="btn btn-sm">{{ _('AR') }}</a>
+        </div>
+    </div>
+
+    <div class="dashboard-metrics">
+        <div class="metric-circle" id="council-members" data-value="{{ council_members_count }}" data-total="{{ total_council_members }}">
+            <svg viewBox="0 0 100 100">
+                <circle class="background" cx="50" cy="50" r="45"></circle>
+                <circle class="progress" cx="50" cy="50" r="45"></circle>
+                <text class="value" x="50" y="50" text-anchor="middle" dy=".3em"></text>
+            </svg>
+            <div class="label">{{ _('Council Members') }}</div>
+            <i class="fas fa-gavel metric-icon"></i>
+        </div>
+        <div class="metric-circle" id="contact-persons" data-value="{{ contact_persons_count }}" data-total="{{ total_contact_persons }}">
+            <svg viewBox="0 0 100 100">
+                <circle class="background" cx="50" cy="50" r="45"></circle>
+                <circle class="progress" cx="50" cy="50" r="45"></circle>
+                <text class="value" x="50" y="50" text-anchor="middle" dy=".3em"></text>
+            </svg>
+            <div class="label">{{ _('Contact Persons') }}</div>
+            <i class="fas fa-phone metric-icon"></i>
+        </div>
+        <div class="metric-circle" id="projects" data-value="{{ projects_count }}" data-total="{{ total_projects }}">
+            <svg viewBox="0 0 100 100">
+                <circle class="background" cx="50" cy="50" r="45"></circle>
+                <circle class="progress" cx="50" cy="50" r="45"></circle>
+                <text class="value" x="50" y="50" text-anchor="middle" dy=".3em"></text>
+            </svg>
+            <div class="label">{{ _('Projects') }}</div>
+            <i class="fas fa-building metric-icon"></i>
+        </div>
+    </div>
+
+    <div class="styled-news-container">
+        <div class="news-header">
+            <h2>{{ _('Latest News') }}</h2>
+            <a href="#" class="view-all-news">{{ _('View All News') }}</a>
+        </div>
+        <div class="news-scroll-wrapper">
+            <button class="scroll-button prev"><i class="fas fa-chevron-left"></i></button>
+            <div class="news-card-scroll">
+                {% if latest_news %}
+                    {% for news in latest_news %}
+                        <div class="news-card">
+                            {% if news.image_url %}
+                                <img src="{{ news.image_url }}" alt="{{ news.title }}">
+                            {% endif %}
+                            <h3>{{ news.title }}</h3>
+                            <p>{{ news.short_description }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-news-message">{{ _('No news available.') }}</div>
+                {% endif %}
+            </div>
+            <button class="scroll-button next"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+</div>
+{% endblock %}

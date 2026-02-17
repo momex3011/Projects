@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ _('Track Project') }}: {{ project.title }}</h1>
+    <div class="card">
+        <h2>{{ project.title }}</h2>
+        <p>{{ project.description }}</p>
+        <p><strong>{{ _('Status') }}:</strong> {{ project.status }}</p>
+        <p><strong>{{ _('Start Date') }}:</strong> {{ project.start_date.strftime('%Y-%m-%d %H:%M') }}</p>
+        <p><strong>{{ _('End Date') }}:</strong> {{ project.end_date.strftime('%Y-%m-%d %H:%M') }}</p>
+        <div class="progress">
+            <div class="progress-bar" style="width: {{ project.progress() }}%;"></div>
+        </div>
+        <!-- Add tracker specific actions here -->
+        {% if current_user.role == 'tracker' and current_user.id == project.tracker_id %}
+            <div class="mt-3">
+                <h4>{{ _('Tracker Actions') }}</h4>
+                <form method="POST" action="{{ url_for('update_project_status', project_id=project.id, locale=get_locale())  }}">
+                    <div class="form-group">
+                        <label for="status">{{ _('Update Status') }}</label>
+                        <select class="form-control" id="status" name="status">
+                            <option value="Pending" {% if project.status == 'Pending' %}selected{% endif %}>{{ _('Pending') }}</option>
+                            <option value="In Progress" {% if project.status == 'In Progress' %}selected{% endif %}>{{ _('In Progress') }}</option>
+                            <option value="Completed" {% if project.status == 'Completed' %}selected{% endif %}>{{ _('Completed') }}</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">{{ _('Update Status') }}</button>
+                </form>
+                 <form method="POST" action="{{ url_for('add_comment', project_id=project.id, locale=get_locale())  }}">
+                    <div class="form-group">
+                        <label for="comment">{{ _('Add Comment') }}</label>
+                        <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">{{ _('Add Comment') }}</button>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+    <a href="{{ url_for('project', project_id=project.id, locale=get_locale())  }}" class="btn btn-outline-info mt-3">{{ _('Back to Project Details') }}</a>
+</div>
+{% endblock %}

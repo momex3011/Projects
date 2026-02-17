@@ -1,0 +1,964 @@
+
+
+:root {
+    --navbar-bg-color: #007A3D;
+    --primary-color: #ecf0f3; 
+    --secondary-color: #ffffff;
+    --text-color: #333;
+    --shadow-light: #ffffff; 
+    --shadow-dark: #d1d9e6; 
+    --primary-button-color: #ecf0f3; 
+    --primary-button-text-color: #007A3D; 
+    --primary-button-shadow-dark: #d1d9e6;
+    --primary-button-shadow-light: #ffffff;
+    --outline-button-text-color: #17a2b8;
+    --outline-button-border-color: #17a2b8;
+    --outline-button-hover-color: #17a2b8;
+    --outline-button-hover-text-color: white;
+    --outline-button-hover-shadow-dark: #14899b;
+    --outline-button-hover-shadow-light: #1adbf5;
+    --success-bg-color: #e9faef; /* Light green for success */
+    --success-text-color: #155724;
+    --success-border-color: #c3e6cb;
+    --info-bg-color: #e3f1ff; /* Light blue for info */
+    --info-text-color: #004085;
+    --info-border-color: #b8daff;
+    --warning-bg-color: #fff8e1; /* Light yellow for warning */
+    --warning-text-color: #85640b;
+    --warning-border-color: #ffeeba;
+    --danger-bg-color: #fdedee; /* Light red for danger */
+    --danger-text-color: #721c24;
+    --danger-border-color: #f5c6cb;
+}
+
+.dark-mode { /* Changed from .dark-theme to .dark-mode */
+    --navbar-bg-color: #004724;
+    --primary-color: #292C33; /* Darker gray for dark mode background */
+    --secondary-color: #30343B; /* Slightly lighter gray for dark mode elements */
+    --text-color: #f1f1f1;
+    --shadow-light: #373B42; /* Lighter shadow for dark mode */
+    --shadow-dark: #21242A; /* Darker shadow for dark mode */
+    --primary-button-color: #30343B; /* Dark gray for primary button in dark mode */
+    --primary-button-text-color: #f1f1f1;
+    --primary-button-shadow-dark: #21242A;
+    --primary-button-shadow-light: #373B42;
+    --success-bg-color: #1e3625;
+    --success-text-color: #a8cca3;
+    --success-border-color: #1e3625;
+    --info-bg-color: #1e3344;
+    --info-text-color: #a3c0cf;
+    --info-border-color: #1e3344;
+    --warning-bg-color: #40341e;
+    --warning-text-color: #cfc1a3;
+    --warning-border-color: #40341e;
+    --danger-bg-color: #3b2326;
+    --danger-text-color: #cfabab;
+    --danger-border-color: #3b2326;
+}
+
+.admin-form .form-group .form-check-input[type="checkbox"] {
+    position: relative;
+    width: 50px; /* Smaller toggle width */
+    height: 25px; /* Smaller toggle height */
+    -webkit-appearance: none; /* Disable default appearance */
+    background-color: var(--primary-color); /* Background color */
+    border-radius: 15px; /* Rounded toggle */
+    box-shadow: 3px 3px 5px var(--shadow-dark), -3px -3px 5px var(--shadow-light); /* Neumorphic shadow */
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Transition on background color change */
+    border: none; /* Remove default border */
+    outline: none; /* Remove default outline */
+  }
+
+  .admin-form .form-group .form-check-input[type="checkbox"]:checked {
+    background-color: #10bb6b; /* Active state color */
+  }
+
+  .admin-form .form-group .form-check-input[type="checkbox"]::before {
+    content: '';
+    position: absolute;
+    width: 23px; /* Handle width */
+    height: 23px; /* Handle height */
+    border-radius: 50%;
+    top: 1px; /* Handle vertical position */
+    left: 1px; /* Handle initial horizontal position */
+    background-color: var(--secondary-color); /* Handle color */
+    transition: left 0.3s ease; /* Transition for position */
+    box-shadow: 2px 2px 3px var(--shadow-dark), -2px -2px 3px var(--shadow-light); /* Subtle handle shadow */
+  }
+
+  .admin-form .form-group .form-check-input[type="checkbox"]:checked::before {
+    left: 26px; /* Handle position when toggle is active */
+  }
+
+  .admin-form .form-group .form-check-input[type="checkbox"]:focus {
+    outline: none; /* Remove focus outline */
+    box-shadow: 3px 3px 5px var(--shadow-dark), -3px -3px 5px var(--shadow-light), 0 0 5px rgba(0,170,85,0.4);
+  }
+    .admin-form .form-group .form-check-label {
+        margin-left: 10px;
+        color: var(--text-color);
+    }
+
+/* Footer Styles */
+.footer {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    padding: 40px 20px;
+    box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light); /* Adjusted shadow */
+    margin-top: 40px; /* Add some space above the footer */
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+
+
+.footer-section {
+    margin-bottom: 20px;
+    flex-basis: 30%;
+    min-width: 200px;
+}
+
+.footer-section h3 {
+    color: var(--primary-button-text-color); /* Use button text color for contrast */
+    margin-bottom: 10px;
+}
+
+
+
+.footer-section p {
+    line-height: 1.6;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: 5px;
+}
+
+.footer-section ul li a {
+    color: var(--text-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-section ul li a:hover {
+    text-decoration: underline;
+}
+
+.footer-section.social .social-links a {
+    display: inline-block;
+    margin-right: 10px;
+    font-size: 20px;
+    color: var(--primary-button-text-color);
+    transition: color 0.3s ease;
+}
+
+.footer-section.social .social-links a:hover {
+    color: var(--text-color);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid var(--shadow-dark);
+}
+
+body {
+    font-family: sans-serif;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin: 0; /* Reset default margin */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensure body covers the full viewport height */
+}
+
+.container {
+    max-width: 960px;
+    margin: 20px auto;
+    padding: 20px;
+    flex: 1; /* Allow container to grow and take available space */
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+.col-md-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+    padding-right: 15px;
+    padding-left: 15px;
+    box-sizing: border-box;
+}
+
+.col-md-4 {
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;
+    padding-right: 15px;
+    padding-left: 15px;
+    box-sizing: border-box;
+}
+
+.col-md-3 {
+    flex: 0 0 25%;
+    max-width: 25%;
+    padding-right: 15px;
+    padding-left: 15px;
+    box-sizing: border-box;
+}
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -5px;
+    margin-left: -5px;
+}
+
+.form-group.col-md-4,
+.form-group.col-md-3,
+.form-group.col-md-2 {
+    padding-right: 5px;
+    padding-left: 5px;
+    box-sizing: border-box;
+}
+
+.form-group.col-md-4 {
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;
+}
+
+.form-group.col-md-3 {
+    flex: 0 0 25%;
+    max-width: 25%;
+}
+
+.form-group.col-md-2 {
+    flex: 0 0 16.666667%;
+    max-width: 16.666667%;
+}
+
+h1, h2 {
+    color: var(--text-color);
+    transition: color 0.3s ease;
+}
+
+a {
+    color: var(--primary-button-text-color); /* Use primary button text color */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+p {
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+small {
+    font-size: 0.8em;
+    color: #777;
+    transition: color 0.3s ease;
+}
+
+.dark-mode small {
+    color: #bbb;
+}
+
+.card {
+    background-color: var(--secondary-color);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light); /* Adjusted shadow */
+    margin-bottom: 20px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text-color);
+    transition: color 0.3s ease;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 5px;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    box-shadow: inset 3px 3px 5px var(--shadow-dark), inset -3px -3px 5px var(--shadow-light); /* Adjusted inset shadow */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+    box-sizing: border-box; /* Ensure padding doesn't affect width */
+}
+
+.form-control:focus {
+    outline: none;
+    box-shadow: inset 5px 5px 8px var(--shadow-dark), inset -5px -5px 8px var(--shadow-light); /* Adjusted focus shadow */
+}
+
+textarea.form-control {
+    resize: vertical;
+}
+
+.form-check-input {
+    margin-top: .3rem;
+    margin-left: -1.25rem;
+    background-color: var(--primary-color);
+    border: none; /* Removed default border */
+    box-shadow: 2px 2px 3px var(--shadow-dark), -2px -2px 3px var(--shadow-light); /* Neumorphic effect */
+    border-radius: 5px;
+}
+
+.form-check-label {
+    margin-left: 1.5rem;
+}
+
+select.form-control {
+    appearance: none; /* Remove default arrow in some browsers */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23444" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-repeat: no-repeat;
+    background-position-x: 95%; /* Adjust position for neumorphic look */
+    background-position-y: center;
+    padding-right: 30px;
+}
+
+.dark-mode select.form-control {
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23ccc" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--primary-button-color); /* Use primary button color */
+    color: var(--primary-button-text-color); /* Use primary button text color */
+    box-shadow: 5px 5px 10px var(--primary-button-shadow-dark), -5px -5px 10px var(--primary-button-shadow-light); /* Neumorphic shadow */
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+    display: inline-block; /* To allow margin on sides */
+    margin-bottom: 5px;
+}
+
+.btn:focus {
+    outline: none;
+}
+
+.btn-primary {
+    /* Inherits styles from .btn */
+}
+
+.btn-primary:hover {
+    box-shadow: inset 2px 2px 5px var(--primary-button-shadow-dark), inset -2px -2px 5px var(--primary-button-shadow-light); /* Pressed effect on hover */
+}
+
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+.btn-outline-info {
+    background-color: var(--primary-color); /* Match background */
+    color: var(--outline-button-text-color);
+    box-shadow: inset 2px 2px 3px var(--shadow-dark), inset -2px -2px 3px var(--shadow-light); /* Inset border effect */
+    border: none; /* Remove explicit border */
+}
+
+.btn-outline-info:hover {
+    background-color: var(--outline-button-hover-color);
+    color: var(--outline-button-hover-text-color);
+    box-shadow: 5px 5px 10px var(--outline-button-hover-shadow-dark), -5px -5px 10px var(--outline-button-hover-shadow-light);
+}
+
+.btn-danger {
+    background-color: var(--danger-bg-color);
+    color: var(--danger-text-color);
+    box-shadow: 5px 5px 10px var(--danger-border-color), -5px -5px 10px var(--danger-bg-color);
+}
+
+.btn-danger:hover {
+    box-shadow: inset 2px 2px 5px var(--danger-border-color), inset -2px -2px 5px var(--danger-bg-color);
+}
+
+.navbar {
+    background-color: var(--navbar-bg-color); /* Use a variable for the background color */
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border-radius: 0 0 10px 10px; /* Rounded bottom corners */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: white; /* Changed text color to white for better contrast */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    align-items: center; /* Align items vertically in the navbar */
+}
+
+.nav-item {
+    margin-left: 15px;
+}
+
+.nav-link {
+    color: white; /* Changed text color to white for better contrast */
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-link:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.alert {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 3px 3px 5px var(--shadow-dark), -3px -3px 5px var(--shadow-light); /* Adjusted shadow */
+}
+
+.alert-success {
+    background-color: var(--success-bg-color);
+    color: var(--success-text-color);
+    border: 1px solid var(--success-border-color);
+}
+
+.alert-info {
+    background-color: var(--info-bg-color);
+    color: var(--info-text-color);
+    border: 1px solid var(--info-border-color);
+}
+
+.alert-warning {
+    background-color: var(--warning-bg-color);
+    color: var(--warning-text-color);
+    border: 1px solid var(--warning-border-color);
+}
+
+.alert-danger {
+    background-color: var(--danger-bg-color);
+    color: var(--danger-text-color);
+    border: 1px solid var(--danger-border-color);
+}
+
+.list-group {
+    list-style: none;
+    padding: 0;
+}
+
+.list-group-item {
+    background-color: var(--secondary-color);
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light); 
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.list-group-item a {
+    color: var(--text-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.list-group-item a:hover {
+    text-decoration: underline;
+}
+
+.list-group-item.d-flex {
+    display: flex;
+}
+
+/* Dark Mode Toggle */
+.theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5em;
+    color: var(--text-color);
+    transition: color 0.3s ease;
+    margin-left: 10px; /* Add some spacing */
+}
+
+.theme-toggle:focus {
+    outline: none;
+}
+
+.progress {
+    height: 10px;
+    background-color: var(--primary-color);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 10px;
+    box-shadow: inset 1px 1px 3px var(--shadow-dark), inset -1px -1px 3px var(--shadow-light);
+}
+
+.progress-bar {
+    background-color: #28a745; /* Green color for progress */
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination a, .pagination span {
+    padding: 8px 12px;
+    margin: 0 5px;
+    border-radius: 5px;
+    text-decoration: none;
+    background-color: var(--primary-button-color); /* Use primary button color */
+    color: var(--primary-button-text-color); /* Use primary button text color */
+    box-shadow: 3px 3px 5px var(--primary-button-shadow-dark), -3px -3px 5px var(--primary-button-shadow-light); /* Neumorphic shadow */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+}
+
+.pagination a:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.pagination span.btn-info {
+    background-color: #17a2b8;
+    color: white;
+    box-shadow: 3px 3px 6px #14899b, -3px -3px 6px #1adbf5;
+}
+
+/* Ensure footer stays at the bottom */
+.content {
+    flex: 1; /* Allow content to grow and take available space */
+}
+
+body > script {
+    margin-top: auto; /* Push scripts to the bottom */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    .col-md-6, .col-md-4, .col-md-3,
+    .form-group.col-md-4, .form-group.col-md-3, .form-group.col-md-2 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .navbar-nav {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .nav-item {
+        margin-left: 0;
+        margin-bottom: 10px;
+    }
+
+}
+
+/* static/style.css */
+
+/* Update styles for the calendar container */
+#calendar {
+    background-color: var(--primary-color);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.fc-header-toolbar {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.fc-toolbar-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: var(--text-color);
+    transition: color 0.3s ease;
+}
+
+.fc-toolbar-chunk {
+    display: flex;
+    gap: 10px;
+}
+
+.fc-button {
+    background-color: var(--primary-color);
+    color: var(--primary-button-text-color);
+    border: none;
+    padding: 8px 12px;
+    border-radius: 10px;
+    box-shadow: 5px 5px 10px var(--primary-button-shadow-dark), -5px -5px 10px var(--primary-button-shadow-light);
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    font-size: 1em;
+}
+
+.fc-button:hover:not(.fc-disabled) {
+    box-shadow: inset 2px 2px 5px var(--primary-button-shadow-dark), inset -2px -2px 5px var(--primary-button-shadow-light);
+}
+
+.fc-button:focus {
+    outline: none;
+}
+
+.fc-button:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.fc-daygrid-day-frame {
+    padding: 5px;
+}
+
+.fc-daygrid-day-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 5px;
+}
+
+.fc-daygrid-day-number {
+    font-weight: bold;
+    color: var(--text-color);
+    transition: color 0.3s ease;
+}
+
+.fc-daygrid-day-events {
+    margin-top: 5px;
+}
+
+.fc-daygrid-event {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    border-radius: 8px;
+    padding: 5px;
+    margin-bottom: 3px;
+    font-size: 0.85em;
+    text-align: center;
+    box-shadow: 2px 2px 4px var(--shadow-dark), -2px -2px 4px var(--shadow-light);
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    text-decoration: none; /* Remove default link underline */
+    display: block; /* Ensure it takes full width */
+}
+
+.fc-daygrid-event:hover {
+    box-shadow: inset 2px 2px 4px var(--shadow-dark), inset -2px -2px 4px var(--shadow-light);
+}
+
+.fc-col-header-cell {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    padding: 8px;
+    text-align: center;
+    border: none !important; /* Override default border */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.fc-daygrid-day {
+    background-color: var(--secondary-color);
+    border: none !important; /* Override default border */
+    transition: background-color 0.3s ease;
+}
+
+.fc-day-today {
+    background-color: rgba(0, 122, 61, 0.15); /* Lightened primary color */
+}
+
+.fc-day-sun,
+.fc-day-sat {
+    opacity: 0.8; /* Slightly dim weekend days */
+}
+
+.fc-timegrid-slot-lane {
+    border-bottom: none !important; /* Remove slot lane lines */
+}
+
+.fc-timegrid-event {
+    border: none !important;
+    box-shadow: 2px 2px 4px var(--shadow-dark), -2px -2px 4px var(--shadow-light);
+}
+
+.fc-list-event-time {
+    color: var(--text-color);
+}
+
+.fc-list-event-title {
+    color: var(--primary-button-text-color);
+}
+
+.about-section h2 {
+    font-size: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+.about-section h3 {
+    font-size: 1.2em;
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+}
+
+.about-section p {
+    line-height: 1.6;
+    margin-bottom: 1em;
+}
+
+.about-section ul.about-goals {
+    list-style-type: disc; /* Or any other list style */
+    padding-left: 20px;
+    margin-bottom: 1em;
+}
+
+.about-section ul.about-goals li {
+    margin-bottom: 0.5em;
+}
+
+.about-section p.closing-message {
+    font-weight: bold;
+    text-align: center; /* Optional: Center the closing message */
+}
+
+.dashboard-header {
+    position: relative;
+    top: auto;
+    left: auto;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.dashboard-header h1.welcome-message {
+    color: var(--text-color);
+    font-size: 2.5em;
+    margin-bottom: 0;
+}
+
+.dashboard-metrics {
+    display: flex;
+    justify-content: space-around;
+    gap: 0;
+    margin-top: 40px;
+    padding-left: 0;
+    padding-right: 0;
+    align-items: flex-start;
+}
+
+.metric-circle {
+    width: 240px;
+    height: 240px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.metric-circle svg {
+    width: 100%;
+    height: 100%;
+}
+
+.metric-circle .background {
+    fill: none;
+    stroke: var(--shadow-dark);
+    stroke-width: 8;
+}
+
+.metric-circle .progress {
+    fill: none;
+    stroke: #007A3D;
+    stroke-width: 8;
+    stroke-dasharray: 753.98;
+    stroke-dashoffset: 753.98;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+    transition: stroke-dashoffset 0.5s ease-in-out;
+}
+
+.metric-circle .value {
+    font-size: 2.5em;
+    font-weight: bold;
+    fill: var(--text-color);
+}
+
+.metric-circle .label {
+    text-align: center;
+    margin-top: 15px;
+    color: var(--text-color);
+    font-size: 1.2em;
+}
+
+.metric-circle .metric-icon {
+    font-size: 1.5em;
+    margin-top: 10px;
+    color: var(--primary-button-text-color);
+}
+
+/* Styled Latest News Section */
+.styled-news-container {
+    margin-top: 50px;
+    background-color: var(--card-background); /* You might want to define this in :root or .dark-mode */
+    border-radius: 10px;
+    box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+    padding: 20px;
+    color: var(--text-color);
+}
+
+.news-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.news-header h2 {
+    margin: 0;
+    font-size: 1.8em;
+}
+
+.news-header .view-all-news {
+    display: inline-block;
+    padding: 8px 15px;
+    background-color: transparent;
+    color: var(--primary-color);
+    text-decoration: none;
+    border: 1px solid var(--primary-color);
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.news-header .view-all-news:hover {
+    background-color: var(--primary-color);
+    color: var(--primary-button-text-color);
+}
+
+.news-scroll-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+.news-card-scroll {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 15px; /* To prevent scrollbar from overlapping content */
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+}
+
+.news-card-scroll::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+.news-card {
+    flex: 0 0 auto;
+    width: calc(25% - 11.25px); /* Adjust width for 4 items with gap */
+    min-width: 0; /* Allow shrinking */
+    background-color: var(--primary-color);
+    border-radius: 8px;
+    padding: 15px;
+    scroll-snap-align: start;
+    box-sizing: border-box;
+}
+
+.news-card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.news-card h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+
+.news-card p {
+    margin: 0;
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+.scroll-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    font-size: 1em;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.news-scroll-wrapper:hover .scroll-button {
+    opacity: 1;
+}
+
+.scroll-button.prev {
+    left: 10px;
+}
+
+.scroll-button.next {
+    right: 10px;
+}
+
+.scroll-button i {
+    font-size: 1.2em;
+}
+
+.no-news-message {
+    padding: 20px;
+    text-align: center;
+    font-style: italic;
+    color: var(--text-light); /* You might want to define this in :root or .dark-mode */
+}

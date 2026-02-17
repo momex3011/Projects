@@ -1,0 +1,625 @@
+# translations/en/LC_MESSAGES/messages.po
+#
+# Translation of your Flask application.
+# This file contains the English translations.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-01-14 00:23-0600\n"
+"PO-Revision-Date: 2025-01-09 12:26-0600\n"
+"Last-Translator: Ahmed Bahbouh\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.16.0\n"
+
+#: app.py:173 app.py:236 app.py:325 app.py:332 app.py:341
+msgid "You do not have permission to access this page."
+msgstr "You do not have permission to access this page."
+
+#: app.py:258 app.py:278 app.py:309
+msgid "Username"
+msgstr "Username"
+
+#: app.py:259 app.py:310
+msgid "Email"
+msgstr "Email"
+
+#: app.py:260 app.py:279
+msgid "Password"
+msgstr "Password"
+
+#: app.py:261
+msgid "Confirm Password"
+msgstr "Confirm Password"
+
+#: app.py:262
+msgid "Role"
+msgstr "Role"
+
+#: app.py:262
+msgid "Council Member"
+msgstr "Council Member"
+
+#: app.py:262
+msgid "Project Tracker"
+msgstr "Project Tracker"
+
+#: app.py:263
+msgid "Sign Up"
+msgstr "Sign Up"
+
+#: app.py:268
+msgid "That email is taken. Please choose a different one."
+msgstr "That email is taken. Please choose a different one."
+
+#: app.py:271
+msgid "Name"
+msgstr "Name"
+
+#: app.py:272
+msgid "Additional Info"
+msgstr "Additional Info"
+
+#: app.py:273
+msgid "Volunteer"
+msgstr "Volunteer"
+
+#: app.py:280 app.py:526 templates/layout.html:47 templates/login.html:5
+msgid "Login"
+msgstr "Login"
+
+#: app.py:283 app.py:292
+msgid "Title"
+msgstr "Title"
+
+#: app.py:284 app.py:293
+msgid "Description"
+msgstr "Description"
+
+#: app.py:285 app.py:294 app.py:317 templates/project.html:10
+msgid "Category"
+msgstr "Category"
+
+#: app.py:286 app.py:295 templates/project.html:16
+msgid "Voting Deadline"
+msgstr "Voting Deadline"
+
+#: app.py:287 app.py:296 templates/project.html:38
+#: templates/track_project.html:10
+msgid "Start Date"
+msgstr "Start Date"
+
+#: app.py:288 app.py:297 templates/project.html:39
+#: templates/track_project.html:11
+msgid "End Date"
+msgstr "End Date"
+
+#: app.py:289
+msgid "Create Project"
+msgstr "Create Project"
+
+#: app.py:298 app.py:316 templates/project.html:8
+#: templates/projects_list.html:35 templates/track_project.html:9
+msgid "Status"
+msgstr "Status"
+
+#: app.py:299
+msgid "Update Project"
+msgstr "Update Project"
+
+#: app.py:302 app.py:303 app.py:644 templates/project.html:48
+msgid "Assign Tracker"
+msgstr "Assign Tracker"
+
+#: app.py:306
+msgid "Vote"
+msgstr "Vote"
+
+#: app.py:306
+msgid "Yes"
+msgstr "Yes"
+
+#: app.py:306
+msgid "No"
+msgstr "No"
+
+#: app.py:307
+msgid "Submit Vote"
+msgstr "Submit Vote"
+
+#: app.py:311
+msgid "Contact Details"
+msgstr "Contact Details"
+
+#: app.py:312
+msgid "Update Profile"
+msgstr "Update Profile"
+
+#: app.py:315
+msgid "Search Keywords"
+msgstr "Search Keywords"
+
+#: app.py:316 app.py:318
+msgid "Any"
+msgstr "Any"
+
+#: app.py:318 templates/project.html:13
+msgid "Tracker"
+msgstr "Tracker"
+
+#: app.py:319
+msgid "Apply Filters"
+msgstr "Apply Filters"
+
+#: app.py:349
+msgid "You do not have the required permission to access this page."
+msgstr "You do not have the required permission to access this page."
+
+#: app.py:385
+msgid "Blog Post 1"
+msgstr "Blog Post 1"
+
+#: app.py:386
+msgid "Blog Post 2"
+msgstr "Blog Post 2"
+
+#: app.py:391
+msgid "Institution 1"
+msgstr "Institution 1"
+
+#: app.py:392
+msgid "Institution 2"
+msgstr "Institution 2"
+
+#: app.py:397
+msgid "Partner One"
+msgstr "Partner One"
+
+#: app.py:398
+msgid "Partner Two"
+msgstr "Partner Two"
+
+#: app.py:472
+#, python-format
+msgid "Thank you for volunteering for %(project_title)s!"
+msgstr "Thank you for volunteering for %(project_title)s!"
+
+#: app.py:474
+msgid "Volunteer for Project"
+msgstr "Volunteer for Project"
+
+#: app.py:509
+msgid "Account created successfully!"
+msgstr "Account created successfully!"
+
+#: app.py:511 templates/login.html:28 templates/register.html:5
+msgid "Register"
+msgstr "Register"
+
+#: app.py:525
+msgid "Login Unsuccessful. Please check username and password"
+msgstr "Login Unsuccessful. Please check username and password"
+
+#: app.py:536
+msgid "Please log in to access this page."
+msgstr "Please log in to access this page."
+
+#: app.py:556
+msgid "New project created successfully!"
+msgstr "New project created successfully!"
+
+#: app.py:559
+msgid "New Project"
+msgstr "New Project"
+
+#: app.py:586
+msgid "Project updated successfully!"
+msgstr "Project updated successfully!"
+
+#: app.py:588 templates/edit_project.html:5 templates/project.html:47
+msgid "Edit Project"
+msgstr "Edit Project"
+
+#: app.py:602
+msgid "Voting deadline has passed for this project."
+msgstr "Voting deadline has passed for this project."
+
+#: app.py:612
+msgid "Vote updated successfully!"
+msgstr "Vote updated successfully!"
+
+#: app.py:616
+msgid "Vote submitted successfully!"
+msgstr "Vote submitted successfully!"
+
+#: app.py:626
+msgid "You do not have permission to view voting results."
+msgstr "You do not have permission to view voting results."
+
+#: app.py:642
+#, python-format
+msgid "Project assigned to %(tracker_name)s!"
+msgstr "Project assigned to %(tracker_name)s!"
+
+#: app.py:652
+msgid "You do not have permission to track this project."
+msgstr "You do not have permission to track this project."
+
+#: app.py:654 templates/project.html:50 templates/track_project.html:5
+msgid "Track Project"
+msgstr "Track Project"
+
+#: app.py:661 templates/layout.html:43
+msgid "Manage Users"
+msgstr "Manage Users"
+
+#: app.py:672
+msgid "Your profile has been updated!"
+msgstr "Your profile has been updated!"
+
+#: app.py:674 templates/edit_profile.html:5 templates/layout.html:40
+msgid "Edit Profile"
+msgstr "Edit Profile"
+
+#: templates/admin_dashboard.html:5
+msgid "Admin Dashboard"
+msgstr "Admin Dashboard"
+
+#: templates/admin_dashboard.html:9
+msgid "Recent Projects"
+msgstr "Recent Projects"
+
+#: templates/admin_dashboard.html:22
+msgid "No recent projects."
+msgstr "No recent projects."
+
+#: templates/admin_dashboard.html:28
+msgid "Pending Votes"
+msgstr "Pending Votes"
+
+#: templates/admin_dashboard.html:34 templates/council_dashboard.html:13
+msgid "Voting ends"
+msgstr "Voting ends"
+
+#: templates/admin_dashboard.html:39
+msgid "No pending votes."
+msgstr "No pending votes."
+
+#: templates/assign_tracker.html:5
+msgid "Assign Tracker to Project"
+msgstr "Assign Tracker to Project"
+
+#: templates/assign_tracker.html:21 templates/edit_project.html:63
+#: templates/results.html:23 templates/volunteer_form.html:16
+msgid "Back to Project"
+msgstr "Back to Project"
+
+#: templates/calendar.html:12
+msgid "Project Calendar"
+msgstr "Project Calendar"
+
+#: templates/calendar.html:31
+msgid "Voting"
+msgstr "Voting"
+
+#: templates/calendar.html:31
+msgid "Project"
+msgstr "Project"
+
+#: templates/council_dashboard.html:5
+msgid "Council Member Dashboard"
+msgstr "Council Member Dashboard"
+
+#: templates/council_dashboard.html:7
+msgid "Projects to Vote On"
+msgstr "Projects to Vote On"
+
+#: templates/council_dashboard.html:18
+msgid "No projects currently open for voting."
+msgstr "No projects currently open for voting."
+
+#: templates/create_project.html:5
+msgid "Create New Project"
+msgstr "Create New Project"
+
+#: templates/create_project.html:11 templates/edit_project.html:11
+msgid "Enter project title"
+msgstr "Enter project title"
+
+#: templates/create_project.html:18 templates/edit_project.html:18
+msgid "Describe the project details"
+msgstr "Describe the project details"
+
+#: templates/create_project.html:25 templates/edit_project.html:25
+msgid "Optional project category"
+msgstr "Optional project category"
+
+#: templates/dashboard.html:6
+#, fuzzy
+msgid "Welcome admin!"
+msgstr "Welcome admin!"
+
+#: templates/dashboard.html:8 templates/layout.html:98
+msgid "EN"
+msgstr "EN"
+
+#: templates/dashboard.html:9 templates/layout.html:99
+msgid "AR"
+msgstr "AR"
+
+#: templates/dashboard.html:20
+msgid "Council Members"
+msgstr "Council Members"
+
+#: templates/dashboard.html:29
+msgid "Contact Persons"
+msgstr "Contact Persons"
+
+#: templates/dashboard.html:38 templates/layout.html:37
+#: templates/projects_list.html:5
+msgid "Projects"
+msgstr "Projects"
+
+#: templates/dashboard.html:45
+msgid "Latest News"
+msgstr "Latest News"
+
+#: templates/dashboard.html:46
+msgid "View All News"
+msgstr "View All News"
+
+#: templates/dashboard.html:62
+msgid "No news available."
+msgstr "No news available."
+
+#: templates/edit_profile.html:11
+msgid "Your username"
+msgstr "Your username"
+
+#: templates/edit_profile.html:18
+msgid "Your email address"
+msgstr "Your email address"
+
+#: templates/edit_profile.html:25
+msgid "Optional contact information"
+msgstr "Optional contact information"
+
+#: templates/home.html:5
+msgid "Welcome"
+msgstr "Welcome"
+
+#: templates/home.html:6
+msgid "This page redirects to the dashboard."
+msgstr "This page redirects to the dashboard."
+
+#: templates/layout.html:6 templates/layout.html:35
+msgid "Al-Nabk City Civil Council"
+msgstr "Al-Nabk City Civil Council"
+
+#: templates/layout.html:39
+msgid "Calendar"
+msgstr "Calendar"
+
+#: templates/layout.html:42
+msgid "Register User"
+msgstr "Register User"
+
+#: templates/layout.html:45
+msgid "Logout"
+msgstr "Logout"
+
+#: templates/layout.html:82
+msgid "About Al-Nabk City Civil Council"
+msgstr "About Al-Nabk City Civil Council"
+
+#: templates/layout.html:83
+msgid ""
+"Welcome to the official website of the Al-Nabk City Civil Council, "
+"established after the end of the civil war to serve as the voice of all "
+"the residents of our city. We are committed to working hand in hand with "
+"you to build a better future that reflects the aspirations of everyone."
+msgstr ""
+"Welcome to the official website of the Al-Nabk City Civil Council, "
+"established after the end of the civil war to serve as the voice of all "
+"the residents of our city. We are committed to working hand in hand with "
+"you to build a better future that reflects the aspirations of everyone."
+
+#: templates/layout.html:84
+msgid ""
+"The Al-Nabk City Civil Council aims to promote transparency in managing "
+"the city’s affairs, encourage community collaboration and participation "
+"in decision-making, improve infrastructure and public services to meet "
+"residents' needs, and support efforts to rebuild the city and restore its"
+" prosperity."
+msgstr ""
+"The Al-Nabk City Civil Council aims to promote transparency in managing "
+"the city’s affairs, encourage community collaboration and participation "
+"in decision-making, improve infrastructure and public services to meet "
+"residents' needs, and support efforts to rebuild the city and restore its"
+" prosperity."
+
+#: templates/layout.html:85
+msgid ""
+"We invite you to contribute your ideas and suggestions to achieve a "
+"shared vision for our beloved city. You can contact us directly through "
+"the website, participate in surveys, and stay updated on the latest news "
+"and projects. Together, we build the future of Al-Nabk!"
+msgstr ""
+"We invite you to contribute your ideas and suggestions to achieve a "
+"shared vision for our beloved city. You can contact us directly through "
+"the website, participate in surveys, and stay updated on the latest news "
+"and projects. Together, we build the future of Al-Nabk!"
+
+#: templates/layout.html:89
+msgid "Quick Links"
+msgstr "Quick Links"
+
+#: templates/layout.html:91
+msgid "Terms of Service"
+msgstr "Terms of Service"
+
+#: templates/layout.html:92
+msgid "Privacy Policy"
+msgstr "Privacy Policy"
+
+#: templates/layout.html:96
+msgid "Language"
+msgstr "Language"
+
+#: templates/layout.html:104
+msgid "Follow Us"
+msgstr "Follow Us"
+
+#: templates/layout.html:114
+msgid "Al-Nabk City Civil Council. All rights reserved."
+msgstr "Al-Nabk City Civil Council. All rights reserved."
+
+#: templates/login.html:11
+msgid "Enter your username"
+msgstr "Enter your username"
+
+#: templates/login.html:18
+msgid "Enter your password"
+msgstr "Enter your password"
+
+#: templates/login.html:28
+msgid "Need an account?"
+msgstr "Need an account?"
+
+#: templates/project.html:31
+msgid "You have already voted on this project."
+msgstr "You have already voted on this project."
+
+#: templates/project.html:33
+msgid "Voting is closed for this project."
+msgstr "Voting is closed for this project."
+
+#: templates/project.html:35
+msgid "View Results"
+msgstr "View Results"
+
+#: templates/project.html:53
+msgid "Back to Projects"
+msgstr "Back to Projects"
+
+#: templates/project.html:54
+msgid "Voluntree"
+msgstr "Voluntree"
+
+#: templates/projects_list.html:11
+msgid "Search projects"
+msgstr "Search projects"
+
+#: templates/projects_list.html:19
+msgid "Filter by category"
+msgstr "Filter by category"
+
+#: templates/projects_list.html:41
+msgid "No projects found."
+msgstr "No projects found."
+
+#: templates/projects_list.html:45
+msgid "Previous"
+msgstr "Previous"
+
+#: templates/projects_list.html:59
+msgid "Next"
+msgstr "Next"
+
+#: templates/register.html:11
+msgid "Enter a username"
+msgstr "Enter a username"
+
+#: templates/register.html:18
+msgid "Enter your email"
+msgstr "Enter your email"
+
+#: templates/register.html:25
+msgid "Choose a password"
+msgstr "Choose a password"
+
+#: templates/register.html:32
+msgid "Confirm your password"
+msgstr "Confirm your password"
+
+#: templates/results.html:5
+msgid "Voting Results for"
+msgstr "Voting Results for"
+
+#: templates/results.html:7
+msgid "Results"
+msgstr "Results"
+
+#: templates/results.html:8
+msgid "Yes Votes"
+msgstr "Yes Votes"
+
+#: templates/results.html:10 templates/results.html:17
+msgid "Hidden"
+msgstr "Hidden"
+
+#: templates/results.html:15
+msgid "No Votes"
+msgstr "No Votes"
+
+#: templates/track_project.html:18
+msgid "Tracker Actions"
+msgstr "Tracker Actions"
+
+#: templates/track_project.html:21 templates/track_project.html:28
+msgid "Update Status"
+msgstr "Update Status"
+
+#: templates/track_project.html:23
+msgid "Pending"
+msgstr "Pending"
+
+#: templates/track_project.html:24
+msgid "In Progress"
+msgstr "In Progress"
+
+#: templates/track_project.html:25
+msgid "Completed"
+msgstr "Completed"
+
+#: templates/track_project.html:32 templates/track_project.html:35
+msgid "Add Comment"
+msgstr "Add Comment"
+
+#: templates/track_project.html:40
+msgid "Back to Project Details"
+msgstr "Back to Project Details"
+
+#: templates/volunteer_form.html:6
+msgid "Volunteer for"
+msgstr "Volunteer for"
+
+#~ msgid "Vote Anonymously"
+#~ msgstr "Vote Anonymously"
+
+#~ msgid "ProjectFlow"
+#~ msgstr "ProjectFlow"
+
+#~ msgid "Edit"
+#~ msgstr "Edit"
+
+#~ msgid "Are you sure you want to delete this user?"
+#~ msgstr "Are you sure you want to delete this user?"
+
+#~ msgid "Delete"
+#~ msgstr "Delete"
+
+#~ msgid "Register New User"
+#~ msgstr "Register New User"
+
+#~ msgid "English"
+#~ msgstr "English"
+
+#~ msgid "Arabic"
+#~ msgstr "Arabic"
+

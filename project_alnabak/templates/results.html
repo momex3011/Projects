@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ _('Voting Results for') }}: {{ project.title }}</h1>
+    <div class="card">
+        <h2>{{ _('Results') }}</h2>
+        <p><strong>{{ _('Yes Votes') }}:</strong> 
+            {% if project.vote_type == 'anonymous' and current_user.role != 'admin' %}
+                {{ _('Hidden') }}
+            {% else %}
+                {{ yes_votes }}
+            {% endif %}
+        </p>
+        <p><strong>{{ _('No Votes') }}:</strong> 
+            {% if project.vote_type == 'anonymous' and current_user.role != 'admin' %}
+                {{ _('Hidden') }}
+            {% else %}
+                {{ no_votes }}
+            {% endif %}
+        </p>
+    </div>
+    <a href="{{ url_for('project', project_id=project.id, locale=get_locale()) }}" class="btn btn-outline-info">{{ _('Back to Project') }}</a>
+</div>
+{% endblock %}
