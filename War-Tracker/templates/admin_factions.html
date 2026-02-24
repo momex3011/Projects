@@ -1,0 +1,372 @@
+{% extends "layout.html" %}
+{% block content %}
+<style>
+    /* Override layout overflow for admin pages */
+    body, .main-wrapper {
+        overflow: auto !important;
+        height: auto !important;
+    }
+    .main-wrapper {
+        min-height: calc(100vh - 50px);
+        padding-bottom: 50px;
+    }
+    
+    /* Editable faction input styling */
+    .faction-edit-input {
+        transition: all 0.2s ease;
+    }
+    .faction-edit-input:hover {
+        border-color: #6b7280 !important;
+        background: rgba(30, 41, 59, 0.8) !important;
+    }
+    .faction-edit-input:focus {
+        border-color: #3b82f6 !important;
+        background: rgba(30, 41, 59, 1) !important;
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+    }
+    
+    /* Sub-faction styles */
+    .subfaction-panel {
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 8px;
+        margin-top: 8px;
+        padding: 12px;
+        display: none;
+    }
+    .subfaction-panel.show {
+        display: block;
+    }
+    .subfaction-row {
+        background: rgba(30, 41, 59, 0.5);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 6px;
+        padding: 10px 12px;
+        margin-bottom: 8px;
+    }
+    .subfaction-row:last-child {
+        margin-bottom: 0;
+    }
+    .sf-type-badge {
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        padding: 2px 6px;
+        border-radius: 3px;
+        text-transform: uppercase;
+    }
+    .sf-type-land {
+        background: rgba(34, 197, 94, 0.15);
+        color: #22c55e;
+        border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+    .sf-type-notable {
+        background: rgba(234, 179, 8, 0.15);
+        color: #eab308;
+        border: 1px solid rgba(234, 179, 8, 0.3);
+    }
+    .toggle-subfactions {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: #94a3b8;
+        padding: 3px 10px;
+        border-radius: 4px;
+        font-size: 11px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .toggle-subfactions:hover {
+        background: rgba(255,255,255,0.1);
+        color: white;
+    }
+    .faction-card {
+        background: rgba(30, 41, 59, 0.5);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 12px;
+    }
+    .dual-color-preview {
+        width: 36px;
+        height: 36px;
+        border-radius: 6px;
+        position: relative;
+        overflow: hidden;
+    }
+    .dual-color-preview .outer {
+        position: absolute;
+        inset: 0;
+        border-radius: 6px;
+    }
+    .dual-color-preview .inner {
+        position: absolute;
+        inset: 4px;
+        border-radius: 3px;
+    }
+</style>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <a href="{{ url_for('admin.dashboard') }}" class="text-muted small"><i class="fa fa-arrow-left me-1"></i> Back to Dashboard</a>
+            <h1 class="fw-bold mt-2">Faction Management</h1>
+            <p class="text-muted">{{ war.name }}</p>
+        </div>
+        <a href="{{ url_for('admin.territory_editor', war_id=war.id) }}" class="btn btn-primary">
+            <i class="fa fa-map me-2"></i> Territory Editor
+        </a>
+    </div>
+
+    <!-- ADD NEW FACTION -->
+    <div class="card p-4 mb-4" style="background: rgba(30, 41, 59, 0.9); border: 1px solid rgba(255,255,255,0.1);">
+        <h5 class="mb-3 text-uppercase small fw-bold text-muted">Add New Faction</h5>
+        <form action="{{ url_for('admin.add_faction', war_id=war.id) }}" method="POST" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label small text-muted">FACTION NAME</label>
+                <input type="text" name="name" class="form-control bg-dark text-white border-secondary" placeholder="e.g. Syrian Government" required>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small text-muted">SHORT NAME</label>
+                <input type="text" name="short_name" class="form-control bg-dark text-white border-secondary" placeholder="e.g. GOV" maxlength="10">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small text-muted">COLOR</label>
+                <div class="input-group">
+                    <input type="color" name="color" id="colorPicker" value="#dc2626" class="form-control form-control-color" style="width: 50px;">
+                    <input type="text" class="form-control bg-dark text-white border-secondary" id="colorHex" value="#dc2626" maxlength="7">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-success w-100">
+                    <i class="fa fa-plus me-2"></i> Add Faction
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- EXISTING FACTIONS -->
+    <div class="card p-4" style="background: rgba(30, 41, 59, 0.9); border: 1px solid rgba(255,255,255,0.1);">
+        <h5 class="mb-3 text-uppercase small fw-bold text-muted">Existing Factions</h5>
+        
+        {% if factions %}
+        {% for faction in factions %}
+        <div class="faction-card" style="border-left: 4px solid {{ faction.color }};">
+            <!-- FACTION HEADER ROW -->
+            <div class="d-flex align-items-center gap-3">
+                <form action="{{ url_for('admin.update_faction', faction_id=faction.id) }}" method="POST" id="form-{{ faction.id }}" class="d-flex align-items-center gap-2 flex-grow-1">
+                    <input type="color" name="color" value="{{ faction.color }}" class="form-control-color" style="width: 30px; height: 30px; border-radius: 4px; border: 2px solid rgba(255,255,255,0.3); cursor: pointer;">
+                    <input type="text" name="name" value="{{ faction.name }}" class="form-control form-control-sm bg-dark text-white border-secondary faction-edit-input" style="max-width: 220px;" placeholder="Faction name">
+                    <input type="text" name="short_name" value="{{ faction.short_name or '' }}" class="form-control form-control-sm bg-dark text-white border-secondary faction-edit-input" style="max-width: 70px;" placeholder="Short">
+                    
+                    {% if faction.territory_geojson %}
+                        <span class="badge bg-success"><i class="fa fa-check me-1"></i> Territory</span>
+                    {% else %}
+                        <span class="badge bg-secondary">No Territory</span>
+                    {% endif %}
+                    
+                    <button type="submit" class="btn btn-primary btn-sm" title="Save Changes">
+                        <i class="fa fa-save"></i>
+                    </button>
+                </form>
+                
+                <button class="toggle-subfactions" onclick="toggleSubfactions({{ faction.id }})" title="Manage Sub-Factions">
+                    <i class="fa fa-sitemap me-1"></i> 
+                    <span class="badge bg-secondary">{{ faction.subfactions|length }}</span>
+                    Sub-factions
+                    <i class="fa fa-chevron-down ms-1 sf-chevron" id="chevron-{{ faction.id }}"></i>
+                </button>
+                
+                <form action="{{ url_for('admin.delete_faction', faction_id=faction.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this faction and all its sub-factions?');">
+                    <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete Faction">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </form>
+            </div>
+            
+            <!-- SUB-FACTIONS PANEL (expandable) -->
+            <div class="subfaction-panel" id="sf-panel-{{ faction.id }}">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-uppercase small fw-bold text-muted" style="font-size: 10px; letter-spacing: 1px;">
+                        <i class="fa fa-sitemap me-1"></i> SUB-FACTIONS OF {{ faction.name|upper }}
+                    </span>
+                </div>
+
+                <!-- Add Sub-Faction Form -->
+                <form action="{{ url_for('admin.add_subfaction', faction_id=faction.id) }}" method="POST" class="subfaction-row" style="background: rgba(59, 130, 246, 0.05); border-color: rgba(59, 130, 246, 0.15);">
+                    <div class="row g-2 align-items-end">
+                        <div class="col-md-3">
+                            <label class="form-label small text-muted" style="font-size: 10px;">NAME</label>
+                            <input type="text" name="name" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="e.g. HTS, Wagner" required>
+                        </div>
+                        <div class="col-md-1">
+                            <label class="form-label small text-muted" style="font-size: 10px;">SHORT</label>
+                            <input type="text" name="short_name" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="HTS" maxlength="10">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label small text-muted" style="font-size: 10px;">TYPE</label>
+                            <select name="subfaction_type" class="form-select form-select-sm bg-dark text-white border-secondary">
+                                <option value="notable">Notable (no land)</option>
+                                <option value="land_controlling">Controls Land</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label small text-muted" style="font-size: 10px;">COLOR</label>
+                            <div class="input-group input-group-sm">
+                                <input type="color" name="color" value="{{ faction.color }}" class="form-control-color" style="width: 28px; height: 28px; border-radius: 4px;">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small text-muted" style="font-size: 10px;">DESCRIPTION</label>
+                            <input type="text" name="description" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="Brief note...">
+                        </div>
+                        <div class="col-md-1">
+                            <button type="submit" class="btn btn-success btn-sm w-100" title="Add Sub-Faction">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Existing Sub-Factions -->
+                {% for sf in faction.subfactions %}
+                <div class="subfaction-row">
+                    <form action="{{ url_for('admin.update_subfaction', subfaction_id=sf.id) }}" method="POST">
+                        <div class="row g-2 align-items-center">
+                            <div class="col-auto">
+                                <!-- Dual color preview: faction outer + subfaction inner -->
+                                <div class="dual-color-preview" title="{{ faction.name }} > {{ sf.name }}">
+                                    <div class="outer" style="background: {{ faction.color }};"></div>
+                                    {% if sf.subfaction_type == 'land_controlling' %}
+                                    <div class="inner" style="background: {{ sf.color }};"></div>
+                                    {% else %}
+                                    <div class="inner" style="background: {{ faction.color }}; opacity: 0.6;"></div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="text" name="name" value="{{ sf.name }}" class="form-control form-control-sm bg-dark text-white border-secondary faction-edit-input" placeholder="Name">
+                            </div>
+                            <div class="col-md-1">
+                                <input type="text" name="short_name" value="{{ sf.short_name or '' }}" class="form-control form-control-sm bg-dark text-white border-secondary faction-edit-input" placeholder="Short" maxlength="10">
+                            </div>
+                            <div class="col-md-2">
+                                <select name="subfaction_type" class="form-select form-select-sm bg-dark text-white border-secondary">
+                                    <option value="notable" {{ 'selected' if sf.subfaction_type == 'notable' }}>Notable</option>
+                                    <option value="land_controlling" {{ 'selected' if sf.subfaction_type == 'land_controlling' }}>Controls Land</option>
+                                </select>
+                            </div>
+                            <div class="col-auto">
+                                <input type="color" name="color" value="{{ sf.color }}" class="form-control-color" style="width: 28px; height: 28px; border-radius: 4px; border: 2px solid rgba(255,255,255,0.2); cursor: pointer;">
+                            </div>
+                            <div class="col">
+                                <input type="text" name="description" value="{{ sf.description or '' }}" class="form-control form-control-sm bg-dark text-white border-secondary faction-edit-input" placeholder="Description...">
+                            </div>
+                            <div class="col-auto d-flex gap-1">
+                                <span class="sf-type-badge {{ 'sf-type-land' if sf.subfaction_type == 'land_controlling' else 'sf-type-notable' }}">
+                                    {% if sf.subfaction_type == 'land_controlling' %}
+                                        <i class="fa fa-map-pin me-1"></i>LAND
+                                    {% else %}
+                                        <i class="fa fa-star me-1"></i>NOTABLE
+                                    {% endif %}
+                                </span>
+                                <button type="submit" class="btn btn-primary btn-sm" title="Save">
+                                    <i class="fa fa-save"></i>
+                                </button>
+                    </form>
+                                <form action="{{ url_for('admin.delete_subfaction', subfaction_id=sf.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete sub-faction {{ sf.name }}?');">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                
+                {% if not faction.subfactions %}
+                <div class="text-center py-3 text-muted small">
+                    <i class="fa fa-info-circle me-1"></i> No sub-factions yet. Add groups like specific militias, brigades, or notable units above.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="text-center py-5 text-muted">
+            <i class="fa fa-users fa-3x mb-3 opacity-50"></i>
+            <p>No factions created yet. Add your first faction above.</p>
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- LEGEND / HELP -->
+    <div class="card p-3 mt-3" style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255,255,255,0.06);">
+        <div class="row text-muted small">
+            <div class="col-md-6">
+                <p class="mb-1 fw-bold text-uppercase" style="font-size: 10px; letter-spacing: 1px;"><i class="fa fa-info-circle me-1"></i> Sub-Faction Types</p>
+                <p class="mb-1"><span class="sf-type-badge sf-type-land me-1"><i class="fa fa-map-pin me-1"></i>LAND</span> Controls territory independently. On the map: thick outer border = faction color, inner fill = sub-faction color.</p>
+                <p class="mb-0"><span class="sf-type-badge sf-type-notable me-1"><i class="fa fa-star me-1"></i>NOTABLE</span> Important fighting force but no independent territory. Captures default to faction color.</p>
+            </div>
+            <div class="col-md-6">
+                <p class="mb-1 fw-bold text-uppercase" style="font-size: 10px; letter-spacing: 1px;"><i class="fa fa-lightbulb me-1"></i> Examples</p>
+                <p class="mb-1">Syria: Opposition (faction) &rarr; HTS, SNA, Ahrar (land-controlling sub-factions)</p>
+                <p class="mb-0">Ukraine: Russia (faction) &rarr; Wagner (notable sub-faction, territory = Russia's color)</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Toggle sub-faction panels
+    function toggleSubfactions(factionId) {
+        const panel = document.getElementById('sf-panel-' + factionId);
+        const chevron = document.getElementById('chevron-' + factionId);
+        
+        if (panel.classList.contains('show')) {
+            panel.classList.remove('show');
+            chevron.style.transform = 'rotate(0deg)';
+        } else {
+            panel.classList.add('show');
+            chevron.style.transform = 'rotate(180deg)';
+        }
+    }
+
+    // Two-way sync between color picker and hex display
+    const colorPicker = document.getElementById('colorPicker');
+    const colorHex = document.getElementById('colorHex');
+    
+    if (colorPicker && colorHex) {
+        colorPicker.addEventListener('input', function() {
+            colorHex.value = this.value;
+        });
+        
+        colorHex.addEventListener('input', function() {
+            let hex = this.value.trim();
+            if (hex && !hex.startsWith('#')) {
+                hex = '#' + hex;
+                this.value = hex;
+            }
+            if (/^#[0-9A-Fa-f]{6}$/.test(hex)) {
+                colorPicker.value = hex;
+            }
+        });
+        
+        colorHex.addEventListener('blur', function() {
+            let hex = this.value.trim();
+            if (hex && !hex.startsWith('#')) {
+                hex = '#' + hex;
+            }
+            if (/^#[0-9A-Fa-f]{6}$/.test(hex)) {
+                this.value = hex;
+                colorPicker.value = hex;
+            } else if (/^#[0-9A-Fa-f]{3}$/.test(hex)) {
+                const r = hex[1], g = hex[2], b = hex[3];
+                hex = '#' + r + r + g + g + b + b;
+                this.value = hex;
+                colorPicker.value = hex;
+            } else {
+                this.value = colorPicker.value;
+            }
+        });
+    }
+</script>
+{% endblock %}

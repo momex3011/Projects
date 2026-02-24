@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <title>WarTracker // Command</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Leaflet (PINNED VERSION to match JS 1.9.4) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --bg-dark: #0b1120;
+      --bg-panel: rgba(15, 23, 42, 0.85);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --accent: #3b82f6;
+      --text-main: #e2e8f0;
+      --text-muted: #64748b;
+      --font-ui: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    /* ✅ Critical: ensure the height chain exists */
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-ui);
+      overflow: hidden; /* prevents page scroll stealing space */
+    }
+
+    /* Navbar */
+    .navbar {
+      background: var(--bg-dark) !important;
+      border-bottom: 1px solid var(--border-color);
+      height: 50px;
+      padding: 0;
+      z-index: 2000;
+      flex: 0 0 auto;
+    }
+
+    .navbar-brand {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      letter-spacing: 1px;
+      font-weight: 700;
+      padding-left: 20px;
+    }
+
+    /* ✅ Critical: main area fills remaining height below navbar */
+    .main-wrapper {
+      height: calc(100vh - 50px);
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+    /* Inputs */
+    .form-control {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-color);
+      color: white;
+      font-size: 13px;
+    }
+
+    .form-control:focus {
+      background: rgba(0, 0, 0, 0.5);
+      border-color: var(--accent);
+      color: white;
+      box-shadow: none;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand navbar-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand text-uppercase text-white" href="{{ url_for('index') }}">
+        <span class="text-primary">///</span> WarTracker
+      </a>
+
+      <ul class="navbar-nav ms-auto small fw-bold text-uppercase pe-3">
+        {% if current_user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" style="font-size: 11px;" href="{{ url_for('admin.dashboard') }}">ADMIN</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" style="font-size: 11px;" href="{{ url_for('auth.logout') }}">LOGOUT</a>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link" style="font-size: 11px;" href="{{ url_for('auth.login') }}">LOGIN</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </nav>
+
+  <div class="main-wrapper">
+    {% block content %}{% endblock %}
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/Leaflet/Leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,14 @@
+flask
+sqlalchemy
+requests
+beautifulsoup4
+feedparser
+geopy
+ntscraper
+celery
+redis
+deep-translator
+python-dateutil
+psycopg2-binary
+python-dotenv
+curl_cffi

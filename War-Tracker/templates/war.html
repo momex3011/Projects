@@ -1,0 +1,1292 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="hud-wrapper">
+
+    <div class="screen-vignette"></div>
+    <div class="screen-grid"></div>
+
+    <div class="hud-sidebar">
+        <div class="hud-header glass-effect">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="hud-title">{{ war.name }}</h1>
+                    <div class="hud-subtitle text-primary">
+                        <i class="fa-solid fa-satellite me-2"></i>OP-ZONE: ALPHA
+                    </div>
+                </div>
+                <div class="live-badge">
+                    <span class="pulse-dot"></span> LIVE
+                </div>
+            </div>
+
+            <!-- SEARCH & FILTER -->
+            <div class="search-bar mt-3" style="position: relative;">
+                <i class="fa-solid fa-search search-icon"
+                    style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #64748b;"></i>
+                <input type="text" id="searchInput" placeholder="Search intel feed..." autocomplete="off"
+                    style="width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); padding: 8px 10px 8px 35px; border-radius: 6px; color: white; font-family: 'Inter'; font-size: 0.9rem; outline: none;">
+                <button class="btn-filter" id="filterBtn" title="Filter Intel"
+                    style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: #94a3b8; cursor: pointer;"><i
+                        class="fa-solid fa-filter"></i></button>
+            </div>
+
+            <!-- FILTERS PANEL -->
+            <div id="filterPanel" class="filter-panel"
+                style="display: none; margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.5); border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                <div class="filter-group">
+                    <label
+                        style="font-size: 10px; color: #64748b; font-weight: 700; display: block; margin-bottom: 5px;">CATEGORY</label>
+                    <div class="filter-tags" id="categoryFilters" style="display: flex; flex-wrap: wrap; gap: 5px;">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="date-scrubber mt-3">
+                <button class="btn-icon" id="playBtn" title="Play Timeline"><i class="fa fa-play"></i></button>
+                <div class="vr mx-1"
+                    style="opacity: 0.2; border-left: 1px solid white; height: 20px; align-self: center;"></div>
+                <button class="btn-icon" id="prevDay"><i class="fa fa-chevron-left"></i></button>
+                <div class="date-display">
+                    <input type="date" id="datePicker" min="{{ war_start | default('2011-03-06') }}">
+                </div>
+                <button class="btn-icon" id="nextDay"><i class="fa fa-chevron-right"></i></button>
+            </div>
+        </div>
+
+        <div class="feed-container custom-scrollbar" id="feed">
+            <div class="skeleton-loader">
+                <div class="skeleton-item"></div>
+                <div class="skeleton-item"></div>
+                <div class="skeleton-item"></div>
+            </div>
+        </div>
+
+        <div class="hud-footer glass-effect">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted small fw-bold" style="font-size: 10px; letter-spacing: 1px;">INTEL FEED</span>
+                <span id="eventCount" class="badge bg-primary bg-opacity-25 text-primary border border-primary">0
+                    UNITS</span>
+            </div>
+            <button id="btnToday" class="btn-tactical w-100">
+                <i class="fa-solid fa-rotate me-2"></i> SYNC SATELLITE
+            </button>
+        </div>
+    </div>
+
+    <div class="map-controls">
+        <button class="control-btn" onclick="map.zoomIn()"><i class="fa-solid fa-plus"></i></button>
+        <button class="control-btn" onclick="map.zoomOut()"><i class="fa-solid fa-minus"></i></button>
+        <div class="control-separator"></div>
+        <button class="control-btn" onclick="resetView()"><i class="fa-solid fa-crosshairs"></i></button>
+        <div class="control-separator"></div>
+        <button class="control-btn" id="btnToggleHeatmap" onclick="toggleHeatmap()" title="Toggle Heatmap"><i
+                class="fa-solid fa-fire"></i></button>
+        <button class="control-btn active" id="btnToggleTerritory" onclick="toggleTerritory()" title="Toggle Territory"><i
+                class="fa-solid fa-layer-group"></i></button>
+    </div>
+
+    <div id="map" class="hud-map"></div>
+    
+
+</div>
+
+<style>
+    /* --- GLOBAL LAYOUT --- */
+    html,
+    body {
+        height: 100%;
+        overflow: hidden;
+        background: #0f172a;
+    }
+
+    .main-wrapper {
+        height: calc(100vh - 50px);
+        width: 100%;
+        position: relative;
+    }
+
+    .hud-wrapper {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    /* --- ATMOSPHERE --- */
+    .screen-vignette {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        box-shadow: inset 0 0 150px rgba(0, 0, 0, 0.9);
+        pointer-events: none;
+        z-index: 5;
+    }
+
+    .screen-grid {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image:
+            linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 100px 100px;
+        pointer-events: none;
+        z-index: 4;
+    }
+
+    /* --- MAP --- */
+    .hud-map {
+        width: 100%;
+        height: 100%;
+        background: #1e293b;
+        z-index: 1;
+    }
+
+    .leaflet-control-zoom,
+    .leaflet-control-layers {
+        display: none !important;
+    }
+
+    /* Remove focus boxes from territories */
+    .leaflet-interactive {
+        outline: none !important;
+    }
+    
+    .leaflet-interactive:focus {
+        outline: none !important;
+    }
+    
+    path.leaflet-interactive:focus {
+        outline: none !important;
+    }
+    
+    /* Sub-faction territory tooltip */
+    .subfaction-tooltip {
+        font-size: 11px !important;
+        opacity: 0.9 !important;
+    }
+
+    /* --- SIDEBAR --- */
+    .hud-sidebar {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        bottom: 20px;
+        width: 380px;
+        display: flex;
+        flex-direction: column;
+        z-index: 10;
+        pointer-events: none;
+    }
+
+    .hud-header,
+    .feed-container,
+    .hud-footer {
+        pointer-events: auto;
+    }
+
+    .glass-effect {
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    }
+
+    .hud-header {
+        border-radius: 12px 12px 0 0;
+        padding: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .hud-footer {
+        border-radius: 0 0 12px 12px;
+        padding: 15px;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .hud-title {
+        font-family: 'Inter', sans-serif;
+        font-weight: 800;
+        font-size: 1.5rem;
+        color: white;
+        letter-spacing: -0.5px;
+        margin: 0;
+        text-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+    }
+
+    .hud-subtitle {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        letter-spacing: 1px;
+    }
+
+    /* --- CONTROLS REINFORCED --- */
+    .date-scrubber {
+        display: flex;
+        align-items: center;
+        /* Force vertical centering */
+        background: rgba(0, 0, 0, 0.6);
+        /* Slightly darker for contrast */
+        border-radius: 8px;
+        padding: 4px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        position: relative;
+        z-index: 50;
+        /* Ensure on top */
+        pointer-events: auto;
+        /* Force clickable */
+    }
+
+    .btn-icon {
+        background: transparent;
+        border: 1px solid transparent;
+        /* Maintain box model */
+        color: #94a3b8;
+        width: 32px;
+        height: 32px;
+        /* Explicit height */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.2s;
+        border-radius: 4px;
+        cursor: pointer;
+        z-index: 51;
+    }
+
+    .btn-icon:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .date-display {
+        flex-grow: 1;
+        text-align: center;
+    }
+
+    .date-display input {
+        background: transparent;
+        border: none;
+        color: white;
+        font-family: 'JetBrains Mono';
+        font-weight: 700;
+        text-align: center;
+        width: 100%;
+        outline: none;
+    }
+
+    ::-webkit-calendar-picker-indicator {
+        filter: invert(1);
+        opacity: 0.5;
+        cursor: pointer;
+    }
+
+    .btn-tactical {
+        background: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+        border: 1px solid #3b82f6;
+        padding: 10px;
+        border-radius: 6px;
+        font-family: 'JetBrains Mono';
+        font-weight: 700;
+        font-size: 11px;
+        letter-spacing: 1px;
+        transition: 0.2s;
+    }
+
+    .btn-tactical:hover {
+        background: #3b82f6;
+        color: white;
+        box-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
+    }
+
+    /* --- FEED --- */
+    .feed-container {
+        flex-grow: 1;
+        background: rgba(15, 23, 42, 0.90);
+        backdrop-filter: blur(12px);
+        border-left: 1px solid rgba(255, 255, 255, 0.08);
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        overflow-y: auto;
+    }
+
+    .feed-item {
+        padding: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        transition: 0.2s;
+        position: relative;
+        border-left: 3px solid var(--item-color, #64748b);
+        background: linear-gradient(90deg, var(--item-bg, rgba(100, 116, 139, 0.05)) 0%, transparent 100%);
+    }
+
+    .feed-item:hover {
+        background: linear-gradient(90deg, var(--item-bg-hover, rgba(100, 116, 139, 0.15)) 0%, rgba(255, 255, 255, 0.03) 100%);
+    }
+
+    .feed-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .feed-category {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 2px 8px;
+        border-radius: 4px;
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--accent);
+    }
+
+    .feed-time {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+    }
+
+    .feed-title {
+        font-weight: 700;
+        font-size: 1rem;
+        margin-bottom: 4px;
+        line-height: 1.4;
+        color: #f8fafc;
+    }
+
+    .feed-desc {
+        font-size: 0.9rem;
+        color: #cbd5e1;
+        line-height: 1.5;
+    }
+
+    .feed-footer {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-top: 5px;
+    }
+
+    .btn-source {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 700;
+        color: #64748b;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 2px 8px;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: 0.2s;
+        border: 1px solid transparent;
+    }
+
+    .btn-source:hover {
+        border-color: #64748b;
+        color: white;
+    }
+
+    /* --- MEDIA --- */
+    .image-container img {
+        width: 100%;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    .video-container iframe,
+    .video-container video {
+        width: 100%;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        aspect-ratio: 16/9;
+    }
+
+    .feed-thumb-placeholder {
+        width: 100%;
+        height: 150px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 24px;
+        background: rgba(255, 255, 255, 0.05);
+        margin-bottom: 10px;
+    }
+
+    /* --- CLEAN VIDEO PLAYER --- */
+    .clean-video-player {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16/9;
+        border-radius: 8px;
+        overflow: hidden;
+        cursor: pointer;
+        background: #000;
+        margin-bottom: 10px;
+    }
+
+    .clean-video-player .video-thumb {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease, filter 0.3s ease;
+    }
+
+    .clean-video-player:hover .video-thumb {
+        transform: scale(1.05);
+        filter: brightness(0.7);
+    }
+
+    .clean-video-player .play-btn {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 70px;
+        height: 70px;
+        background: rgba(239, 68, 68, 0.9);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 30px rgba(239, 68, 68, 0.5);
+    }
+
+    .clean-video-player .play-btn i {
+        color: white;
+        font-size: 28px;
+        margin-left: 5px;
+    }
+
+    .clean-video-player:hover .play-btn {
+        transform: translate(-50%, -50%) scale(1.15);
+        background: #ef4444;
+        box-shadow: 0 0 50px rgba(239, 68, 68, 0.8);
+    }
+
+    .clean-video-player .video-duration {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 6px;
+        border-radius: 4px;
+    }
+
+    .clean-video-player iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+
+    .clean-video-player.playing {
+        cursor: default;
+    }
+
+    .clean-video-player.playing .play-btn,
+    .clean-video-player.playing .video-duration,
+    .clean-video-player.playing .video-title-overlay {
+        display: none;
+    }
+
+    .clean-video-player .video-title-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 30px 10px 10px 10px;
+        background: linear-gradient(transparent, rgba(0,0,0,0.9));
+        color: white;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.3;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    }
+
+    .clean-video-player .video-thumb-error {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        color: #64748b;
+        font-size: 40px;
+    }
+
+    /* --- MAP CONTROLS --- */
+    .map-controls {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        z-index: 100;
+    }
+
+    .control-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background: rgba(15, 23, 42, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.2s;
+        cursor: pointer;
+        backdrop-filter: blur(5px);
+    }
+
+    .control-btn:hover {
+        background: white;
+        color: black;
+        border-color: white;
+    }
+    
+    .control-btn.active {
+        background: rgba(239, 68, 68, 0.3);
+        border-color: #ef4444;
+        color: #ef4444;
+    }
+
+    .control-separator {
+        height: 1px;
+        background: rgba(255, 255, 255, 0.1);
+        margin: 4px 10px;
+    }
+
+    /* --- MARKERS & ANIMATIONS --- */
+    .live-badge {
+        font-size: 10px;
+        font-weight: 800;
+        color: #ef4444;
+        border: 1px solid #ef4444;
+        padding: 4px 8px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        background: rgba(239, 68, 68, 0.15);
+        box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+    }
+
+    .pulse-dot {
+        width: 6px;
+        height: 6px;
+        background: #ef4444;
+        border-radius: 50%;
+        margin-right: 6px;
+        animation: pulseRed 1.5s infinite;
+    }
+
+    .skeleton-loader {
+        padding: 20px;
+    }
+
+    .skeleton-item {
+        height: 60px;
+        background: rgba(255, 255, 255, 0.05);
+        margin-bottom: 15px;
+        border-radius: 6px;
+        animation: pulseGrey 1.5s infinite alternate;
+    }
+
+    @keyframes pulseRed {
+        0% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.3;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes pulseGrey {
+        0% {
+            opacity: 0.3;
+        }
+
+        100% {
+            opacity: 0.6;
+        }
+    }
+
+    .combat-icon {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--marker-color);
+        color: white;
+        border: 2px solid white;
+        box-shadow: 0 0 15px var(--marker-glow);
+        position: relative;
+        transition: 0.3s;
+    }
+
+    .combat-icon:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 25px var(--marker-color);
+        z-index: 999;
+    }
+
+    .combat-icon::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 1px solid var(--marker-color);
+        opacity: 0;
+        z-index: -1;
+        animation: radarPulse 2s infinite;
+    }
+
+    @keyframes radarPulse {
+        0% {
+            width: 100%;
+            opacity: 0.8;
+        }
+
+        100% {
+            width: 220%;
+            opacity: 0;
+        }
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+    }
+
+    @media (max-width: 768px) {
+        .hud-sidebar {
+            top: auto;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .map-controls {
+            bottom: 52%;
+            top: auto;
+        }
+    }
+
+    /* --- FILTER TAGS --- */
+    .filter-tag {
+        font-size: 10px;
+        padding: 4px 8px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.1);
+        color: #94a3b8;
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition: 0.2s;
+    }
+
+    .filter-tag:hover,
+    .filter-tag.active {
+        background: #3b82f6;
+        color: white;
+    }
+
+    .video-source-badge {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        background: rgba(0, 0, 0, 0.75);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 10px;
+        font-weight: 700;
+        z-index: 30;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(4px);
+    }
+
+    /* --- FACTION TERRITORY TOOLTIP --- */
+    .faction-tooltip {
+        background: rgba(0, 0, 0, 0.85);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        padding: 6px 10px;
+    }
+    
+    /* --- CAPITAL MARKER TOOLTIP --- */
+    .capital-tooltip {
+        background: rgba(0, 0, 0, 0.9);
+        color: gold;
+        border: 1px solid gold;
+        border-radius: 4px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        padding: 4px 8px;
+        font-weight: bold;
+    }
+    
+    .capital-icon {
+        background: transparent !important;
+        border: none !important;
+    }
+
+    /* --- CLASH MARKER PULSE --- */
+    .clash-marker .combat-icon::after {
+        animation: clashPulse 0.8s infinite !important;
+    }
+    
+    @keyframes clashPulse {
+        0% { width: 100%; opacity: 1; }
+        50% { width: 180%; opacity: 0.5; }
+        100% { width: 100%; opacity: 1; }
+    }
+
+    /* --- HOTSPOT PULSE ANIMATION --- */
+    .hotspot-pulse {
+        animation: hotspotPulse 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes hotspotPulse {
+        0% { opacity: 0.6; transform: scale(1); }
+        50% { opacity: 0.3; transform: scale(1.2); }
+        100% { opacity: 0.6; transform: scale(1); }
+    }
+    
+    .hotspot-tooltip {
+        border-left: 3px solid #f59e0b !important;
+    }
+
+    /* --- LEAFLET PATH ANIMATIONS --- */
+    .leaflet-interactive.hotspot-pulse {
+        animation: leafletPulse 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes leafletPulse {
+        0%, 100% { 
+            stroke-opacity: 0.6;
+            fill-opacity: 0.2;
+        }
+        50% { 
+            stroke-opacity: 1;
+            fill-opacity: 0.4;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const warId = '{{ war.id }}';
+        const datePicker = document.getElementById('datePicker');
+        const feed = document.getElementById('feed');
+        const eventCount = document.getElementById('eventCount');
+        const searchInput = document.getElementById('searchInput');
+
+        let allEvents = [];
+        let allLocations = [];
+
+        // FACTION COLORS
+        const FACTION_COLORS = {
+            "Government Control": "#dc2626",
+            "Rebel Control": "#22c55e",
+            "ISIS Control": "#111827",
+            "SDF Control": "#eab308",
+            "Neutral": "#6b7280"
+        };
+
+        // GOOGLE MAPS
+        const googleClean = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}&apistyle=s.t:poi|p.v:off,s.t:transit|p.v:off', {
+            maxZoom: 20, subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+        });
+        window.map = L.map('map', { zoomControl: false, layers: [googleClean] }).setView([33.5138, 36.2765], 7);
+        
+        const markerLayer = L.layerGroup().addTo(map);
+        const territoryLayer = L.layerGroup().addTo(map);
+        const capitalsLayer = L.layerGroup().addTo(map);
+
+        // Capital icon
+        function createCapitalIcon(color, isPrimary) {
+            const size = isPrimary ? 14 : 10;
+            return L.divIcon({
+                className: 'capital-icon',
+                html: `<div style="
+                    background: ${color};
+                    width: ${size}px;
+                    height: ${size}px;
+                    border-radius: 50%;
+                    border: 2px solid white;
+                    box-shadow: 0 0 6px rgba(0,0,0,0.5);
+                    ${isPrimary ? 'box-shadow: 0 0 10px gold, 0 0 4px white;' : ''}
+                "></div>`,
+                iconSize: [size, size],
+                iconAnchor: [size/2, size/2]
+            });
+        }
+
+        // --- FACTION TERRITORIES ---
+        // Load and display faction control zones
+        // dateStr is optional - if provided, loads territory as of that date
+        // Renders dual-color: thick outer border = faction color, inner = sub-faction color
+        function loadFactionTerritories(dateStr) {
+            let url = `/api/wars/${warId}/factions`;
+            if (dateStr) {
+                url += `?date=${dateStr}`;
+            }
+            
+            fetch(url)
+                .then(r => r.json())
+                .then(factions => {
+                    territoryLayer.clearLayers();
+                    
+                    factions.forEach(faction => {
+                        // 1) Draw the main faction territory (thick outer border)
+                        if (faction.territory) {
+                            try {
+                                L.geoJSON(faction.territory, {
+                                    style: {
+                                        color: faction.color,
+                                        weight: 3,
+                                        fillColor: faction.color,
+                                        fillOpacity: 0.25,
+                                        dashArray: null
+                                    }
+                                }).bindTooltip(faction.name, {
+                                    permanent: false,
+                                    direction: 'center',
+                                    className: 'faction-tooltip'
+                                }).addTo(territoryLayer);
+                            } catch (e) {
+                                console.log('Error loading territory for', faction.name, e);
+                            }
+                        }
+                        
+                        // 2) Draw land-controlling sub-faction territories on top
+                        // These appear as a thinner inner line/fill within the faction's zone
+                        if (faction.subfactions) {
+                            faction.subfactions.forEach(sf => {
+                                if (sf.controls_land && sf.territory) {
+                                    try {
+                                        // Inner fill with sub-faction color
+                                        L.geoJSON(sf.territory, {
+                                            style: {
+                                                color: faction.color,       // outer stroke = faction
+                                                weight: 3,                  // thick faction border
+                                                fillColor: sf.color,        // inner fill = sub-faction
+                                                fillOpacity: 0.35,
+                                                dashArray: null
+                                            }
+                                        }).bindTooltip(`${sf.name} (${faction.name})`, {
+                                            permanent: false,
+                                            direction: 'center',
+                                            className: 'faction-tooltip subfaction-tooltip'
+                                        }).addTo(territoryLayer);
+                                        
+                                        // Inner border line (thinner, sub-faction color)
+                                        L.geoJSON(sf.territory, {
+                                            style: {
+                                                color: sf.color,
+                                                weight: 1.5,
+                                                fillOpacity: 0,
+                                                dashArray: '4 3',
+                                                opacity: 0.7
+                                            },
+                                            interactive: false
+                                        }).addTo(territoryLayer);
+                                    } catch (e) {
+                                        console.log('Error loading sub-faction territory for', sf.name, e);
+                                    }
+                                }
+                            });
+                        }
+                    });
+                })
+                .catch(e => console.log("Factions error:", e));
+        }
+        
+        // Load faction capitals (anchor points for news)
+        function loadFactionCapitals(dateStr) {
+            let url = `/api/wars/${warId}/capitals`;
+            if (dateStr) {
+                url += `?date=${dateStr}`;
+            }
+            
+            fetch(url)
+                .then(r => r.json())
+                .then(capitals => {
+                    capitalsLayer.clearLayers();
+                    
+                    capitals.forEach(cap => {
+                        const icon = createCapitalIcon(cap.faction_color, cap.is_primary);
+                        const marker = L.marker([cap.lat, cap.lng], { icon: icon });
+                        
+                        let tooltip = cap.name;
+                        if (cap.sector_name) tooltip += ` (${cap.sector_name})`;
+                        if (cap.is_primary) tooltip += ' ★';
+                        
+                        // Add date info to tooltip
+                        if (cap.effective_date || cap.end_date) {
+                            tooltip += '\n';
+                            if (cap.effective_date && cap.end_date) {
+                                tooltip += `${cap.effective_date} → ${cap.end_date}`;
+                            } else if (cap.effective_date) {
+                                tooltip += `From ${cap.effective_date}`;
+                            } else if (cap.end_date) {
+                                tooltip += `Until ${cap.end_date}`;
+                            }
+                        }
+                        
+                        marker.bindTooltip(tooltip, {
+                            permanent: false,
+                            direction: 'top',
+                            className: 'capital-tooltip'
+                        });
+                        
+                        capitalsLayer.addLayer(marker);
+                    });
+                })
+                .catch(e => console.log("Capitals error:", e));
+        }
+        
+        // Load territories and capitals on page load
+        loadFactionTerritories();
+        loadFactionCapitals();
+
+        // --- FRONTLINE DETECTION ---
+        function isFrontline(lat, lng) {
+            if (allLocations.length < 2) return false;
+            
+            const FRONTLINE_RADIUS = 0.25;
+            const nearbyControllers = new Set();
+            
+            for (const loc of allLocations) {
+                const dist = Math.sqrt(Math.pow(loc.lat - lat, 2) + Math.pow(loc.lng - lng, 2));
+                if (dist <= FRONTLINE_RADIUS) {
+                    nearbyControllers.add(loc.controller);
+                }
+            }
+            
+            return nearbyControllers.size > 1;
+        }
+
+        function renderFeed() {
+            feed.innerHTML = "";
+            const displayData = allEvents; 
+            eventCount.innerText = displayData.length + " UNITS";
+            markerLayer.clearLayers();
+
+            if (displayData.length === 0) {
+                feed.innerHTML = '<div class="text-center p-5 text-muted small">NO INTEL FOR THIS DATE</div>';
+                return;
+            }
+
+            displayData.forEach(e => {
+                let text = (e.title + " " + (e.description || "")).toLowerCase();
+                let icon = 'fa-crosshairs';
+                let color = '#f97316'; 
+                let isClash = false;
+
+                // ICON & COLOR LOGIC
+                const frontline = isFrontline(e.lat, e.lng);
+                
+                if (text.includes("clash") || text.includes("battle") || text.includes("fighting") || text.includes("تصادم") || text.includes("معركة")) {
+                    icon = 'fa-burst'; color = '#f59e0b'; isClash = true;
+                }
+                else if (text.includes("capture") || text.includes("seize") || text.includes("سيطر") || text.includes("استولى")) { 
+                    icon = 'fa-flag'; color = '#10b981'; 
+                }
+                else if (text.includes("kill") || text.includes("dead") || text.includes("arrest") || text.includes("قتل") || text.includes("اعتقال")) { 
+                    icon = 'fa-skull'; color = '#ef4444'; 
+                }
+                else if (text.includes("bomb") || text.includes("strike") || text.includes("shell") || text.includes("قصف") || text.includes("غارة")) { 
+                    icon = 'fa-fire'; color = '#ef4444'; 
+                }
+                else if (frontline) {
+                    // Default to CLASH if event is on frontline
+                    icon = 'fa-burst'; color = '#f59e0b'; isClash = true;
+                }
+
+                // 2. MEDIA & PLATFORM LOGIC
+                let finalUrl = e.source_url || "";
+                let videoId = null;
+                if (finalUrl.includes('v=')) videoId = finalUrl.split('v=')[1].split('&')[0];
+                else if (finalUrl.includes('youtu.be/')) videoId = finalUrl.split('/').pop().split('?')[0];
+
+                let mediaHtml = '';
+                
+                // CASE A: YouTube - Clean Video Player (thumbnail + custom play button)
+                if (videoId) {
+                    const thumbUrl = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+                    const defaultThumb = `https://i.ytimg.com/vi/${videoId}/default.jpg`;
+                    const playerId = `player-${e.id}`;
+                    
+                    mediaHtml = `
+                        <div class="clean-video-player" id="${playerId}" data-video-id="${videoId}" onclick="event.stopPropagation(); playVideo('${playerId}', '${videoId}')">
+                            <img class="video-thumb" src="${thumbUrl}" onerror="this.onerror=null; this.src='${defaultThumb}'" alt="Video">
+                            <div class="play-btn">
+                                <i class="fa-solid fa-play"></i>
+                            </div>
+                            <div class="video-title-overlay" id="title-${playerId}">Loading title...</div>
+                        </div>`;
+                    
+                    // Fetch video title asynchronously
+                    fetchVideoTitle(videoId, `title-${playerId}`);
+                } 
+                // CASE B: Social Media with Image (Twitter/Facebook)
+                else if (e.image_url && !e.image_url.includes('google') && !e.image_url.includes('logo')) {
+                    mediaHtml = `
+                        <div class="image-container" style="margin-bottom:10px;">
+                            <img src="${e.image_url}" style="width:100%; border-radius:8px; border:1px solid rgba(255,255,255,0.1);">
+                        </div>`;
+                }
+                // CASE C: Text only (Twitter/Facebook without images)
+                // We leave mediaHtml empty here. No big red skull placeholder.
+
+                // 3. MAP MARKER (Tactical Icons remain on map)
+                const m = L.marker([e.lat, e.lng], {
+                    icon: L.divIcon({
+                        className: 'tactical-marker',
+                        html: `<div class='combat-icon' style='--marker-color: ${color}; background:${color}; width:30px; height:30px; border-radius:50%; border:2px solid white; display:flex; align-items:center; justify-content:center; color:white; box-shadow: 0 0 10px ${color}66;'>
+                                    <i class='fa-solid ${icon}' style='font-size:14px;'></i>
+                               </div>`,
+                        iconSize: [30, 30],
+                        iconAnchor: [15, 15]
+                    })
+                }).addTo(markerLayer);
+
+                m.bindPopup(`<div style="color:#000; font-family:'Inter'; font-weight:800; padding:5px;">${e.title}</div>`);
+
+                // 4. BUILD SIDEBAR CARD
+                let item = document.createElement('div');
+                item.className = 'feed-item';
+                item.id = `feed-item-${e.id}`;
+                item.style.setProperty('--item-color', color);
+                item.style.setProperty('--item-bg', color + '15');
+                item.style.cursor = 'pointer';
+
+                // Sidebar -> Map Click
+                item.onclick = function() {
+                    map.flyTo([e.lat, e.lng], 15, { duration: 1.2 });
+                    setTimeout(() => { m.openPopup(); }, 1000); 
+                };
+
+                item.innerHTML = `
+                    <div class="feed-header">
+                        <span style="color: ${color}; font-size: 12px;"><i class="fa-solid ${icon}"></i></span>
+                        <span class="feed-category" style="font-size: 10px; opacity: 0.8;">${e.category || 'SOCIAL'}</span>
+                        <span class="feed-time" style="font-size: 10px;">${e.event_date}</span>
+                    </div>
+                    ${mediaHtml}
+                    <div class="feed-title" style="font-size: 0.95rem; margin-top: 5px;">${e.title}</div>
+                    <div class="feed-desc" style="font-size: 0.85rem; color: #94a3b8;">${e.description || ""}</div>
+                    <div class="feed-footer" style="margin-top: 10px;">
+                        <a href="${finalUrl}" target="_blank" class="btn-source" onclick="event.stopPropagation()">SOURCE</a>
+                    </div>
+                `;
+                feed.appendChild(item);
+
+                // Map -> Sidebar Click
+                m.on('click', function() {
+                    const sidebarItem = document.getElementById(`feed-item-${e.id}`);
+                    if (sidebarItem) {
+                        sidebarItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        sidebarItem.style.boxShadow = `inset 0 0 20px ${color}`;
+                        setTimeout(() => { sidebarItem.style.boxShadow = "none"; }, 1500);
+                    }
+                });
+            });
+        }
+
+        function loadEvents(dateStr) {
+            if (!dateStr) return;
+
+            // Sync URL
+            const newUrl = `/wars/${warId}/${dateStr}`;
+            window.history.pushState({ path: newUrl }, '', newUrl);
+
+            // Load locations (for frontline detection)
+            fetch(`/api/wars/${warId}/locations?date=${dateStr}`)
+                .then(r => r.json())
+                .then(locData => {
+                    allLocations = locData || [];
+                })
+                .catch(e => console.log("Locations error:", e));
+            
+            // Load events
+            fetch(`/api/wars/${warId}/events?date=${dateStr}`)
+                .then(r => r.json())
+                .then(data => {
+                    allEvents = data || [];
+                    renderFeed();
+                })
+                .catch(e => console.error("Events error:", e));
+        }
+
+        // Use server date or fallback
+        const defaultDate = "{{ initial_date }}" || "2011-03-15";
+        datePicker.value = defaultDate;
+        loadEvents(defaultDate);
+        loadFactionTerritories(defaultDate); // Load territories for initial date
+        loadFactionCapitals(defaultDate); // Load capitals for initial date
+        
+        datePicker.addEventListener('change', () => {
+            loadEvents(datePicker.value);
+            loadFactionTerritories(datePicker.value); // Update territories for selected date
+            loadFactionCapitals(datePicker.value); // Update capitals for selected date
+        });
+
+        // --- TIMELINE CONTROLS ---
+        const warStart = "{{ war_start | default('2011-03-06') }}";
+        
+        function parseLocalDate(dateStr) {
+            const [year, month, day] = dateStr.split('-').map(Number);
+            return new Date(year, month - 1, day);  // Local timezone
+        }
+        
+        function formatDate(d) {
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+        
+        document.getElementById('prevDay').addEventListener('click', () => {
+            let d = parseLocalDate(datePicker.value);
+            d.setDate(d.getDate() - 1);
+            // Don't go before war start date
+            if (d >= parseLocalDate(warStart)) {
+                datePicker.value = formatDate(d);
+                loadEvents(datePicker.value);
+                loadFactionTerritories(datePicker.value); // Update territories
+                loadFactionCapitals(datePicker.value); // Update capitals
+            }
+        });
+
+        document.getElementById('nextDay').addEventListener('click', () => {
+            let d = parseLocalDate(datePicker.value);
+            d.setDate(d.getDate() + 1);
+            // Don't go past today
+            let today = new Date();
+            today.setHours(23, 59, 59, 999);  // End of today
+            if (d <= today) {
+                datePicker.value = formatDate(d);
+                loadEvents(datePicker.value);
+                loadFactionTerritories(datePicker.value); // Update territories
+                loadFactionCapitals(datePicker.value); // Update capitals
+            }
+        });
+
+        searchInput.addEventListener('input', renderFeed);
+        
+        // Reset view function
+        window.resetView = function() {
+            map.setView([33.5138, 36.2765], 7);
+        };
+
+        // Territory toggle
+        let territoryVisible = true;
+        window.toggleTerritory = function() {
+            territoryVisible = !territoryVisible;
+            const btn = document.getElementById('btnToggleTerritory');
+            
+            if (territoryVisible) {
+                territoryLayer.addTo(map);
+                btn.classList.add('active');
+            } else {
+                map.removeLayer(territoryLayer);
+                btn.classList.remove('active');
+            }
+        };
+
+        // Heatmap toggle (placeholder)
+        window.toggleHeatmap = function() {
+            // TODO: Implement heatmap visualization
+            console.log("Heatmap toggle not implemented yet");
+        };
+
+        // Fetch YouTube video title via oEmbed (no API key needed)
+        window.fetchVideoTitle = function(videoId, titleElementId) {
+            const url = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`;
+            
+            fetch(url)
+                .then(r => r.json())
+                .then(data => {
+                    const titleEl = document.getElementById(titleElementId);
+                    if (titleEl && data.title) {
+                        titleEl.textContent = data.title;
+                    }
+                })
+                .catch(err => {
+                    const titleEl = document.getElementById(titleElementId);
+                    if (titleEl) {
+                        titleEl.textContent = 'Video';
+                    }
+                });
+        };
+
+        // Clean Video Player - Click to play (uses YouTube nocookie for client-side playback)
+        window.playVideo = function(containerId, videoId) {
+            const container = document.getElementById(containerId);
+            if (!container || container.classList.contains('playing')) return;
+            
+            container.classList.add('playing');
+            
+            // Use youtube-nocookie.com - runs client-side, reduced tracking
+            // Parameters: autoplay, no related videos, minimal branding, no annotations
+            const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1`;
+            
+            container.innerHTML = `
+                <iframe 
+                    src="${embedUrl}" 
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen 
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;"
+                ></iframe>`;
+        };
+    });
+</script>
+{% endblock %}

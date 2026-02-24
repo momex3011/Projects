@@ -1,0 +1,2307 @@
+{% extends "layout.html" %}
+{% block content %}
+<style>
+    /* Override layout for territory editor - needs full height */
+    body, html {
+        overflow: hidden !important;
+        height: 100% !important;
+    }
+    .main-wrapper {
+        height: calc(100vh - 50px) !important;
+        overflow: hidden !important;
+    }
+    
+    .editor-wrapper {
+        display: flex;
+        height: 100%;
+        width: 100%;
+    }
+    
+    .editor-sidebar {
+        width: 320px;
+        min-width: 320px;
+        background: rgba(15, 23, 42, 0.95);
+        border-right: 1px solid rgba(255,255,255,0.1);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        height: 100%;
+    }
+    
+    .sidebar-header {
+        padding: 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .sidebar-content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 15px;
+    }
+    
+    .faction-card {
+        background: rgba(30, 41, 59, 0.8);
+        border: 2px solid transparent;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .faction-card:hover {
+        background: rgba(51, 65, 85, 0.8);
+        border-color: rgba(255,255,255,0.2);
+    }
+    
+    .faction-card.active {
+        border-color: var(--faction-color) !important;
+        box-shadow: 0 0 15px var(--faction-color);
+    }
+    
+    .faction-color-dot {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 2px solid rgba(255,255,255,0.4);
+    }
+    
+    .editor-map {
+        flex: 1;
+        position: relative;
+        height: 100%;
+    }
+    
+    #map {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    
+    .tool-hint {
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0,0,0,0.85);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        z-index: 1000;
+        display: none;
+    }
+    
+    .tool-hint.show {
+        display: block;
+    }
+    
+    .save-status {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: bold;
+        z-index: 1000;
+        display: none;
+    }
+    
+    .save-status.success {
+        display: block;
+        background: #22c55e;
+        color: white;
+    }
+    
+    .save-status.error {
+        display: block;
+        background: #ef4444;
+        color: white;
+    }
+    
+    .btn-draw {
+        padding: 8px 16px;
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 6px;
+        background: rgba(59, 130, 246, 0.3);
+        color: white;
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 0.2s;
+    }
+    
+    .btn-draw:hover {
+        background: rgba(59, 130, 246, 0.5);
+    }
+    
+    .btn-draw:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+    
+    .btn-clear {
+        background: rgba(239, 68, 68, 0.3);
+    }
+    
+    .btn-clear:hover {
+        background: rgba(239, 68, 68, 0.5);
+    }
+    
+    /* Mode toggle buttons */
+    .mode-toggle {
+        display: flex;
+        gap: 0;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    .mode-btn {
+        flex: 1;
+        padding: 10px 16px;
+        border: none;
+        background: rgba(30, 41, 59, 0.8);
+        color: #94a3b8;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 600;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .mode-btn:not(:last-child) {
+        border-right: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .mode-btn:hover {
+        background: rgba(51, 65, 85, 0.8);
+        color: white;
+    }
+    
+    .mode-btn.active {
+        background: rgba(59, 130, 246, 0.5);
+        color: white;
+    }
+    
+    .mode-btn.active.draw-mode {
+        background: rgba(34, 197, 94, 0.5);
+    }
+    
+    .mode-btn#btnCapitalMode.active {
+        background: rgba(234, 179, 8, 0.5);
+    }
+    
+    .mode-btn#btnEraseMode.active,
+    .mode-btn#btnEraseBrushMode.active {
+        background: rgba(239, 68, 68, 0.5);
+    }
+    
+    .mode-btn#btnBrushMode.active {
+        background: rgba(34, 197, 94, 0.5);
+    }
+    
+    .erasing-mode {
+        cursor: crosshair !important;
+    }
+    
+    .erasing-mode .leaflet-interactive {
+        cursor: crosshair !important;
+    }
+    
+    /* Drawing cursor */
+    .drawing-mode {
+        cursor: crosshair !important;
+    }
+    
+    .drawing-mode .leaflet-interactive {
+        cursor: crosshair !important;
+    }
+    
+    /* Brush size slider */
+    .form-range {
+        width: 100%;
+        height: 6px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 3px;
+        appearance: none;
+        -webkit-appearance: none;
+    }
+    
+    .form-range::-webkit-slider-thumb {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 16px;
+        height: 16px;
+        background: #3b82f6;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+    
+    .form-range::-moz-range-thumb {
+        width: 16px;
+        height: 16px;
+        background: #3b82f6;
+        border-radius: 50%;
+        cursor: pointer;
+        border: none;
+    }
+
+    .instructions {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 15px;
+        font-size: 11px;
+        color: #94a3b8;
+    }
+    
+    .instructions strong {
+        color: #3b82f6;
+    }
+    
+    /* Boundary search results */
+    .boundary-result {
+        padding: 8px 10px;
+        background: rgba(30, 41, 59, 0.9);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 4px;
+        margin-bottom: 4px;
+        cursor: pointer;
+        font-size: 11px;
+        transition: all 0.2s;
+    }
+    
+    .boundary-result:hover {
+        background: rgba(59, 130, 246, 0.3);
+        border-color: #3b82f6;
+    }
+    
+    .boundary-result.selected {
+        background: rgba(59, 130, 246, 0.4);
+        border-color: #3b82f6;
+    }
+    
+    .boundary-result .type-badge {
+        font-size: 9px;
+        background: rgba(255,255,255,0.1);
+        padding: 2px 6px;
+        border-radius: 10px;
+        margin-left: 6px;
+    }
+    
+    .boundary-loading {
+        text-align: center;
+        padding: 15px;
+        color: #64748b;
+    }
+    
+    .boundary-loading i {
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        100% { transform: rotate(360deg); }
+    }
+</style>
+
+<div class="editor-wrapper">
+    <!-- SIDEBAR -->
+    <div class="editor-sidebar">
+        <div class="sidebar-header">
+            <a href="{{ url_for('admin.manage_factions', war_id=war.id) }}" class="text-muted small">
+                <i class="fa fa-arrow-left me-1"></i> Back to Factions
+            </a>
+            <h4 class="fw-bold mt-2 mb-0">Territory Editor</h4>
+            <p class="text-muted small mb-0">{{ war.name }}</p>
+        </div>
+        
+        <div class="sidebar-content">
+            <div class="instructions">
+                <strong>How to use:</strong><br>
+                1. Select a faction below<br>
+                2. Use <strong>Quick Fill</strong> to auto-fill country/province<br>
+                3. Or use <strong>Draw</strong> mode to draw manually<br>
+                4. Use <strong>Erase</strong> mode to remove areas (sea, etc.)<br>
+                5. Territory auto-saves when complete
+            </div>
+            
+            <h6 class="text-uppercase small text-muted mb-3">Select Faction to Edit</h6>
+            
+            {% if factions %}
+                {% for faction in factions %}
+                <div class="faction-card" 
+                     data-faction-id="{{ faction.id }}"
+                     data-faction-name="{{ faction.name }}"
+                     data-faction-color="{{ faction.color }}"
+                     data-faction-territory="{{ faction.territory_geojson or '' }}"
+                     style="--faction-color: {{ faction.color }};">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="faction-color-dot" style="background: {{ faction.color }};"></div>
+                        <div>
+                            <div class="fw-bold">{{ faction.name }}</div>
+                            <div class="text-muted small">{{ faction.short_name or 'N/A' }}</div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <hr class="my-4 border-secondary">
+                
+                <div id="drawControls" style="display: none;">
+                    <h6 class="text-uppercase small text-muted mb-3">Mode</h6>
+                    <div class="mode-toggle mb-3" style="flex-wrap: wrap;">
+                        <button type="button" class="mode-btn active" id="btnPanMode" title="Pan/Move Map">
+                            <i class="fa fa-hand-paper"></i> Pan
+                        </button>
+                        <button type="button" class="mode-btn" id="btnBrushMode" title="Paint Brush (Freehand)">
+                            <i class="fa fa-paint-brush"></i> Brush
+                        </button>
+                        <button type="button" class="mode-btn" id="btnDrawMode" title="Draw Polygon (Click Points)">
+                            <i class="fa fa-pencil"></i> Polygon
+                        </button>
+                        <button type="button" class="mode-btn" id="btnRectMode" title="Draw Rectangle">
+                            <i class="fa fa-square-o"></i> Rect
+                        </button>
+                        <button type="button" class="mode-btn" id="btnEraseBrushMode" title="Eraser Brush">
+                            <i class="fa fa-eraser"></i> Eraser
+                        </button>
+                        <button type="button" class="mode-btn" id="btnCapitalMode" title="Place Capital">
+                            <i class="fa fa-star"></i> Capital
+                        </button>
+                    </div>
+                    
+                    <!-- Brush Size Slider -->
+                    <div id="brushSizeControl" class="mb-3" style="display: none;">
+                        <label class="small text-muted">Brush Size: <span id="brushSizeValue">0.02</span>°</label>
+                        <input type="range" id="brushSize" class="form-range" min="0.005" max="0.1" step="0.005" value="0.02">
+                    </div>
+                    
+                    <!-- Date Settings for Territory -->
+                    <h6 class="text-uppercase small text-muted mb-2 mt-4">Territory Date</h6>
+                    <div class="mb-3">
+                        <label class="small text-muted">Effective From:</label>
+                        <input type="date" id="effectiveDate" class="form-control form-control-sm bg-dark text-white border-secondary" 
+                               value="{{ today }}" style="color-scheme: dark;">
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="isPermanent" checked>
+                            <label class="form-check-label small" for="isPermanent">
+                                Permanent (applies indefinitely)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-3" id="endDateGroup" style="display: none;">
+                        <label class="small text-muted">Ends On:</label>
+                        <input type="date" id="endDate" class="form-control form-control-sm bg-dark text-white border-secondary"
+                               style="color-scheme: dark;">
+                    </div>
+                    <div class="mb-3">
+                        <label class="small text-muted">Notes (optional):</label>
+                        <input type="text" id="snapshotNotes" class="form-control form-control-sm bg-dark text-white border-secondary" 
+                               placeholder="e.g. After Battle of Aleppo">
+                    </div>
+                    
+                    <!-- Quick Fill Section -->
+                    <h6 class="text-uppercase small text-muted mb-2">Quick Fill</h6>
+                    <div class="mb-3">
+                        <div class="input-group input-group-sm mb-2">
+                            <input type="text" id="boundarySearch" class="form-control bg-dark text-white border-secondary" 
+                                   placeholder="Search country/province..." style="font-size: 12px;">
+                            <button class="btn btn-outline-secondary" type="button" id="btnSearchBoundary">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                        <div id="boundaryResults" class="mb-2" style="max-height: 150px; overflow-y: auto; display: none;"></div>
+                        <div id="selectedBoundary" class="small text-muted mb-2" style="display: none;">
+                            Selected: <span id="selectedBoundaryName"></span>
+                            <button class="btn btn-xs btn-link text-primary p-0 ms-2" id="btnApplyBoundary">Apply</button>
+                            <button class="btn btn-xs btn-link text-warning p-0 ms-2" id="btnPreviewBoundary">Preview</button>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="excludeSeaTerritory" checked>
+                            <label class="form-check-label small" for="excludeSeaTerritory">
+                                <i class="fa fa-water me-1" style="color: #3b82f6;"></i> Exclude sea/maritime territory
+                            </label>
+                        </div>
+                        <div class="small text-muted" style="font-size: 10px;">
+                            <i class="fa fa-info-circle"></i> Search for countries/provinces. Use <strong>Erase mode</strong> to remove unwanted areas.
+                        </div>
+                    </div>
+                    
+                    <hr class="my-3 border-secondary">
+                    
+                    <h6 class="text-uppercase small text-muted mb-3">Actions</h6>
+                    <div class="d-flex flex-column gap-2">
+                        <!-- Undo/Redo Buttons -->
+                        <div class="d-flex gap-2 mb-2">
+                            <button type="button" class="btn-draw flex-grow-1" id="btnUndo" disabled title="Undo (Ctrl+Z)">
+                                <i class="fa fa-undo me-1"></i> Undo
+                            </button>
+                            <button type="button" class="btn-draw flex-grow-1" id="btnRedo" disabled title="Redo (Ctrl+Y)">
+                                <i class="fa fa-repeat me-1"></i> Redo
+                            </button>
+                        </div>
+                        <div class="small text-muted text-center mb-2" id="historyStatus">
+                            History: 0/0 <span style="opacity: 0.6;">| Ctrl+Z / Ctrl+Y</span>
+                        </div>
+                        <button type="button" class="btn-draw" id="btnFinishDrawing" style="display: none;">
+                            <i class="fa fa-check me-2"></i> Finish Shape
+                        </button>
+                        <button type="button" class="btn-draw" id="btnCancelDrawing" style="display: none;">
+                            <i class="fa fa-times me-2"></i> Cancel Drawing
+                        </button>
+                        <button type="button" class="btn-draw btn-clear" id="btnClearTerritory">
+                            <i class="fa fa-trash me-2"></i> Clear All Territory
+                        </button>
+                    </div>
+                    
+                    <!-- Capitals Section -->
+                    <h6 class="text-uppercase small text-muted mb-2 mt-4">Capitals / Anchors</h6>
+                    <div id="capitalsList" class="mb-2">
+                        <!-- Capitals will be listed here -->
+                    </div>
+                    <div class="small text-muted mb-2">
+                        Click "Capital" mode, then click map to place anchor points.
+                    </div>
+                    
+                    <!-- Keyboard Shortcuts Legend -->
+                    <div class="mt-4 p-2 rounded" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3);">
+                        <div class="small text-muted mb-1" style="font-weight: 600;">⌨️ KEYBOARD SHORTCUTS</div>
+                        <div class="small" style="opacity: 0.9; line-height: 1.6;">
+                            <kbd style="background: rgba(255,255,255,0.1); padding: 1px 5px; border-radius: 3px; font-size: 10px;">Space</kbd> Hold to pan<br>
+                            <kbd style="background: rgba(255,255,255,0.1); padding: 1px 5px; border-radius: 3px; font-size: 10px;">Ctrl+Z</kbd> Undo point/action<br>
+                            <kbd style="background: rgba(255,255,255,0.1); padding: 1px 5px; border-radius: 3px; font-size: 10px;">Ctrl+Y</kbd> Redo<br>
+                            <kbd style="background: rgba(255,255,255,0.1); padding: 1px 5px; border-radius: 3px; font-size: 10px;">Esc</kbd> Cancel & go to Pan
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3 p-3 rounded" style="background: rgba(0,0,0,0.3);">
+                        <div class="small text-muted mb-1">SELECTED:</div>
+                        <div id="selectedFactionName" class="fw-bold">-</div>
+                        <div class="small text-muted mt-2" id="drawingStatus">Mode: Pan</div>
+                    </div>
+                    
+                    <!-- History Button -->
+                    <button type="button" class="btn-draw mt-3 w-100" id="btnShowHistory">
+                        <i class="fa fa-history me-2"></i> View Territory History
+                    </button>
+                </div>
+            {% else %}
+                <div class="text-center py-4 text-muted">
+                    <i class="fa fa-exclamation-triangle fa-2x mb-2"></i>
+                    <p class="small">No factions created yet.</p>
+                    <a href="{{ url_for('admin.manage_factions', war_id=war.id) }}" class="btn btn-sm btn-primary">
+                        Create Factions First
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- MAP -->
+    <div class="editor-map">
+        <div id="map"></div>
+        <div class="tool-hint" id="toolHint">Click on map to draw polygon points. Click first point to finish.</div>
+        <div class="save-status" id="saveStatus"></div>
+    </div>
+</div>
+
+<!-- Leaflet Draw CSS -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/leaflet.draw.css') }}" />
+
+{% endblock %}
+
+{% block scripts %}
+<!-- Turf.js for polygon operations -->
+<script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+<!-- Leaflet Draw JS - loads AFTER Leaflet from layout.html -->
+<script src="{{ url_for('static', filename='js/leaflet.draw.js') }}"></script>
+
+<script>
+// All scripts run here AFTER Leaflet and Leaflet.Draw are loaded
+(function() {
+    console.log('Territory Editor initializing...');
+    
+    if (typeof L === 'undefined') {
+        console.error('Leaflet not loaded!');
+        document.getElementById('map').innerHTML = '<div style="padding:40px;color:#f00;">Map library not loaded. Please refresh the page.</div>';
+        return;
+    }
+    
+    // Check if Leaflet.Draw loaded
+    const drawToolsLoaded = (typeof L.Draw !== 'undefined');
+    
+    const warId = {{ war.id }};
+    const defaultLat = {{ war.default_lat or 35.0 }};
+    const defaultLng = {{ war.default_lng or 38.0 }};
+    const defaultZoom = {{ war.default_zoom or 7 }};
+    
+    // Initialize map
+    const map = L.map('map').setView([defaultLat, defaultLng], defaultZoom);
+    
+    setTimeout(() => map.invalidateSize(), 100);
+    
+    // Google Maps layer
+    L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    }).addTo(map);
+    
+    // Layer groups
+    const factionLayers = {};
+    const capitalMarkers = {};
+    let selectedFactionId = null;
+    let currentPolygonDrawer = null;
+    let currentMode = 'pan'; // 'pan', 'draw', 'capital', 'brush', 'eraseBrush'
+    let drawnItems = new L.FeatureGroup().addTo(map);
+    let capitalsLayer = new L.FeatureGroup().addTo(map);
+    
+    // ========== UNDO/REDO HISTORY SYSTEM ==========
+    const MAX_HISTORY = 50;
+    let historyStack = [];  // Stack of GeoJSON states
+    let historyIndex = -1;  // Current position in history
+    let isUndoRedoing = false; // Flag to prevent saving during undo/redo
+    
+    // Save current state to history
+    function saveToHistory() {
+        if (isUndoRedoing) return;
+        
+        // Get current state as GeoJSON
+        const features = [];
+        drawnItems.eachLayer(layer => {
+            features.push(layer.toGeoJSON());
+        });
+        const state = JSON.stringify({ type: "FeatureCollection", features: features });
+        
+        // If we're not at the end of history, remove future states
+        if (historyIndex < historyStack.length - 1) {
+            historyStack = historyStack.slice(0, historyIndex + 1);
+        }
+        
+        // Don't add duplicate states
+        if (historyStack.length > 0 && historyStack[historyStack.length - 1] === state) {
+            return;
+        }
+        
+        // Add new state
+        historyStack.push(state);
+        historyIndex = historyStack.length - 1;
+        
+        // Limit history size
+        if (historyStack.length > MAX_HISTORY) {
+            historyStack.shift();
+            historyIndex--;
+        }
+        
+        updateHistoryButtons();
+    }
+    
+    // Restore state from history
+    function restoreFromHistory(index) {
+        if (index < 0 || index >= historyStack.length) return;
+        
+        isUndoRedoing = true;
+        
+        const state = JSON.parse(historyStack[index]);
+        const card = document.querySelector(`.faction-card[data-faction-id="${selectedFactionId}"]`);
+        const color = card?.dataset.factionColor || '#808080';
+        
+        // Clear current layers
+        drawnItems.clearLayers();
+        
+        // Restore layers from state
+        if (state.features && state.features.length > 0) {
+            state.features.forEach(feature => {
+                const layer = L.geoJSON(feature, {
+                    style: { color: color, weight: 2, fillColor: color, fillOpacity: 0.35 }
+                });
+                layer.eachLayer(l => drawnItems.addLayer(l));
+            });
+        }
+        
+        historyIndex = index;
+        updateHistoryButtons();
+        
+        isUndoRedoing = false;
+    }
+    
+    // Undo action
+    function undo() {
+        if (historyIndex > 0) {
+            restoreFromHistory(historyIndex - 1);
+            showSaveStatus('success', 'Undo');
+        }
+    }
+    
+    // Redo action
+    function redo() {
+        if (historyIndex < historyStack.length - 1) {
+            restoreFromHistory(historyIndex + 1);
+            showSaveStatus('success', 'Redo');
+        }
+    }
+    
+    // Update undo/redo button states
+    function updateHistoryButtons() {
+        const undoBtn = document.getElementById('btnUndo');
+        const redoBtn = document.getElementById('btnRedo');
+        const statusEl = document.getElementById('historyStatus');
+        
+        if (undoBtn) {
+            undoBtn.disabled = historyIndex <= 0;
+        }
+        if (redoBtn) {
+            redoBtn.disabled = historyIndex >= historyStack.length - 1;
+        }
+        if (statusEl) {
+            statusEl.textContent = `History: ${historyIndex + 1}/${historyStack.length}`;
+        }
+    }
+    
+    // Clear history (when switching factions)
+    function clearHistory() {
+        historyStack = [];
+        historyIndex = -1;
+        updateHistoryButtons();
+    }
+    
+    // Track if space is held for pan-while-drawing
+    let spaceHeld = false;
+    let drawingModeBeforeSpace = null;
+    
+    // Brush drawing state (declared early for keyboard handler access)
+    let isBrushDrawing = false;
+    let brushPath = [];
+    let brushPreviewLayer = null;
+    let brushSize = 0.02; // degrees
+    
+    // ========== UNIFIED KEYBOARD CONTROLS ==========
+    // All drawing modes support:
+    // - Space: Hold to pan (works in all modes except when actively painting)
+    // - Ctrl+Z: Undo last action (removes last polygon point while drawing, or undoes last saved change)
+    // - Ctrl+Y / Ctrl+Shift+Z: Redo
+    // - Escape: Cancel current drawing operation
+    
+    document.addEventListener('keydown', function(e) {
+        // Only handle if we're in the editor and a faction is selected
+        if (!selectedFactionId) return;
+        
+        // Get all active drawing modes
+        const isDrawingMode = ['draw', 'rect', 'brush', 'eraseBrush', 'erase', 'capital'].includes(currentMode);
+        const isPolygonDrawing = ['draw', 'erase'].includes(currentMode);
+        const isBrushMode = ['brush', 'eraseBrush'].includes(currentMode);
+        
+        // ========== SPACE = Pan while drawing ==========
+        if (e.code === 'Space' && !spaceHeld && currentMode !== 'pan') {
+            // Don't enable pan if actively painting with brush/eraser (mouse down)
+            if (isBrushMode && isBrushDrawing) {
+                return; // User is actively painting, don't interrupt
+            }
+            
+            e.preventDefault();
+            spaceHeld = true;
+            drawingModeBeforeSpace = currentMode;
+            
+            // Enable map dragging without losing drawer state
+            map.dragging.enable();
+            document.getElementById('map').style.cursor = 'grab';
+            document.getElementById('toolHint').textContent = '🖐️ Pan mode (release Space to continue)';
+            
+            // Temporarily disable the active drawer from accepting clicks
+            if (currentPolygonDrawer && currentPolygonDrawer._enabled) {
+                currentPolygonDrawer._mouseMarker?.off('click');
+            }
+        }
+        
+        // ========== CTRL+Z = Undo ==========
+        else if (e.ctrlKey && e.key === 'z' && !e.shiftKey) {
+            e.preventDefault();
+            
+            // If actively drawing a polygon, remove last vertex first
+            if (isPolygonDrawing && currentPolygonDrawer && currentPolygonDrawer._enabled) {
+                if (currentPolygonDrawer._markers && currentPolygonDrawer._markers.length > 0) {
+                    // Use Leaflet.Draw's built-in deleteLastVertex
+                    try {
+                        currentPolygonDrawer.deleteLastVertex();
+                        updateStatus('Removed last point (Ctrl+Z)');
+                        return; // Don't trigger history undo while actively drawing
+                    } catch (err) {
+                        console.warn('Could not delete last vertex:', err);
+                    }
+                }
+            }
+            
+            // Otherwise, undo from history stack
+            undo();
+        }
+        
+        // ========== CTRL+Y / CTRL+SHIFT+Z = Redo ==========
+        else if ((e.ctrlKey && e.key === 'y') || (e.ctrlKey && e.shiftKey && e.key === 'z') || (e.ctrlKey && e.shiftKey && e.key === 'Z')) {
+            e.preventDefault();
+            redo();
+        }
+        
+        // ========== ESCAPE = Cancel current operation ==========
+        else if (e.key === 'Escape') {
+            e.preventDefault();
+            
+            if (currentPolygonDrawer && currentPolygonDrawer._enabled) {
+                currentPolygonDrawer.disable();
+                currentPolygonDrawer = null;
+            }
+            
+            if (isBrushMode && isBrushDrawing) {
+                isBrushDrawing = false;
+                brushPath = [];
+                if (brushPreviewLayer) {
+                    map.removeLayer(brushPreviewLayer);
+                    brushPreviewLayer = null;
+                }
+            }
+            
+            setPanMode();
+            updateStatus('Cancelled - switched to Pan mode');
+        }
+    });
+    
+    // Handle space release to resume drawing
+    document.addEventListener('keyup', function(e) {
+        if (e.code === 'Space' && spaceHeld) {
+            e.preventDefault();
+            spaceHeld = false;
+            
+            // Restore previous drawing mode
+            map.dragging.disable();
+            document.getElementById('map').style.cursor = 'crosshair';
+            
+            // Re-enable click handler on drawer
+            if (currentPolygonDrawer && currentPolygonDrawer._enabled) {
+                currentPolygonDrawer._mouseMarker?.on('click', currentPolygonDrawer._onMouseClick, currentPolygonDrawer);
+            }
+            
+            // Restore appropriate tool hint
+            switch (drawingModeBeforeSpace) {
+                case 'draw':
+                    document.getElementById('toolHint').textContent = 'Click to add polygon points. Click first point to finish. [Space=Pan, Ctrl+Z=Undo point, Esc=Cancel]';
+                    break;
+                case 'rect':
+                    document.getElementById('toolHint').textContent = 'Click and drag to draw rectangle. [Space=Pan, Esc=Cancel]';
+                    break;
+                case 'brush':
+                    document.getElementById('toolHint').textContent = 'Click and drag to paint territory. [Space=Pan, Esc=Cancel]';
+                    break;
+                case 'eraseBrush':
+                    document.getElementById('toolHint').textContent = 'Click and drag to erase territory. [Space=Pan, Esc=Cancel]';
+                    break;
+                case 'erase':
+                    document.getElementById('toolHint').textContent = 'Draw polygon to erase. Click first point to finish. [Space=Pan, Ctrl+Z=Undo point, Esc=Cancel]';
+                    break;
+                case 'capital':
+                    document.getElementById('toolHint').textContent = 'Click to place faction capital. [Space=Pan, Esc=Cancel]';
+                    document.getElementById('map').style.cursor = 'pointer';
+                    break;
+                default:
+                    document.getElementById('toolHint').textContent = '';
+            }
+            
+            drawingModeBeforeSpace = null;
+        }
+    });
+    
+    // Button click handlers for undo/redo
+    document.getElementById('btnUndo')?.addEventListener('click', undo);
+    document.getElementById('btnRedo')?.addEventListener('click', redo);
+    
+    // Capital icon
+    const capitalIcon = L.divIcon({
+        className: 'capital-marker',
+        html: '<div style="background: gold; width: 16px; height: 16px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 8px rgba(0,0,0,0.5);"></div>',
+        iconSize: [16, 16],
+        iconAnchor: [8, 8]
+    });
+    
+    // Load existing territories
+    function loadAllTerritories() {
+        document.querySelectorAll('.faction-card').forEach(card => {
+            const factionId = card.dataset.factionId;
+            const color = card.dataset.factionColor;
+            const territoryJson = card.dataset.factionTerritory;
+            
+            if (territoryJson) {
+                try {
+                    const geojson = JSON.parse(territoryJson);
+                    const layer = L.geoJSON(geojson, {
+                        style: { color: color, weight: 2, fillColor: color, fillOpacity: 0.35 }
+                    });
+                    factionLayers[factionId] = layer;
+                    layer.addTo(map);
+                } catch (e) {
+                    console.log('Error parsing territory for faction', factionId, e);
+                }
+            }
+        });
+    }
+    
+    loadAllTerritories();
+    
+    // Load capitals for a faction
+    function loadCapitals(factionId) {
+        capitalsLayer.clearLayers();
+        
+        fetch(`/admin/factions/${factionId}/capitals`)
+            .then(r => r.json())
+            .then(data => {
+                const listEl = document.getElementById('capitalsList');
+                listEl.innerHTML = '';
+                
+                if (data.capitals && data.capitals.length > 0) {
+                    data.capitals.forEach(cap => {
+                        // Build tooltip with dates
+                        let tooltip = cap.name + (cap.is_primary ? ' ★' : '');
+                        if (cap.effective_date || cap.end_date) {
+                            tooltip += '\n';
+                            if (cap.effective_date) tooltip += `From: ${cap.effective_date}`;
+                            if (cap.end_date) tooltip += ` To: ${cap.end_date}`;
+                        }
+                        
+                        // Add marker to map
+                        const marker = L.marker([cap.lat, cap.lng], { icon: capitalIcon })
+                            .bindTooltip(tooltip, { permanent: false });
+                        capitalsLayer.addLayer(marker);
+                        
+                        // Build date display
+                        let dateInfo = '';
+                        if (cap.effective_date || cap.end_date) {
+                            dateInfo = '<div class="text-muted" style="font-size:9px;">';
+                            if (cap.effective_date && cap.end_date) {
+                                dateInfo += `${cap.effective_date} → ${cap.end_date}`;
+                            } else if (cap.effective_date) {
+                                dateInfo += `From ${cap.effective_date}`;
+                            } else if (cap.end_date) {
+                                dateInfo += `Until ${cap.end_date}`;
+                            }
+                            dateInfo += '</div>';
+                        }
+                        
+                        // Add to sidebar list
+                        const div = document.createElement('div');
+                        div.className = 'small p-2 rounded mb-1';
+                        div.style.background = 'rgba(255,215,0,0.1)';
+                        div.innerHTML = `
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>${cap.is_primary ? '★ ' : ''}${cap.name}</span>
+                                <button class="btn btn-sm btn-link text-danger p-0" onclick="deleteCapital(${cap.id})">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                            ${dateInfo}
+                        `;
+                        listEl.appendChild(div);
+                    });
+                } else {
+                    listEl.innerHTML = '<div class="small text-muted">No capitals set</div>';
+                }
+            })
+            .catch(e => console.error('Error loading capitals:', e));
+    }
+    
+    // Delete capital
+    window.deleteCapital = function(capitalId) {
+        if (!confirm('Delete this capital?')) return;
+        
+        fetch(`/admin/capitals/${capitalId}/delete`, { method: 'POST' })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    showSaveStatus('success', 'Capital deleted');
+                    if (selectedFactionId) loadCapitals(selectedFactionId);
+                }
+            });
+    };
+    
+    // Update status display
+    function updateStatus(text) {
+        const statusEl = document.getElementById('drawingStatus');
+        if (statusEl) statusEl.textContent = text;
+    }
+    
+    // Update brush size display
+    document.getElementById('brushSize')?.addEventListener('input', function() {
+        brushSize = parseFloat(this.value);
+        document.getElementById('brushSizeValue').textContent = brushSize.toFixed(3);
+    });
+    
+    // Clear all mode buttons
+    function clearModeButtons() {
+        document.getElementById('btnPanMode')?.classList.remove('active');
+        document.getElementById('btnBrushMode')?.classList.remove('active');
+        document.getElementById('btnDrawMode')?.classList.remove('active', 'draw-mode');
+        document.getElementById('btnRectMode')?.classList.remove('active');
+        document.getElementById('btnEraseMode')?.classList.remove('active');
+        document.getElementById('btnEraseBrushMode')?.classList.remove('active');
+        document.getElementById('btnCapitalMode')?.classList.remove('active');
+        document.getElementById('map').classList.remove('drawing-mode', 'erasing-mode');
+        document.getElementById('toolHint').classList.remove('show');
+        document.getElementById('brushSizeControl').style.display = 'none';
+        
+        // Remove brush event listeners
+        map.off('mousedown', onBrushStart);
+        map.off('mousemove', onBrushMove);
+        map.off('mouseup', onBrushEnd);
+        map.off('mousedown', onEraseBrushStart);
+        map.off('mousemove', onEraseBrushMove);
+        map.off('mouseup', onEraseBrushEnd);
+    }
+    
+    // Switch to Pan mode
+    function setPanMode() {
+        currentMode = 'pan';
+        
+        if (currentPolygonDrawer) {
+            currentPolygonDrawer.disable();
+            currentPolygonDrawer = null;
+        }
+        
+        map.dragging.enable();
+        map.off('click', onCapitalClick);
+        
+        clearModeButtons();
+        document.getElementById('btnPanMode')?.classList.add('active');
+        document.getElementById('btnFinishDrawing').style.display = 'none';
+        document.getElementById('btnCancelDrawing').style.display = 'none';
+        
+        updateStatus('Mode: Pan (drag to move)');
+    }
+    
+    // ========== BRUSH MODE (Freehand Paint) ==========
+    function setBrushMode() {
+        if (!selectedFactionId) {
+            alert('Please select a faction first');
+            return;
+        }
+        
+        currentMode = 'brush';
+        
+        if (currentPolygonDrawer) {
+            currentPolygonDrawer.disable();
+            currentPolygonDrawer = null;
+        }
+        
+        map.dragging.disable();
+        map.off('click', onCapitalClick);
+        
+        clearModeButtons();
+        document.getElementById('btnBrushMode')?.classList.add('active');
+        document.getElementById('map').classList.add('drawing-mode');
+        document.getElementById('brushSizeControl').style.display = 'block';
+        document.getElementById('toolHint').textContent = 'Click and drag to paint territory. [Space=Pan, Esc=Cancel]';
+        document.getElementById('toolHint').classList.add('show');
+        document.getElementById('btnCancelDrawing').style.display = 'block';
+        
+        updateStatus('Mode: Brush - Click and drag to paint');
+        
+        // Add brush event listeners
+        map.on('mousedown', onBrushStart);
+        map.on('mousemove', onBrushMove);
+        map.on('mouseup', onBrushEnd);
+    }
+    
+    function onBrushStart(e) {
+        if (currentMode !== 'brush') return;
+        isBrushDrawing = true;
+        brushPath = [];
+        addBrushPoint(e.latlng);
+    }
+    
+    function onBrushMove(e) {
+        if (currentMode !== 'brush' || !isBrushDrawing) return;
+        addBrushPoint(e.latlng);
+        updateBrushPreview();
+    }
+    
+    function onBrushEnd(e) {
+        if (currentMode !== 'brush' || !isBrushDrawing) return;
+        isBrushDrawing = false;
+        
+        if (brushPath.length >= 2) {
+            // Convert brush path to a polygon (buffered line)
+            createBrushPolygon();
+        }
+        
+        // Clear preview
+        if (brushPreviewLayer) {
+            map.removeLayer(brushPreviewLayer);
+            brushPreviewLayer = null;
+        }
+        brushPath = [];
+    }
+    
+    function addBrushPoint(latlng) {
+        // Only add point if it's far enough from the last one
+        if (brushPath.length === 0) {
+            brushPath.push(latlng);
+        } else {
+            const last = brushPath[brushPath.length - 1];
+            const dist = Math.sqrt(Math.pow(latlng.lat - last.lat, 2) + Math.pow(latlng.lng - last.lng, 2));
+            if (dist > brushSize * 0.3) { // Add point every ~1/3 brush size
+                brushPath.push(latlng);
+            }
+        }
+    }
+    
+    function updateBrushPreview() {
+        const card = document.querySelector(`.faction-card[data-faction-id="${selectedFactionId}"]`);
+        const color = card?.dataset.factionColor || '#3b82f6';
+        
+        if (brushPreviewLayer) {
+            map.removeLayer(brushPreviewLayer);
+        }
+        
+        if (brushPath.length < 2) return;
+        
+        // Show preview as circles along the path
+        const circles = brushPath.map(p => 
+            L.circle([p.lat, p.lng], { 
+                radius: brushSize * 111000, // Convert degrees to meters (approx)
+                color: color, 
+                fillColor: color, 
+                fillOpacity: 0.4,
+                weight: 1
+            })
+        );
+        
+        brushPreviewLayer = L.layerGroup(circles).addTo(map);
+    }
+    
+    function createBrushPolygon() {
+        if (brushPath.length < 2) return;
+        
+        const card = document.querySelector(`.faction-card[data-faction-id="${selectedFactionId}"]`);
+        const color = card.dataset.factionColor;
+        
+        // Use Turf.js to create a buffered line
+        if (typeof turf !== 'undefined') {
+            try {
+                // Create line from brush path
+                const lineCoords = brushPath.map(p => [p.lng, p.lat]);
+                const line = turf.lineString(lineCoords);
+                
+                // Buffer the line to create a polygon
+                const buffered = turf.buffer(line, brushSize * 111, { units: 'kilometers' });
+                
+                if (buffered && buffered.geometry) {
+                    const layer = L.geoJSON(buffered.geometry, {
+                        style: { color: color, weight: 2, fillColor: color, fillOpacity: 0.35 }
+                    });
+                    layer.eachLayer(l => drawnItems.addLayer(l));
+                    saveCurrentTerritory();
+                    showSaveStatus('success', 'Brush stroke saved!');
+                }
+            } catch (e) {
+                console.error('Brush polygon error:', e);
+                // Fallback: add circles
+                createBrushCircles(color);
+            }
+        } else {
+            // Fallback without Turf: add circles at each point
+            createBrushCircles(color);
+        }
+    }
+    
+    function createBrushCircles(color) {
+        brushPath.forEach(p => {
+            const circle = L.circle([p.lat, p.lng], {
+                radius: brushSize * 111000,
+                color: color,
+                fillColor: color,
+                fillOpacity: 0.35,
+                weight: 2
+            });
+            drawnItems.addLayer(circle);
+        });
+        saveCurrentTerritory();
+        showSaveStatus('success', 'Brush stroke saved!');
+    }
+    
+    // ========== ERASER BRUSH MODE ==========
+    function setEraseBrushMode() {
+        if (!selectedFactionId) {
+            alert('Please select a faction first');
+            return;
+        }
+        
+        currentMode = 'eraseBrush';
+        
+        if (currentPolygonDrawer) {
+            currentPolygonDrawer.disable();
+            currentPolygonDrawer = null;
+        }
+        
+        map.dragging.disable();
+        map.off('click', onCapitalClick);
+        
+        clearModeButtons();
+        document.getElementById('btnEraseBrushMode')?.classList.add('active');
+        document.getElementById('map').classList.add('erasing-mode');
+        document.getElementById('brushSizeControl').style.display = 'block';
+        document.getElementById('toolHint').textContent = 'Click and drag to erase territory. [Space=Pan, Esc=Cancel]';
+        document.getElementById('toolHint').classList.add('show');
+        document.getElementById('btnCancelDrawing').style.display = 'block';
+        
+        updateStatus('Mode: Eraser Brush - Click and drag');
+        
+        // Add eraser brush event listeners
+        map.on('mousedown', onEraseBrushStart);
+        map.on('mousemove', onEraseBrushMove);
+        map.on('mouseup', onEraseBrushEnd);
+    }
+    
+    function onEraseBrushStart(e) {
+        if (currentMode !== 'eraseBrush') return;
+        isBrushDrawing = true;
+        brushPath = [];
+        addBrushPoint(e.latlng);
+    }
+    
+    function onEraseBrushMove(e) {
+        if (currentMode !== 'eraseBrush' || !isBrushDrawing) return;
+        addBrushPoint(e.latlng);
+        updateEraserPreview();
+    }
+    
+    function onEraseBrushEnd(e) {
+        if (currentMode !== 'eraseBrush' || !isBrushDrawing) return;
+        isBrushDrawing = false;
+        
+        if (brushPath.length >= 1) {
+            eraseWithBrush();
+        }
+        
+        // Clear preview
+        if (brushPreviewLayer) {
+            map.removeLayer(brushPreviewLayer);
+            brushPreviewLayer = null;
+        }
+        brushPath = [];
+    }
+    
+    function updateEraserPreview() {
+        if (brushPreviewLayer) {
+            map.removeLayer(brushPreviewLayer);
+        }
+        
+        if (brushPath.length < 1) return;
+        
+        // Show preview as red circles along the path
+        const circles = brushPath.map(p => 
+            L.circle([p.lat, p.lng], { 
+                radius: brushSize * 111000,
+                color: '#ef4444', 
+                fillColor: '#ef4444', 
+                fillOpacity: 0.3,
+                weight: 1,
+                dashArray: '5, 5'
+            })
+        );
+        
+        brushPreviewLayer = L.layerGroup(circles).addTo(map);
+    }
+    
+    function eraseWithBrush() {
+        if (brushPath.length < 1 || typeof turf === 'undefined') {
+            showSaveStatus('error', 'Turf.js required for eraser');
+            return;
+        }
+        
+        const card = document.querySelector(`.faction-card[data-faction-id="${selectedFactionId}"]`);
+        const color = card.dataset.factionColor;
+        
+        try {
+            // Create eraser polygon from brush path
+            let eraserGeometry;
+            
+            if (brushPath.length === 1) {
+                // Single point - create circle
+                const center = [brushPath[0].lng, brushPath[0].lat];
+                eraserGeometry = turf.circle(center, brushSize * 111, { units: 'kilometers' });
+            } else {
+                // Multiple points - create buffered line
+                const lineCoords = brushPath.map(p => [p.lng, p.lat]);
+                const line = turf.lineString(lineCoords);
+                eraserGeometry = turf.buffer(line, brushSize * 111, { units: 'kilometers' });
+            }
+            
+            if (!eraserGeometry) return;
+            
+            // Apply eraser to all drawn layers
+            const newLayers = [];
+            const layersToRemove = [];
+            
+            drawnItems.eachLayer(layer => {
+                try {
+                    const layerGeoJson = layer.toGeoJSON();
+                    let geom = layerGeoJson.geometry;
+                    
+                    // Handle different geometry types
+                    if (geom.type === 'Polygon') {
+                        // Direct difference for single polygon
+                        const poly = turf.polygon(geom.coordinates);
+                        const diff = turf.difference(poly, eraserGeometry);
+                        
+                        if (diff && diff.geometry && diff.geometry.coordinates.length > 0) {
+                            const newLayer = L.geoJSON(diff.geometry, {
+                                style: { color: color, weight: 2, fillColor: color, fillOpacity: 0.35 }
+                            });
+                            newLayer.eachLayer(l => newLayers.push(l));
+                        }
+                        layersToRemove.push(layer);
+                        
+                    } else if (geom.type === 'MultiPolygon') {
+                        // Process each polygon in the MultiPolygon
+                        const resultPolygons = [];
+                        
+                        geom.coordinates.forEach(polyCoords => {
+                            try {
+                                const poly = turf.polygon(polyCoords);
+                                const diff = turf.difference(poly, eraserGeometry);
+                                
+                                if (diff && diff.geometry) {
+                                    if (diff.geometry.type === 'Polygon' && diff.geometry.coordinates.length > 0) {
+                                        resultPolygons.push(diff.geometry.coordinates);
+                                    } else if (diff.geometry.type === 'MultiPolygon') {
+                                        diff.geometry.coordinates.forEach(c => resultPolygons.push(c));
+                                    }
+                                }
+                            } catch (polyErr) {
+                                // Keep original if difference fails for this polygon
+                                resultPolygons.push(polyCoords);
+                            }
+                        });
+                        
+                        if (resultPolygons.length > 0) {
+                            const resultGeom = resultPolygons.length === 1 
+                                ? { type: 'Polygon', coordinates: resultPolygons[0] }
+                                : { type: 'MultiPolygon', coordinates: resultPolygons };
+                            
+                            const newLayer = L.geoJSON(resultGeom, {
+                                style: { color: color, weight: 2, fillColor: color, fillOpacity: 0.35 }
+                            });
+                            newLayer.eachLayer(l => newLayers.push(l));
+                        }
+                        layersToRemove.push(layer);
+                        
+                    } else {
+                        // Try generic approach for other geometry types
+                        const feature = turf.feature(geom);
+                        const diff = turf.difference(feature, eraserGeometry);
+                        
+                        if (diff && diff.geometry && diff.geometry.coordinates.length > 0) {
+                            const newLayer = L.geoJSON(diff.geometry, {
+                                style: { color: color, weight: 2, fillColor: color, fillOpacity: 0.35 }
+                            });
+                            newLayer.eachLayer(l => newLayers.push(l));
+                        }
+                        layersToRemove.push(layer);
+                    }
+                } catch (e) {
+                    // Keep layer if difference fails
+                    console.warn('Erase layer error:', e);
+                }
+            });
+            
+            // Remove old layers and add new ones
+            layersToRemove.forEach(l => drawnItems.removeLayer(l));
+            newLayers.forEach(l => drawnItems.addLayer(l));
+            
+            if (layersToRemove.length > 0) {
+                saveCurrentTerritory();
+                showSaveStatus('success', 'Erased!');
+            }
+            
+        } catch (e) {
+            console.error('Eraser brush error:', e);
+            showSaveStatus('error', 'Erase failed');
+        }
+    }
+    
+    // Switch to Draw mode (polygon - click points)
+    function setDrawMode() {
+        if (!selectedFactionId) {
+            alert('Please select a faction first');
+            return;
+        }
+        
+        if (!drawToolsLoaded) {
+            alert('Drawing tools are not available. Please refresh the page.');
+            return;
+        }
+        
+        currentMode = 'draw';
+        map.off('click', onCapitalClick);
+        
+        const card = document.querySelector(`.faction-card[data-faction-id="${selectedFactionId}"]`);
+        const color = card.dataset.factionColor;
+        
+        map.dragging.disable();
+        
+        try {
+            currentPolygonDrawer = new L.Draw.Polygon(map, {
+                shapeOptions: { color: color, weight: 2, fillColor: color, fillOpacity: 0.35 },
+                allowIntersection: false,
+                showArea: true
+            });
+            currentPolygonDrawer.enable();
+        } catch (e) {
+            console.error('Error creating polygon drawer:', e);
+            map.dragging.enable();
+            return;
+        }
+        
+        clearModeButtons();
+        document.getElementById('btnDrawMode')?.classList.add('active', 'draw-mode');
+        document.getElementById('map').classList.add('drawing-mode');
+        document.getElementById('toolHint').textContent = 'Click to add polygon points. Click first point to finish. [Space=Pan, Ctrl+Z=Undo point, Esc=Cancel]';
+        document.getElementById('toolHint').classList.add('show');
+        document.getElementById('btnFinishDrawing').style.display = 'block';
+        document.getElementById('btnCancelDrawing').style.display = 'block';
+        
+        updateStatus('Mode: Drawing - Click to add points');
+    }
+    
+    // Switch to Rectangle mode
+    function setRectMode() {
+        if (!selectedFactionId) {
+            alert('Please select a faction first');
+            return;
+        }
+        
+        if (!drawToolsLoaded) {
+            alert('Drawing tools are not available. Please refresh the page.');
+            return;
+        }
+        
+        currentMode = 'rect';
+        
+        if (currentPolygonDrawer) {
+            currentPolygonDrawer.disable();
+            currentPolygonDrawer = null;
+        }
+        
+        map.dragging.disable();
+        map.off('click', onCapitalClick);
+        
+        clearModeButtons();
+        document.getElementById('btnRectMode')?.classList.add('active');
+        document.getElementById('map').classList.add('drawing-mode');
+        document.getElementById('toolHint').textContent = 'Click and drag to draw a rectangle. [Space=Pan, Esc=Cancel]';
+        document.getElementById('toolHint').classList.add('show');
+        document.getElementById('btnFinishDrawing').style.display = 'none';
+        document.getElementById('btnCancelDrawing').style.display = 'block';
+        
+        updateStatus('Mode: Rectangle - Click and drag');
+        
+        // Get faction color
+        const card = document.querySelector(`.faction-card[data-faction-id="${selectedFactionId}"]`);
+        const color = card.dataset.factionColor;
+        
+        // Start rectangle drawer
+        const rectDrawer = new L.Draw.Rectangle(map, {
+            shapeOptions: {
+                color: color,
+                weight: 2,
+                fillColor: color,
+                fillOpacity: 0.35
+            }
+        });
+        
+        rectDrawer.enable();
+        currentPolygonDrawer = rectDrawer;
+    }
+    
+    // Handle rectangle completion
+    map.on(L.Draw.Event.CREATED, function(e) {
+        // Skip if this is the erase handler (handled separately)
+        if (currentMode === 'erase') return;
+        
+        if ((currentMode === 'rect' || currentMode === 'draw') && e.layer) {
+            const card = document.querySelector(`.faction-card[data-faction-id="${selectedFactionId}"]`);
+            const color = card.dataset.factionColor;
+            
+            // Style and add the layer
+            if (e.layer.setStyle) {
+                e.layer.setStyle({
+                    color: color,
+                    weight: 2,
+                    fillColor: color,
+                    fillOpacity: 0.35
+                });
+            }
+            
+            drawnItems.addLayer(e.layer);
+            saveCurrentTerritory();
+            
+            if (currentMode === 'rect') {
+                setPanMode();
+            }
+        }
+    });
+    
+    // Capital click handler
+    function onCapitalClick(e) {
+        if (currentMode !== 'capital' || !selectedFactionId) return;
+        
+        const name = prompt('Enter capital/anchor name:', 'Capital');
+        if (!name) return;
+        
+        const isPrimary = confirm('Set as primary capital? (Used as default anchor for general news)');
+        const sectorName = prompt('Sector/Region name (optional):', '') || '';
+        
+        // Get date range from territory date inputs (reuse them for capitals)
+        const effectiveDate = document.getElementById('effectiveDate')?.value || null;
+        const isPermanent = document.getElementById('isPermanent')?.checked ?? true;
+        const endDate = isPermanent ? null : (document.getElementById('endDate')?.value || null);
+        
+        fetch(`/admin/factions/${selectedFactionId}/capitals/add`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: name,
+                lat: e.latlng.lat,
+                lng: e.latlng.lng,
+                is_primary: isPrimary,
+                sector_name: sectorName,
+                effective_date: effectiveDate,
+                end_date: endDate
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                let msg = `Capital "${name}" added`;
+                if (effectiveDate) msg += ` (from ${effectiveDate})`;
+                showSaveStatus('success', msg);
+                loadCapitals(selectedFactionId);
+            } else {
+                showSaveStatus('error', 'Failed to add capital');
+            }
+        });
+    }
+    
+    // Variable for erase drawer
+    let erasePolygonDrawer = null;
+    
+    // Switch to Erase mode
+    function setEraseMode() {
+        if (!selectedFactionId) {
+            alert('Please select a faction first');
+            return;
+        }
+        
+        if (!drawToolsLoaded) {
+            alert('Drawing tools are not available. Please refresh the page.');
+            return;
+        }
+        
+        currentMode = 'erase';
+        
+        if (currentPolygonDrawer) {
+            currentPolygonDrawer.disable();
+            currentPolygonDrawer = null;
+        }
+        
+        map.dragging.disable();
+        map.off('click', onCapitalClick);
+        
+        clearModeButtons();
+        document.getElementById('btnEraseMode')?.classList.add('active');
+        document.getElementById('map').classList.add('erasing-mode');
+        document.getElementById('toolHint').textContent = 'Draw polygon to erase. Click first point to finish. [Space=Pan, Ctrl+Z=Undo point, Esc=Cancel]';
+        document.getElementById('toolHint').classList.add('show');
+        document.getElementById('btnFinishDrawing').style.display = 'block';
+        document.getElementById('btnCancelDrawing').style.display = 'block';
+        
+        updateStatus('Mode: Erase - Draw area to remove');
+        
+        // Start polygon drawer for erasing
+        const card = document.querySelector(`.faction-card[data-faction-id="${selectedFactionId}"]`);
+        const color = '#ef4444'; // Red for erase
+        
+        erasePolygonDrawer = new L.Draw.Polygon(map, {
+            shapeOptions: {
+                color: color,
+                weight: 3,
+                fillColor: color,
+                fillOpacity: 0.3,
+                dashArray: '10, 5'
+            },
+            allowIntersection: false
+        });
+        
+        erasePolygonDrawer.enable();
+        currentPolygonDrawer = erasePolygonDrawer;
+    }
+    
+    // Handle erase polygon completion
+    map.on(L.Draw.Event.CREATED, function(e) {
+        if (currentMode === 'erase' && e.layer) {
+            const eraseGeoJson = e.layer.toGeoJSON();
+            
+            // Use Turf.js to subtract the erase polygon from all territory polygons
+            if (typeof turf !== 'undefined') {
+                eraseFromTerritory(eraseGeoJson);
+            } else {
+                // Fallback: just remove layers that intersect
+                eraseFromTerritorySimple(e.layer);
+            }
+            
+            setPanMode();
+        }
+    });
+    
+    // Erase using Turf.js difference
+    function eraseFromTerritory(eraseGeoJson) {
+        const card = document.querySelector(`.faction-card[data-faction-id="${selectedFactionId}"]`);
+        const color = card.dataset.factionColor;
+        
+        const newLayers = [];
+        const layersToRemove = [];
+        
+        // Create eraser feature from the drawn polygon
+        const eraserFeature = turf.feature(eraseGeoJson.geometry);
+        
+        drawnItems.eachLayer(layer => {
+            try {
+                const layerGeoJson = layer.toGeoJSON();
+                let geom = layerGeoJson.geometry;
+                
+                // Handle different geometry types
+                if (geom.type === 'Polygon') {
+                    const poly = turf.polygon(geom.coordinates);
+                    const diff = turf.difference(poly, eraserFeature);
+                    
+                    if (diff && diff.geometry && diff.geometry.coordinates.length > 0) {
+                        const newLayer = L.geoJSON(diff.geometry, {
+                            style: { color: color, weight: 2, fillColor: color, fillOpacity: 0.35 }
+                        });
+                        newLayer.eachLayer(l => newLayers.push(l));
+                    }
+                    layersToRemove.push(layer);
+                    
+                } else if (geom.type === 'MultiPolygon') {
+                    // Process each polygon in the MultiPolygon
+                    const resultPolygons = [];
+                    
+                    geom.coordinates.forEach(polyCoords => {
+                        try {
+                            const poly = turf.polygon(polyCoords);
+                            const diff = turf.difference(poly, eraserFeature);
+                            
+                            if (diff && diff.geometry) {
+                                if (diff.geometry.type === 'Polygon' && diff.geometry.coordinates.length > 0) {
+                                    resultPolygons.push(diff.geometry.coordinates);
+                                } else if (diff.geometry.type === 'MultiPolygon') {
+                                    diff.geometry.coordinates.forEach(c => resultPolygons.push(c));
+                                }
+                            }
+                        } catch (polyErr) {
+                            // Keep original if difference fails for this polygon
+                            resultPolygons.push(polyCoords);
+                        }
+                    });
+                    
+                    if (resultPolygons.length > 0) {
+                        const resultGeom = resultPolygons.length === 1 
+                            ? { type: 'Polygon', coordinates: resultPolygons[0] }
+                            : { type: 'MultiPolygon', coordinates: resultPolygons };
+                        
+                        const newLayer = L.geoJSON(resultGeom, {
+                            style: { color: color, weight: 2, fillColor: color, fillOpacity: 0.35 }
+                        });
+                        newLayer.eachLayer(l => newLayers.push(l));
+                    }
+                    layersToRemove.push(layer);
+                    
+                } else {
+                    // Try generic approach
+                    const feature = turf.feature(geom);
+                    const diff = turf.difference(feature, eraserFeature);
+                    
+                    if (diff && diff.geometry) {
+                        const newLayer = L.geoJSON(diff.geometry, {
+                            style: { color: color, weight: 2, fillColor: color, fillOpacity: 0.35 }
+                        });
+                        newLayer.eachLayer(l => newLayers.push(l));
+                        layersToRemove.push(layer);
+                    }
+                }
+            } catch (e) {
+                console.warn('Could not erase from layer:', e);
+            }
+        });
+        
+        // Remove old layers and add new ones
+        layersToRemove.forEach(l => drawnItems.removeLayer(l));
+        newLayers.forEach(l => drawnItems.addLayer(l));
+        
+        // Save
+        if (layersToRemove.length > 0) {
+            saveCurrentTerritory();
+            showSaveStatus('success', 'Territory erased!');
+        } else {
+            showSaveStatus('error', 'No overlap found to erase');
+        }
+    }
+    
+    // Simple erase fallback (removes overlapping polygons entirely)
+    function eraseFromTerritorySimple(eraseLayer) {
+        const eraseBounds = eraseLayer.getBounds();
+        const layersToRemove = [];
+        
+        drawnItems.eachLayer(layer => {
+            if (layer.getBounds && eraseBounds.intersects(layer.getBounds())) {
+                layersToRemove.push(layer);
+            }
+        });
+        
+        layersToRemove.forEach(l => drawnItems.removeLayer(l));
+        
+        if (layersToRemove.length > 0) {
+            saveCurrentTerritory();
+            showSaveStatus('success', `Removed ${layersToRemove.length} overlapping area(s)`);
+        } else {
+            showSaveStatus('error', 'No overlap found');
+        }
+    }
+    
+    // Switch to Capital mode
+    function setCapitalMode() {
+        if (!selectedFactionId) {
+            alert('Please select a faction first');
+            return;
+        }
+        
+        currentMode = 'capital';
+        
+        if (currentPolygonDrawer) {
+            currentPolygonDrawer.disable();
+            currentPolygonDrawer = null;
+        }
+        
+        // Disable dragging so Space key can toggle it (consistent with other modes)
+        map.dragging.disable();
+        map.on('click', onCapitalClick);
+        
+        clearModeButtons();
+        document.getElementById('btnCapitalMode')?.classList.add('active');
+        document.getElementById('map').style.cursor = 'pointer';
+        document.getElementById('toolHint').textContent = 'Click on map to place capital. [Space=Pan, Esc=Cancel]';
+        document.getElementById('toolHint').classList.add('show');
+        document.getElementById('btnFinishDrawing').style.display = 'none';
+        document.getElementById('btnCancelDrawing').style.display = 'none';
+        
+        updateStatus('Mode: Capital - Click to place');
+    }
+    
+    // Faction selection
+    document.querySelectorAll('.faction-card').forEach(card => {
+        card.addEventListener('click', function() {
+            setPanMode();
+            
+            document.querySelectorAll('.faction-card').forEach(c => c.classList.remove('active'));
+            this.classList.add('active');
+            selectedFactionId = this.dataset.factionId;
+            
+            document.getElementById('drawControls').style.display = 'block';
+            document.getElementById('selectedFactionName').textContent = this.dataset.factionName;
+            document.getElementById('selectedFactionName').style.color = this.dataset.factionColor;
+            
+            // Clear history when switching factions
+            clearHistory();
+            
+            drawnItems.clearLayers();
+            
+            if (factionLayers[selectedFactionId]) {
+                factionLayers[selectedFactionId].eachLayer(layer => {
+                    const cloned = L.geoJSON(layer.toGeoJSON(), {
+                        style: { color: this.dataset.factionColor, weight: 2, fillColor: this.dataset.factionColor, fillOpacity: 0.35 }
+                    });
+                    cloned.eachLayer(l => drawnItems.addLayer(l));
+                });
+                map.removeLayer(factionLayers[selectedFactionId]);
+            }
+            
+            // Save initial state to history
+            saveToHistory();
+            
+            // Load capitals for this faction
+            loadCapitals(selectedFactionId);
+            
+            updateStatus('Mode: Pan - Select mode above');
+        });
+    });
+    
+    // Mode toggle buttons
+    document.getElementById('btnPanMode')?.addEventListener('click', setPanMode);
+    document.getElementById('btnBrushMode')?.addEventListener('click', setBrushMode);
+    document.getElementById('btnDrawMode')?.addEventListener('click', setDrawMode);
+    document.getElementById('btnRectMode')?.addEventListener('click', setRectMode);
+    document.getElementById('btnEraseBrushMode')?.addEventListener('click', setEraseBrushMode);
+    document.getElementById('btnCapitalMode')?.addEventListener('click', setCapitalMode);
+    
+    // Finish drawing
+    document.getElementById('btnFinishDrawing')?.addEventListener('click', function() {
+        if (currentPolygonDrawer) currentPolygonDrawer.completeShape();
+    });
+    
+    // Cancel drawing
+    document.getElementById('btnCancelDrawing')?.addEventListener('click', setPanMode);
+    
+    // Permanent checkbox toggle
+    document.getElementById('isPermanent')?.addEventListener('change', function() {
+        document.getElementById('endDateGroup').style.display = this.checked ? 'none' : 'block';
+    });
+    
+    // Handle drawn shapes
+    map.on(L.Draw.Event.CREATED, function(e) {
+        drawnItems.addLayer(e.layer);
+        saveCurrentTerritory();
+        
+        if (currentMode === 'draw') {
+            setTimeout(setDrawMode, 100);
+        }
+    });
+
+    // Clear territory
+    document.getElementById('btnClearTerritory')?.addEventListener('click', function() {
+        if (!selectedFactionId) return;
+        if (confirm('Clear all territory for this faction?')) {
+            drawnItems.clearLayers();
+            saveCurrentTerritory();
+            setPanMode();
+        }
+    });
+    
+    // Show territory history
+    document.getElementById('btnShowHistory')?.addEventListener('click', function() {
+        if (!selectedFactionId) return;
+        
+        fetch(`/admin/factions/${selectedFactionId}/territory/history`)
+            .then(r => r.json())
+            .then(data => {
+                let msg = `Territory History for ${data.faction.name}:\n\n`;
+                if (data.snapshots.length === 0) {
+                    msg += 'No historical snapshots yet.';
+                } else {
+                    data.snapshots.forEach((s, i) => {
+                        msg += `${i+1}. ${s.effective_date}`;
+                        if (s.end_date) msg += ` to ${s.end_date}`;
+                        if (s.is_permanent) msg += ' (permanent)';
+                        if (s.notes) msg += ` - ${s.notes}`;
+                        msg += ` [${s.source}]\n`;
+                    });
+                }
+                alert(msg);
+            });
+    });
+    
+    // Save territory with snapshot
+    function saveCurrentTerritory() {
+        if (!selectedFactionId) return;
+        
+        // Save to history for undo/redo
+        saveToHistory();
+        
+        const card = document.querySelector(`.faction-card[data-faction-id="${selectedFactionId}"]`);
+        const color = card.dataset.factionColor;
+        
+        const features = [];
+        drawnItems.eachLayer(layer => features.push(layer.toGeoJSON()));
+        
+        const geojson = { type: "FeatureCollection", features: features };
+        
+        const effectiveDate = document.getElementById('effectiveDate')?.value || null;
+        const isPermanent = document.getElementById('isPermanent')?.checked ?? true;
+        const endDate = isPermanent ? null : (document.getElementById('endDate')?.value || null);
+        const notes = document.getElementById('snapshotNotes')?.value || '';
+        
+        // Save as snapshot (which also updates current territory)
+        fetch(`/admin/factions/${selectedFactionId}/territory/snapshot`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                geojson: geojson,
+                effective_date: effectiveDate,
+                end_date: endDate,
+                is_permanent: isPermanent,
+                notes: notes
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                showSaveStatus('success', 'Territory saved!');
+                card.dataset.factionTerritory = JSON.stringify(geojson);
+                
+                if (factionLayers[selectedFactionId]) {
+                    map.removeLayer(factionLayers[selectedFactionId]);
+                }
+                factionLayers[selectedFactionId] = L.geoJSON(geojson, {
+                    style: { color: color, weight: 2, fillColor: color, fillOpacity: 0.35 }
+                });
+            } else {
+                showSaveStatus('error', 'Save failed!');
+            }
+        })
+        .catch(e => {
+            console.error('Save error:', e);
+            showSaveStatus('error', 'Save failed!');
+        });
+    }
+    
+    function showSaveStatus(type, message) {
+        const el = document.getElementById('saveStatus');
+        el.className = 'save-status ' + type;
+        el.textContent = message;
+        setTimeout(() => { el.className = 'save-status'; }, 2000);
+    }
+    
+    // Disable draw button if tools didn't load
+    if (!drawToolsLoaded) {
+        const drawBtn = document.getElementById('btnDrawMode');
+        if (drawBtn) {
+            drawBtn.disabled = true;
+            drawBtn.title = 'Drawing tools could not be loaded';
+        }
+    }
+    
+    // ========== BOUNDARY SEARCH (Quick Fill) ==========
+    let previewLayer = null;
+    let selectedOsmId = null;
+    let selectedOsmType = null;
+    
+    // Search for boundaries using Nominatim
+    async function searchBoundaries(query) {
+        const resultsEl = document.getElementById('boundaryResults');
+        resultsEl.style.display = 'block';
+        resultsEl.innerHTML = '<div class="boundary-loading"><i class="fa fa-spinner"></i> Searching...</div>';
+        
+        try {
+            // Nominatim search with polygon support
+            const response = await fetch(
+                `https://nominatim.openstreetmap.org/search?` + 
+                `q=${encodeURIComponent(query)}&format=json&polygon_geojson=0&addressdetails=1&limit=10&` +
+                `featuretype=country,state,county,city&extratags=1`,
+                { headers: { 'User-Agent': 'WarTracker/1.0' } }
+            );
+            const data = await response.json();
+            
+            if (data.length === 0) {
+                resultsEl.innerHTML = '<div class="small text-muted p-2">No results found. Try a different search.</div>';
+                return;
+            }
+            
+            resultsEl.innerHTML = '';
+            data.forEach(item => {
+                // Only show administrative boundaries
+                if (item.osm_type && (item.class === 'boundary' || item.class === 'place' || item.type === 'administrative')) {
+                    const div = document.createElement('div');
+                    div.className = 'boundary-result';
+                    div.dataset.osmId = item.osm_id;
+                    div.dataset.osmType = item.osm_type;
+                    div.dataset.name = item.display_name.split(',')[0];
+                    
+                    let typeBadge = item.type || item.class || '';
+                    if (item.address) {
+                        if (item.address.country_code) typeBadge = item.address.country_code.toUpperCase();
+                    }
+                    
+                    div.innerHTML = `
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>${item.display_name.substring(0, 50)}${item.display_name.length > 50 ? '...' : ''}</span>
+                            <span class="type-badge">${typeBadge}</span>
+                        </div>
+                    `;
+                    
+                    div.addEventListener('click', () => selectBoundary(item));
+                    resultsEl.appendChild(div);
+                }
+            });
+            
+            if (resultsEl.innerHTML === '') {
+                resultsEl.innerHTML = '<div class="small text-muted p-2">No administrative boundaries found.</div>';
+            }
+            
+        } catch (e) {
+            console.error('Boundary search error:', e);
+            resultsEl.innerHTML = '<div class="small text-danger p-2">Search failed. Try again.</div>';
+        }
+    }
+    
+    // Select a boundary from results
+    function selectBoundary(item) {
+        selectedOsmId = item.osm_id;
+        selectedOsmType = item.osm_type;
+        
+        // Highlight selected
+        document.querySelectorAll('.boundary-result').forEach(el => el.classList.remove('selected'));
+        document.querySelector(`.boundary-result[data-osm-id="${item.osm_id}"]`)?.classList.add('selected');
+        
+        // Show selection
+        const selEl = document.getElementById('selectedBoundary');
+        const nameEl = document.getElementById('selectedBoundaryName');
+        selEl.style.display = 'block';
+        nameEl.textContent = item.display_name.split(',')[0];
+    }
+    
+    // Fetch actual boundary polygon from OSM
+    async function fetchBoundaryPolygon(osmType, osmId, excludeSea = false) {
+        // Use Nominatim's polygon output
+        const typePrefix = osmType === 'relation' ? 'R' : (osmType === 'way' ? 'W' : 'N');
+        
+        // First, try to get the land-only boundary using polygon_threshold
+        // Lower threshold = more detail, which can include sea. Higher = simplified land boundary
+        const threshold = excludeSea ? 0.005 : 0.0;
+        
+        const response = await fetch(
+            `https://nominatim.openstreetmap.org/lookup?` +
+            `osm_ids=${typePrefix}${osmId}&format=geojson&polygon_geojson=1&polygon_threshold=${threshold}`,
+            { headers: { 'User-Agent': 'WarTracker/1.0' } }
+        );
+        const data = await response.json();
+        
+        if (data.features && data.features.length > 0) {
+            let feature = data.features[0];
+            
+            // If excluding sea territory, try to clip to land using Turf.js
+            if (excludeSea && feature.geometry && typeof turf !== 'undefined') {
+                feature = await clipToLandWithTurf(feature);
+            }
+            
+            return feature;
+        }
+        return null;
+    }
+    
+    // Clip polygon to land using Turf.js and OSM coastlines
+    async function clipToLandWithTurf(feature) {
+        try {
+            // Get the bounding box
+            const bbox = turf.bbox(feature);
+            const [minLng, minLat, maxLng, maxLat] = bbox;
+            
+            // Add a small buffer to the bbox
+            const padding = 0.5;
+            const paddedBbox = [minLng - padding, minLat - padding, maxLng + padding, maxLat + padding];
+            
+            console.log('Fetching land polygons for bbox:', paddedBbox);
+            
+            // Fetch land polygons from Overpass API
+            const overpassQuery = `
+                [out:json][timeout:60];
+                (
+                    // Get land areas
+                    way["natural"="coastline"](${paddedBbox[1]},${paddedBbox[0]},${paddedBbox[3]},${paddedBbox[2]});
+                    relation["natural"="coastline"](${paddedBbox[1]},${paddedBbox[0]},${paddedBbox[3]},${paddedBbox[2]});
+                );
+                out geom;
+            `;
+            
+            const overpassResponse = await fetch('https://overpass-api.de/api/interpreter', {
+                method: 'POST',
+                body: 'data=' + encodeURIComponent(overpassQuery),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            });
+            
+            const overpassData = await overpassResponse.json();
+            
+            // If no coastlines found, the area is entirely inland
+            if (!overpassData.elements || overpassData.elements.length === 0) {
+                console.log('No coastlines in area - using full boundary');
+                return feature;
+            }
+            
+            console.log('Found coastline elements:', overpassData.elements.length);
+            
+            // Build coastline segments as a polygon
+            // Coastlines go counterclockwise around land (land on left)
+            const coastlinePoints = [];
+            overpassData.elements.forEach(el => {
+                if (el.geometry && el.geometry.length > 1) {
+                    el.geometry.forEach(p => {
+                        coastlinePoints.push([p.lon, p.lat]);
+                    });
+                }
+            });
+            
+            if (coastlinePoints.length < 4) {
+                console.log('Not enough coastline points, using full boundary');
+                return feature;
+            }
+            
+            // Create a rough sea polygon by using the coastline and bbox edges
+            // Strategy: Create a "sea mask" from bbox and subtract land approximation
+            const bboxPolygon = turf.bboxPolygon(paddedBbox);
+            
+            // For each point in the feature, check if it's likely over sea
+            // We'll use a heuristic: points far from coastline in the sea direction
+            const clipped = clipPolygonToLand(feature, coastlinePoints, paddedBbox);
+            
+            if (clipped) {
+                return { ...feature, geometry: clipped };
+            }
+            
+            return feature;
+            
+        } catch (e) {
+            console.warn('Could not clip to land:', e);
+            return feature;
+        }
+    }
+    
+    // Clip polygon coordinates to land side of coastline
+    function clipPolygonToLand(feature, coastlinePoints, bbox) {
+        if (!feature.geometry) return null;
+        
+        try {
+            // Build a coastline for reference
+            const coastlineSet = new Set();
+            coastlinePoints.forEach(p => {
+                coastlineSet.add(`${p[0].toFixed(3)},${p[1].toFixed(3)}`);
+            });
+            
+            // Find the centroid of the original feature (should be on land)
+            const centroid = turf.centroid(feature);
+            const centerLng = centroid.geometry.coordinates[0];
+            const centerLat = centroid.geometry.coordinates[1];
+            
+            // Create a simplified approach: buffer inward from coastline
+            // by keeping points closer to the centroid
+            function processCoordinates(coords, depth = 0) {
+                if (!Array.isArray(coords)) return coords;
+                
+                // Check if this is a coordinate pair [lng, lat]
+                if (coords.length >= 2 && typeof coords[0] === 'number' && typeof coords[1] === 'number') {
+                    return coords;
+                }
+                
+                // Check if this is a ring of coordinates
+                if (coords.length > 0 && Array.isArray(coords[0]) && 
+                    typeof coords[0][0] === 'number' && typeof coords[0][1] === 'number') {
+                    
+                    // This is a ring - filter points that are too far into sea
+                    const filtered = filterSeaPoints(coords, coastlinePoints, centerLng, centerLat);
+                    return filtered.length >= 4 ? filtered : coords;
+                }
+                
+                // This is an array of rings - process each
+                return coords.map(c => processCoordinates(c, depth + 1)).filter(c => c && c.length >= 4);
+            }
+            
+            const newCoords = processCoordinates(feature.geometry.coordinates);
+            
+            return {
+                type: feature.geometry.type,
+                coordinates: newCoords
+            };
+            
+        } catch (e) {
+            console.warn('Error in clipPolygonToLand:', e);
+            return null;
+        }
+    }
+    
+    // Filter out points that appear to be in the sea
+    function filterSeaPoints(ring, coastlinePoints, centerLng, centerLat) {
+        if (ring.length < 4) return ring;
+        
+        // Find average distance from center for coastline points
+        let coastlineDistances = [];
+        coastlinePoints.forEach(cp => {
+            const dist = Math.sqrt(Math.pow(cp[0] - centerLng, 2) + Math.pow(cp[1] - centerLat, 2));
+            coastlineDistances.push(dist);
+        });
+        
+        // If no coastline reference, return original
+        if (coastlineDistances.length === 0) return ring;
+        
+        // Calculate median coastline distance from center
+        coastlineDistances.sort((a, b) => a - b);
+        const medianCoastDist = coastlineDistances[Math.floor(coastlineDistances.length / 2)];
+        
+        // Maximum allowed distance (beyond this is likely sea)
+        // Use 1.2x median + some buffer
+        const maxAllowedDist = medianCoastDist * 1.3 + 0.1;
+        
+        // Filter ring points
+        const filtered = ring.filter(point => {
+            const dist = Math.sqrt(Math.pow(point[0] - centerLng, 2) + Math.pow(point[1] - centerLat, 2));
+            // Keep points within reasonable distance, or all points if filter is too aggressive
+            return dist <= maxAllowedDist;
+        });
+        
+        // If filtering removed too many points, return original
+        if (filtered.length < 4 || filtered.length < ring.length * 0.3) {
+            return ring;
+        }
+        
+        // Ensure ring is closed
+        if (filtered.length > 0) {
+            const first = filtered[0];
+            const last = filtered[filtered.length - 1];
+            if (first[0] !== last[0] || first[1] !== last[1]) {
+                filtered.push([...first]);
+            }
+        }
+        
+        return filtered;
+    }
+    
+    // Preview boundary on map
+    async function previewBoundary() {
+        if (!selectedOsmId || !selectedOsmType) {
+            alert('Select a boundary first');
+            return;
+        }
+        
+        // Clear previous preview
+        if (previewLayer) {
+            map.removeLayer(previewLayer);
+            previewLayer = null;
+        }
+        
+        const excludeSea = document.getElementById('excludeSeaTerritory')?.checked || false;
+        
+        const saveStatus = document.getElementById('saveStatus');
+        saveStatus.className = 'save-status success';
+        saveStatus.textContent = excludeSea ? 'Loading boundary (excluding sea)...' : 'Loading boundary...';
+        saveStatus.style.display = 'block';
+        
+        try {
+            const feature = await fetchBoundaryPolygon(selectedOsmType, selectedOsmId, excludeSea);
+            
+            if (feature && feature.geometry) {
+                const card = document.querySelector(`.faction-card[data-faction-id="${selectedFactionId}"]`);
+                const color = card ? card.dataset.factionColor : '#3b82f6';
+                
+                previewLayer = L.geoJSON(feature.geometry, {
+                    style: { 
+                        color: color, 
+                        weight: 3, 
+                        fillColor: color, 
+                        fillOpacity: 0.3,
+                        dashArray: '5, 10' // Dashed for preview
+                    }
+                }).addTo(map);
+                
+                map.fitBounds(previewLayer.getBounds(), { padding: [50, 50] });
+                
+                saveStatus.textContent = 'Preview shown (dashed). Click Apply to add.';
+                setTimeout(() => { saveStatus.style.display = 'none'; }, 3000);
+            } else {
+                saveStatus.className = 'save-status error';
+                saveStatus.textContent = 'Could not load boundary polygon';
+                setTimeout(() => { saveStatus.style.display = 'none'; }, 3000);
+            }
+        } catch (e) {
+            console.error('Preview error:', e);
+            saveStatus.className = 'save-status error';
+            saveStatus.textContent = 'Failed to load boundary';
+            setTimeout(() => { saveStatus.style.display = 'none'; }, 3000);
+        }
+    }
+    
+    // Apply boundary to faction territory
+    async function applyBoundary() {
+        if (!selectedFactionId) {
+            alert('Select a faction first');
+            return;
+        }
+        
+        if (!selectedOsmId || !selectedOsmType) {
+            alert('Select a boundary first');
+            return;
+        }
+        
+        const excludeSea = document.getElementById('excludeSeaTerritory')?.checked || false;
+        
+        const saveStatus = document.getElementById('saveStatus');
+        saveStatus.className = 'save-status success';
+        saveStatus.textContent = excludeSea ? 'Applying boundary (excluding sea)...' : 'Applying boundary...';
+        saveStatus.style.display = 'block';
+        
+        try {
+            const feature = await fetchBoundaryPolygon(selectedOsmType, selectedOsmId, excludeSea);
+            
+            if (feature && feature.geometry) {
+                const card = document.querySelector(`.faction-card[data-faction-id="${selectedFactionId}"]`);
+                const color = card.dataset.factionColor;
+                
+                // Clear preview
+                if (previewLayer) {
+                    map.removeLayer(previewLayer);
+                    previewLayer = null;
+                }
+                
+                // Add to drawn items
+                const geojsonLayer = L.geoJSON(feature.geometry, {
+                    style: { color: color, weight: 2, fillColor: color, fillOpacity: 0.35 }
+                });
+                
+                geojsonLayer.eachLayer(layer => {
+                    drawnItems.addLayer(layer);
+                });
+                
+                // Fit map to new boundary
+                map.fitBounds(geojsonLayer.getBounds(), { padding: [50, 50] });
+                
+                // Auto-save
+                saveCurrentTerritory();
+                
+                // Clear selection
+                selectedOsmId = null;
+                selectedOsmType = null;
+                document.getElementById('selectedBoundary').style.display = 'none';
+                document.getElementById('boundaryResults').style.display = 'none';
+                document.getElementById('boundarySearch').value = '';
+                
+            } else {
+                saveStatus.className = 'save-status error';
+                saveStatus.textContent = 'Could not load boundary';
+                setTimeout(() => { saveStatus.style.display = 'none'; }, 3000);
+            }
+        } catch (e) {
+            console.error('Apply error:', e);
+            saveStatus.className = 'save-status error';
+            saveStatus.textContent = 'Failed to apply boundary';
+            setTimeout(() => { saveStatus.style.display = 'none'; }, 3000);
+        }
+    }
+    
+    // Event listeners for boundary search
+    document.getElementById('btnSearchBoundary')?.addEventListener('click', () => {
+        const query = document.getElementById('boundarySearch').value.trim();
+        if (query) searchBoundaries(query);
+    });
+    
+    document.getElementById('boundarySearch')?.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            const query = e.target.value.trim();
+            if (query) searchBoundaries(query);
+        }
+    });
+    
+    document.getElementById('btnPreviewBoundary')?.addEventListener('click', previewBoundary);
+    document.getElementById('btnApplyBoundary')?.addEventListener('click', applyBoundary);
+    
+})();
+</script>
+{% endblock %}

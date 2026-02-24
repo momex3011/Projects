@@ -1,0 +1,80 @@
+{% extends "layout.html" %}
+{% block content %}
+<style>
+    /* Override layout overflow for admin pages */
+    body, .main-wrapper {
+        overflow: auto !important;
+        height: auto !important;
+    }
+    .main-wrapper {
+        min-height: calc(100vh - 50px);
+        padding-bottom: 50px;
+    }
+</style>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="fw-bold">Admin Dashboard</h1>
+        <div>
+            <a class="btn btn-primary btn-sm" href="{{ url_for('admin.add_war') }}"><i class="fa fa-plus me-1"></i> Add War</a>
+            <a class="btn btn-secondary btn-sm" href="{{ url_for('admin.add_event') }}"><i class="fa fa-pen me-1"></i> Add Event</a>
+        </div>
+    </div>
+
+    <!-- WARS MANAGEMENT -->
+    <div class="card p-3 mb-4">
+        <h4 class="mb-3 text-muted text-uppercase fs-6 fw-bold">War Zones</h4>
+        <div class="row g-3">
+            {% for war in wars %}
+            <div class="col-md-4">
+                <div class="card h-100" style="background: rgba(30, 41, 59, 0.9); border: 1px solid rgba(255,255,255,0.1);">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ war.name }}</h5>
+                        <p class="card-text text-muted small">{{ war.description[:100] if war.description else 'No description' }}...</p>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <a href="{{ url_for('wars.show_war', war_id=war.id) }}" class="btn btn-outline-primary btn-sm">
+                                <i class="fa fa-map me-1"></i> View Map
+                            </a>
+                            <a href="{{ url_for('admin.manage_factions', war_id=war.id) }}" class="btn btn-outline-warning btn-sm">
+                                <i class="fa fa-users me-1"></i> Factions
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="card p-3">
+        <h4 class="mb-3 text-muted text-uppercase fs-6 fw-bold">Recent Intelligence Logs</h4>
+        <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle">
+              <thead>
+                  <tr class="text-uppercase small text-muted">
+                      <th>Date</th>
+                      <th>War Zone</th>
+                      <th>Event Title</th>
+                      <th>Source</th>
+                  </tr>
+              </thead>
+              <tbody>
+              {% for e in events %}
+                <tr>
+                  <td class="data-font text-info">{{ e.event_date }}</td>
+                  <td><span class="badge bg-secondary">{{ e.war.name }}</span></td>
+                  <td>{{ e.title }}</td>
+                  <td>
+                      {% if e.source_url %}
+                        <a href="{{ e.source_url }}" target="_blank" class="btn btn-outline-light btn-sm py-0" style="font-size: 0.7rem;">LINK</a>
+                      {% else %}
+                        <span class="text-muted small">-</span>
+                      {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

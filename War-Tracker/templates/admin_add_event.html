@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Add Event</h2>
+<form method="POST">
+  <div class="mb-2">
+    <label>War</label>
+    <select name="war_id" class="form-select">
+      {% for w in wars %}<option value="{{ w.id }}">{{ w.name }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="mb-2">
+    <label>Category</label>
+    <select name="category_id" class="form-select">
+      <option value="">(none)</option>
+      {% for c in cats %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="mb-2"><label>Title</label><input class="form-control" name="title"></div>
+  <div class="mb-2"><label>Date</label><input class="form-control" type="date" name="event_date"></div>
+  <div class="mb-2"><label>Latitude</label><input class="form-control" name="lat" id="lat"></div>
+  <div class="mb-2"><label>Longitude</label><input class="form-control" name="lng" id="lng"></div>
+  <div class="mb-2"><label>Source URL</label><input class="form-control" name="source_url"></div>
+  <div id="map" style="height: 350px;"></div>
+  <button class="btn btn-success mt-2">Add Event</button>
+</form>
+
+<script>
+  const map = L.map('map').setView([20,0], 2);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+  let marker;
+  map.on('click', function(e) {
+    const {lat, lng} = e.latlng;
+    document.getElementById('lat').value = lat;
+    document.getElementById('lng').value = lng;
+    if (marker) marker.setLatLng(e.latlng); else marker = L.marker(e.latlng).addTo(map);
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,27 @@
+[
+    {
+        "name": "Ugarit News",
+        "platform": "youtube",
+        "handle": "UgaritNews"
+    },
+    {
+        "name": "Shaam News Network",
+        "platform": "youtube",
+        "handle": "ShaamNetwork"
+    },
+    {
+        "name": "LCC Syria",
+        "platform": "facebook",
+        "handle": "LCCSy"
+    },
+    {
+        "name": "Syrian Observatory",
+        "platform": "facebook",
+        "handle": "syriahroe"
+    },
+    {
+        "name": "Daraa Martyr",
+        "platform": "youtube",
+        "handle": "daraamartyr"
+    }
+]

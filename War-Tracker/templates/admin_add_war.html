@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Create New War</h2>
+<form method="POST">
+  <div class="mb-2"><label>Name</label><input class="form-control" name="name" required></div>
+  <div class="mb-2"><label>Description</label><textarea class="form-control" name="description"></textarea></div>
+  <div class="mb-2"><label>Start Date</label><input class="form-control" type="date" name="start_date"></div>
+  <div class="mb-2"><label>Default Map Latitude</label><input class="form-control" name="default_lat"></div>
+  <div class="mb-2"><label>Default Map Longitude</label><input class="form-control" name="default_lng"></div>
+  <div class="mb-2"><label>Default Zoom</label><input class="form-control" name="default_zoom" type="number" value="6"></div>
+  <button class="btn btn-success">Create War</button>
+</form>
+{% endblock %}
