@@ -1,0 +1,11 @@
+{
+  "upload_id": "4de75720f45641129b63aca91b206a78",
+  "filename": "test.mp4",
+  "safe_filename": "test.mp4",
+  "total_size": 10,
+  "total_chunks": 1,
+  "content_type": "video/mp4",
+  "uploaded_chunks": [],
+  "status": "initialized",
+  "created_at": "2026-03-15T21:33:09.968338+00:00"
+}

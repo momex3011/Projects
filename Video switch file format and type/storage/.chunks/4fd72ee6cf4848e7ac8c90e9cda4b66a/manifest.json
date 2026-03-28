@@ -1,0 +1,36 @@
+{
+  "upload_id": "4fd72ee6cf4848e7ac8c90e9cda4b66a",
+  "tool_id": "gif-maker",
+  "filename": "es2tvhgrsx4xwn9cvjxwq_mHuJoxTN.mp4",
+  "safe_filename": "es2tvhgrsx4xwn9cvjxwq_mHuJoxTN.mp4",
+  "total_size": 30614082,
+  "total_chunks": 6,
+  "content_type": "video/mp4",
+  "uploaded_chunks": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "status": "converted",
+  "created_at": "2026-03-18T20:58:04.157357+00:00",
+  "last_chunk_at": "2026-03-18T20:58:05.226932+00:00",
+  "requested_pipeline": {
+    "resolution": "4K",
+    "colorize": true,
+    "interpolate_60fps": true,
+    "audio_restore": true,
+    "film_restore": true
+  },
+  "tool_options": {
+    "pace": "Gentle",
+    "shape": "Square",
+    "loop": "Endless"
+  },
+  "download_target": "C:\\Users\\Ahmed\\Desktop\\upscale app\\storage\\outputs\\4fd72ee6cf4848e7ac8c90e9cda4b66a_gif-maker.gif",
+  "result_path": "C:\\Users\\Ahmed\\Desktop\\upscale app\\storage\\outputs\\4fd72ee6cf4848e7ac8c90e9cda4b66a_gif-maker.gif",
+  "result_filename": "4fd72ee6cf4848e7ac8c90e9cda4b66a_gif-maker.gif",
+  "completed_at": "2026-03-18T20:58:09.177055+00:00"
+}

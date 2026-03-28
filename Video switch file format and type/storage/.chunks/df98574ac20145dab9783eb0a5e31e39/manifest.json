@@ -1,0 +1,31 @@
+{
+  "upload_id": "df98574ac20145dab9783eb0a5e31e39",
+  "tool_id": "gif-to-mp4",
+  "filename": "8b92789b882b4fdf83d3a8a2ea963897_video-to-gif.gif",
+  "safe_filename": "8b92789b882b4fdf83d3a8a2ea963897_video-to-gif.gif",
+  "total_size": 3797393,
+  "total_chunks": 1,
+  "content_type": "image/gif",
+  "uploaded_chunks": [
+    0
+  ],
+  "status": "converted",
+  "created_at": "2026-03-18T20:22:24.687824+00:00",
+  "last_chunk_at": "2026-03-18T20:22:24.742178+00:00",
+  "requested_pipeline": {
+    "resolution": "4K",
+    "colorize": true,
+    "interpolate_60fps": true,
+    "audio_restore": true,
+    "film_restore": true
+  },
+  "tool_options": {
+    "delivery": "Balanced",
+    "edge": "Keep edge matte",
+    "motion": "Native loop"
+  },
+  "download_target": "C:\\Users\\Ahmed\\Desktop\\upscale app\\storage\\outputs\\df98574ac20145dab9783eb0a5e31e39_gif-to-mp4.mp4",
+  "result_path": "C:\\Users\\Ahmed\\Desktop\\upscale app\\storage\\outputs\\df98574ac20145dab9783eb0a5e31e39_gif-to-mp4.mp4",
+  "result_filename": "df98574ac20145dab9783eb0a5e31e39_gif-to-mp4.mp4",
+  "completed_at": "2026-03-18T20:22:25.235595+00:00"
+}

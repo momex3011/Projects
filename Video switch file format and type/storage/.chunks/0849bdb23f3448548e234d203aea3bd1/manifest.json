@@ -1,0 +1,17 @@
+{
+  "upload_id": "0849bdb23f3448548e234d203aea3bd1",
+  "filename": "MedalTVRoblox20260317200512216-1773863057.mp4",
+  "safe_filename": "MedalTVRoblox20260317200512216-1773863057.mp4",
+  "total_size": 8137617,
+  "total_chunks": 2,
+  "content_type": "video/mp4",
+  "uploaded_chunks": [
+    0,
+    1
+  ],
+  "status": "assembled",
+  "created_at": "2026-03-18T19:50:05.852780+00:00",
+  "last_chunk_at": "2026-03-18T19:50:05.991865+00:00",
+  "assembled_path": "C:\\Users\\Ahmed\\Desktop\\upscale app\\storage\\uploads\\0849bdb23f3448548e234d203aea3bd1_MedalTVRoblox20260317200512216-1773863057.mp4",
+  "assembled_at": "2026-03-18T19:50:06.040434+00:00"
+}

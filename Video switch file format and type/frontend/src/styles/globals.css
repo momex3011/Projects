@@ -1,0 +1,224 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --page-bg: #17121f;
+  --page-bg-2: #221b2f;
+  --surface-1: #2a2238;
+  --surface-2: #342a45;
+  --surface-3: #413254;
+  --surface-soft: rgba(255, 255, 255, 0.06);
+  --line-soft: rgba(255, 255, 255, 0.1);
+  --line-strong: rgba(255, 255, 255, 0.16);
+  --text-main: #f8f4ff;
+  --text-muted: #c3b7d7;
+  --shadow-deep: rgba(10, 8, 18, 0.42);
+  --shadow-soft: rgba(255, 255, 255, 0.09);
+  --accent-coral: #ff8e7f;
+  --accent-peach: #ffbf8d;
+  --accent-mint: #8de7cf;
+  --accent-sky: #9ab7ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 16% 12%, rgba(255, 142, 127, 0.18), transparent 28%),
+    radial-gradient(circle at 80% 18%, rgba(154, 183, 255, 0.2), transparent 26%),
+    radial-gradient(circle at 52% 90%, rgba(141, 231, 207, 0.12), transparent 34%),
+    linear-gradient(180deg, var(--page-bg) 0%, var(--page-bg-2) 100%);
+  color: var(--text-main);
+  font-family: var(--font-body), sans-serif;
+}
+
+body::selection {
+  background: rgba(255, 191, 141, 0.36);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-display {
+  font-family: var(--font-display), sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+@layer components {
+  .clay-shell {
+    border: 1px solid var(--line-soft);
+    background:
+      linear-gradient(160deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03)),
+      linear-gradient(180deg, var(--surface-2), var(--surface-1));
+    box-shadow:
+      28px 28px 60px var(--shadow-deep),
+      -16px -16px 36px var(--shadow-soft),
+      inset 1px 1px 0 rgba(255, 255, 255, 0.16),
+      inset -1px -1px 0 rgba(0, 0, 0, 0.14);
+  }
+
+  .clay-card {
+    border: 1px solid var(--line-soft);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03)),
+      linear-gradient(180deg, rgba(65, 50, 84, 0.98), rgba(42, 34, 56, 0.98));
+    box-shadow:
+      18px 18px 38px rgba(10, 8, 18, 0.3),
+      -10px -10px 22px rgba(255, 255, 255, 0.06),
+      inset 1px 1px 0 rgba(255, 255, 255, 0.16);
+  }
+
+  .clay-inset {
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: linear-gradient(180deg, rgba(23, 18, 31, 0.92), rgba(38, 29, 50, 0.96));
+    box-shadow:
+      inset 12px 12px 22px rgba(9, 7, 16, 0.32),
+      inset -10px -10px 18px rgba(255, 255, 255, 0.035);
+  }
+
+  .clay-pill {
+    border: 1px solid var(--line-soft);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04)),
+      linear-gradient(180deg, rgba(74, 58, 96, 0.95), rgba(52, 42, 69, 0.95));
+    box-shadow:
+      10px 10px 18px rgba(9, 7, 16, 0.26),
+      -6px -6px 16px rgba(255, 255, 255, 0.04),
+      inset 1px 1px 0 rgba(255, 255, 255, 0.14);
+  }
+
+  .clay-badge {
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 18px 28px 18px 28px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
+      linear-gradient(180deg, rgba(66, 52, 86, 0.94), rgba(39, 31, 52, 0.98));
+    box-shadow:
+      inset 10px 10px 20px rgba(9, 7, 16, 0.18),
+      inset -6px -6px 14px rgba(255, 255, 255, 0.03),
+      8px 8px 20px rgba(9, 7, 16, 0.16);
+  }
+
+  .clay-badge::after {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    border-radius: inherit;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    pointer-events: none;
+  }
+
+  .clay-button {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--line-strong);
+    box-shadow:
+      14px 14px 24px rgba(9, 7, 16, 0.28),
+      -8px -8px 18px rgba(255, 255, 255, 0.05),
+      inset 1px 1px 0 rgba(255, 255, 255, 0.18);
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease,
+      filter 180ms ease;
+  }
+
+  .clay-button::after,
+  .clay-gravity::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    background:
+      radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.08), transparent 34%),
+      linear-gradient(180deg, rgba(5, 4, 10, 0), rgba(8, 6, 15, 0.18));
+    transition: opacity 220ms ease;
+  }
+
+  .clay-button:hover {
+    transform: translateY(1px) scale(0.992);
+    filter: brightness(0.99) saturate(1.03);
+    box-shadow:
+      inset 14px 14px 24px rgba(9, 7, 16, 0.34),
+      inset -8px -8px 18px rgba(255, 255, 255, 0.035),
+      inset 1px 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  .clay-button:active {
+    transform: translateY(2px) scale(0.988);
+    box-shadow:
+      inset 18px 18px 30px rgba(9, 7, 16, 0.36),
+      inset -10px -10px 18px rgba(255, 255, 255, 0.035);
+  }
+
+  .clay-button:disabled {
+    filter: grayscale(0.15);
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .clay-button:hover::after,
+  .clay-button:active::after,
+  .clay-gravity:hover::after,
+  .clay-gravity:active::after {
+    opacity: 1;
+  }
+
+  .clay-gravity {
+    position: relative;
+    overflow: hidden;
+    transition:
+      transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 220ms ease,
+      filter 220ms ease,
+      border-color 220ms ease;
+  }
+
+  .clay-gravity:hover {
+    transform: translateY(1px) scale(0.992);
+    filter: brightness(0.99) saturate(1.03);
+    box-shadow:
+      inset 16px 16px 28px rgba(9, 7, 16, 0.33),
+      inset -10px -10px 18px rgba(255, 255, 255, 0.035),
+      inset 1px 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  .clay-gravity:active {
+    transform: translateY(2px) scale(0.987);
+    box-shadow:
+      inset 20px 20px 32px rgba(9, 7, 16, 0.38),
+      inset -10px -10px 18px rgba(255, 255, 255, 0.03);
+  }
+
+  .clay-grid {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 72px 72px;
+  }
+}
