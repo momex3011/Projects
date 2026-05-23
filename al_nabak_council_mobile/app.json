@@ -1,0 +1,31 @@
+{
+  "expo": {
+    "name": "Al-Nabk Council",
+    "slug": "alnabk-council-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/alnabk-symbol.png",
+    "userInterfaceStyle": "light",
+    "scheme": "alnabk",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "splash": {
+      "image": "./assets/alnabk-symbol.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#007a3d"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/alnabk-symbol.png",
+        "backgroundColor": "#007a3d"
+      }
+    },
+    "extra": {
+      "apiBaseUrl": "http://127.0.0.1:5000"
+    }
+  }
+}
