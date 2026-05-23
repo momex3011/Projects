@@ -1,0 +1,58 @@
+{% extends 'layout.html' %}
+
+{% block page_title %}{{ _('Manage Users') }}{% endblock %}
+
+{% block page_actions %}
+  <a class="btn btn-primary" href="{{ url_for('register', locale=get_locale()) }}">
+    <i class="fa-solid fa-user-plus"></i><span>{{ _('Register User') }}</span>
+  </a>
+{% endblock %}
+
+{% block content %}
+<section class="table-panel">
+  <div class="table-wrap">
+    <table>
+      <caption>{{ _('Users and roles') }}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{{ _('User') }}</th>
+          <th scope="col">{{ _('Role') }}</th>
+          <th scope="col">{{ _('Contact') }}</th>
+          <th scope="col">{{ _('Actions') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+          <tr>
+            <td>
+              <strong>{{ display_user_name(user) }}</strong>
+              <small>{{ user.email }}</small>
+            </td>
+            <td><span class="muted-chip">{{ role_label(user.role) }}</span></td>
+            <td>{{ user.contact_details or _('No contact details') }}</td>
+            <td>
+              <div class="table-actions">
+                <a class="icon-btn" href="{{ url_for('edit_user', locale=get_locale(), user_id=user.id) }}" aria-label="{{ _('Edit %(name)s', name=display_user_name(user)) }}">
+                  <i class="fa-solid fa-pen"></i>
+                </a>
+                {% if user.id != current_user.id %}
+                  <form method="POST" action="{{ url_for('delete_user', locale=get_locale(), user_id=user.id) }}">
+                    {{ g.delete_user_form.hidden_tag() }}
+                    <button class="icon-btn danger" type="submit" data-confirm="{{ _('Delete this user permanently? This cannot be undone.') }}" aria-label="{{ _('Delete %(name)s', name=display_user_name(user)) }}">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  </form>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="4">{{ _('No users found.') }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

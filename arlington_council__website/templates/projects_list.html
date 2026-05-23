@@ -1,0 +1,87 @@
+{% extends 'layout.html' %}
+{% from '_macros.html' import project_card with context %}
+
+{% block page_title %}{{ _('Projects') }}{% endblock %}
+
+{% block page_actions %}
+  {% if current_user.is_authenticated and current_user.has_permission(Permission.CREATE_PROJECT) %}
+    <a class="btn btn-primary" href="{{ url_for('new_project', locale=get_locale()) }}">
+      <i class="fa-solid fa-plus"></i><span>{{ _('New Project') }}</span>
+    </a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<section class="filter-panel">
+  <div class="filter-intro">
+    <div>
+      <span class="eyebrow">{{ _('Project guide') }}</span>
+      <h2>{{ _('Find the project you need') }}</h2>
+    </div>
+    <p>{{ _('Use filters instead of remembering exact titles. Leave fields empty to see everything.') }}</p>
+  </div>
+  <form method="GET" action="{{ url_for('projects_list', locale=get_locale()) }}" class="filter-grid" novalidate>
+    <div class="field">
+      {{ g.search_filter_form.search_term.label(class="field-label") }}
+      {{ g.search_filter_form.search_term(class="control", id="project-search", placeholder=_('Search by title or description')) }}
+    </div>
+    <div class="field">
+      {{ g.search_filter_form.status.label(class="field-label") }}
+      {{ g.search_filter_form.status(class="control") }}
+    </div>
+    <div class="field">
+      {{ g.search_filter_form.category.label(class="field-label") }}
+      {{ g.search_filter_form.category(class="control", placeholder=_('Category')) }}
+    </div>
+    <div class="field">
+      {{ g.search_filter_form.tracker_id.label(class="field-label") }}
+      {{ g.search_filter_form.tracker_id(class="control") }}
+    </div>
+    <button class="btn btn-primary filter-submit" type="submit">
+      <i class="fa-solid fa-filter"></i><span>{{ _('Apply Filters') }}</span>
+    </button>
+    {% if request.args.get('search_term') or request.args.get('status') or request.args.get('category') or request.args.get('tracker_id') %}
+      <a class="btn btn-secondary filter-reset" href="{{ url_for('projects_list', locale=get_locale()) }}">
+        <i class="fa-solid fa-rotate-left"></i><span>{{ _('Reset') }}</span>
+      </a>
+    {% endif %}
+  </form>
+  <p class="filter-status" role="status">
+    {{ _('Showing %(count)s project results.', count=projects.total) }}
+  </p>
+</section>
+
+<section class="project-grid">
+  {% for project in projects.items %}
+    {{ project_card(project) }}
+  {% else %}
+    <div class="empty-state wide">{{ _('No projects found.') }}</div>
+  {% endfor %}
+</section>
+
+{% if projects.pages > 1 %}
+  <nav class="pagination" aria-label="{{ _('Project pages') }}">
+    {% if projects.has_prev %}
+      <a class="btn btn-secondary" href="{{ url_for('projects_list', page=projects.prev_num, locale=get_locale(), search_term=request.args.get('search_term'), status=request.args.get('status'), category=request.args.get('category'), tracker_id=request.args.get('tracker_id')) }}">
+        <i class="fa-solid fa-arrow-left"></i><span>{{ _('Previous') }}</span>
+      </a>
+    {% endif %}
+    {% for page_num in projects.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+      {% if page_num %}
+        {% if projects.page == page_num %}
+          <span class="page-current">{{ page_num }}</span>
+        {% else %}
+          <a class="page-link" href="{{ url_for('projects_list', page=page_num, locale=get_locale(), search_term=request.args.get('search_term'), status=request.args.get('status'), category=request.args.get('category'), tracker_id=request.args.get('tracker_id')) }}">{{ page_num }}</a>
+        {% endif %}
+      {% else %}
+        <span class="page-gap">...</span>
+      {% endif %}
+    {% endfor %}
+    {% if projects.has_next %}
+      <a class="btn btn-secondary" href="{{ url_for('projects_list', page=projects.next_num, locale=get_locale(), search_term=request.args.get('search_term'), status=request.args.get('status'), category=request.args.get('category'), tracker_id=request.args.get('tracker_id')) }}">
+        <span>{{ _('Next') }}</span><i class="fa-solid fa-arrow-right"></i>
+      </a>
+    {% endif %}
+  </nav>
+{% endif %}
+{% endblock %}

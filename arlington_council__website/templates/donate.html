@@ -1,0 +1,75 @@
+{% extends 'layout.html' %}
+{% from '_macros.html' import render_field, error_summary with context %}
+
+{% block page_title %}{{ _('Donate') }}{% endblock %}
+
+{% block page_subtitle %}
+  <p class="page-subtitle">{{ campaign.title }}</p>
+{% endblock %}
+
+{% block page_actions %}
+  <a class="btn btn-secondary" href="{{ url_for('donation_campaign', locale=get_locale(), campaign_id=campaign.id) }}">
+    <i class="fa-solid fa-arrow-left"></i><span>{{ _('Campaign') }}</span>
+  </a>
+{% endblock %}
+
+{% block content %}
+<section class="donation-request-panel">
+  <div class="donation-steps" aria-label="{{ _('Donation steps') }}">
+    <div aria-current="step"><span>1</span><strong>{{ _('Donation Details') }}</strong></div>
+    <div><span>2</span><strong>{{ _('Reference and Payment Instructions') }}</strong></div>
+  </div>
+
+  <div class="form-intro">
+    <span class="eyebrow">{{ _('Donation request') }}</span>
+    <h2>{{ _('Create a donation reference') }}</h2>
+    <p>{{ _('No money is collected on this page. You will receive a reference number, then complete payment using the campaign instructions.') }}</p>
+  </div>
+
+  <form method="POST" class="stack-form" novalidate data-watch-changes>
+    {{ form.hidden_tag() }}
+    {{ error_summary(form) }}
+
+    <div class="form-grid">
+      {{ render_field(form.donor_name, placeholder=_('Full name')) }}
+      {{ render_field(form.amount, placeholder='100.00') }}
+    </div>
+    <div class="form-grid">
+      {{ render_field(form.donor_email, placeholder='name@example.com') }}
+      {{ render_field(form.donor_phone, placeholder=_('Optional phone number')) }}
+    </div>
+
+    <fieldset class="field choice-field">
+      <legend class="field-label">{{ form.attribution_type.label.text }}</legend>
+      <div class="vote-options">
+        {% for option in form.attribution_type %}
+          <label class="vote-option">
+            {{ option }}
+            <span>{{ option.label.text }}</span>
+          </label>
+        {% endfor %}
+      </div>
+    </fieldset>
+
+    <div class="form-grid" data-group-attribution>
+      {{ render_field(form.group_id) }}
+      {{ render_field(form.new_group_name, placeholder=_('Family, bloodline, neighborhood, or team')) }}
+    </div>
+    <label class="check-row">
+      {{ form.display_name(class="check-input") }}
+      <span>{{ form.display_name.label.text }}</span>
+    </label>
+    {{ render_field(form.payment_method) }}
+    {{ render_field(form.message, rows=4, placeholder=_('Optional note for the campaign team')) }}
+
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">
+        <i class="fa-solid fa-receipt"></i><span>{{ form.submit.label.text }}</span>
+      </button>
+      <a class="btn btn-secondary" href="{{ url_for('donation_campaign', locale=get_locale(), campaign_id=campaign.id) }}">
+        <i class="fa-solid fa-xmark"></i><span>{{ _('Cancel') }}</span>
+      </a>
+    </div>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+
+{% block page_title %}{{ _('Useful Sites') }}{% endblock %}
+
+{% block page_subtitle %}
+  <p class="page-subtitle">{{ _('Helpful public links shared by the council for residents and visitors.') }}</p>
+{% endblock %}
+
+{% block content %}
+<section class="content-card useful-sites-panel">
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">{{ _('Public directory') }}</span>
+      <h2>{{ _('Find the right site quickly') }}</h2>
+    </div>
+  </div>
+
+  {% if useful_site_items %}
+    <div class="useful-sites-grid">
+      {% for site in useful_site_items %}
+        <article class="useful-site-page-card">
+          <span class="useful-site-icon" aria-hidden="true"><i class="{{ site.icon }}"></i></span>
+          <div>
+            <h3>{{ site.title }}</h3>
+            {% if site.description %}
+              <p>{{ site.description }}</p>
+            {% endif %}
+            <a class="btn btn-secondary" href="{{ site.url }}" target="_blank" rel="noopener noreferrer">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i><span>{{ _('Open site') }}</span>
+            </a>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">
+      {{ _('No useful sites are available yet.') }}
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

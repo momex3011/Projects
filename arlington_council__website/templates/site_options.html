@@ -1,0 +1,158 @@
+{% extends 'layout.html' %}
+{% from '_macros.html' import render_field, error_summary with context %}
+
+{% block page_title %}{{ _('Site Links') }}{% endblock %}
+
+{% block page_subtitle %}
+  <p>{{ _('Control footer social icons and useful public links.') }}</p>
+{% endblock %}
+
+{% block page_actions %}
+  <a class="btn btn-secondary" href="{{ url_for('dashboard', locale=get_locale()) }}">
+    <i class="fa-solid fa-arrow-left"></i><span>{{ _('Dashboard') }}</span>
+  </a>
+{% endblock %}
+
+{% block content %}
+<section class="form-panel narrow">
+  <div class="form-intro">
+    <span class="eyebrow">{{ _('Footer links') }}</span>
+    <h2>{{ _('Edit footer social links') }}</h2>
+    <p>{{ _('Turn an icon off when the council does not have that account or link yet. Descriptions appear on the Useful Sites page.') }}</p>
+  </div>
+
+  <form method="POST" class="stack-form" novalidate data-watch-changes>
+    {{ form.hidden_tag() }}
+    {{ error_summary(form) }}
+    <div class="social-settings-list">
+      {% for platform in social_platforms %}
+        <article class="custom-site-row social-setting-card">
+          <div class="card-topline">
+            <label class="check-row">
+              {{ form[platform.enabled_key](class="check-input") }}
+              <span>{{ form[platform.enabled_key].label.text }}</span>
+            </label>
+            <span class="useful-site-icon" aria-hidden="true"><i class="{{ platform.icon }}"></i></span>
+          </div>
+          {{ render_field(form[platform.url_key], placeholder=platform.placeholder) }}
+          <div class="form-grid">
+            {{ render_field(form[platform.description_en_key], rows=2, placeholder=_('How this link helps visitors')) }}
+            {{ render_field(form[platform.description_ar_key], rows=2, placeholder=_('How this link helps visitors')) }}
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+
+    <div class="section-heading site-options-heading">
+      <div>
+        <span class="eyebrow">{{ _('Useful sites') }}</span>
+        <h2>{{ _('Edit public useful links') }}</h2>
+        <p class="hint">{{ _('These links appear on the Useful Sites page for everyone with a globe icon and a short description.') }}</p>
+      </div>
+      <button class="btn btn-secondary" type="button" data-add-custom-site>
+        <i class="fa-solid fa-plus"></i><span>{{ _('Add useful site') }}</span>
+      </button>
+    </div>
+
+    {% if custom_site_errors %}
+      <div class="error-summary" role="alert">
+        <strong>{{ _('Please fix the useful site links.') }}</strong>
+        <ul>
+          {% for error in custom_site_errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <div class="custom-site-list" data-custom-sites>
+      {% for site in useful_site_rows %}
+        {% set row_id = loop.index0 %}
+        <article class="custom-site-row" data-custom-site-row>
+          <input type="hidden" name="custom_site_index" value="{{ row_id }}">
+          <div class="card-topline">
+            <label class="check-row">
+              <input class="check-input" type="checkbox" name="custom_site_enabled_{{ row_id }}" value="1" {% if site.enabled %}checked{% endif %}>
+              <span>{{ _('Show this useful site') }}</span>
+            </label>
+            <button class="btn btn-secondary" type="button" data-remove-custom-site>
+              <i class="fa-solid fa-trash"></i><span>{{ _('Remove') }}</span>
+            </button>
+          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label class="field-label" for="custom_site_title_en_{{ row_id }}">{{ _('English site name') }}</label>
+              <input class="control" id="custom_site_title_en_{{ row_id }}" name="custom_site_title_en_{{ row_id }}" maxlength="120" value="{{ site.title_en }}" placeholder="{{ _('Example: Civil Registry') }}">
+            </div>
+            <div class="field">
+              <label class="field-label" for="custom_site_title_ar_{{ row_id }}">{{ _('Spanish site name') }}</label>
+              <input class="control" id="custom_site_title_ar_{{ row_id }}" name="custom_site_title_ar_{{ row_id }}" maxlength="120" value="{{ site.title_ar }}" placeholder="{{ _('Example: City records') }}">
+            </div>
+            <div class="field">
+              <label class="field-label" for="custom_site_url_{{ row_id }}">{{ _('Site link') }}</label>
+              <input class="control" id="custom_site_url_{{ row_id }}" name="custom_site_url_{{ row_id }}" maxlength="500" value="{{ site.url }}" placeholder="https://example.org">
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label class="field-label" for="custom_site_description_en_{{ row_id }}">{{ _('English description') }}</label>
+              <textarea class="control" id="custom_site_description_en_{{ row_id }}" name="custom_site_description_en_{{ row_id }}" rows="3" maxlength="500" placeholder="{{ _('What people can do or find there') }}">{{ site.description_en }}</textarea>
+            </div>
+            <div class="field">
+              <label class="field-label" for="custom_site_description_ar_{{ row_id }}">{{ _('Spanish description') }}</label>
+              <textarea class="control" id="custom_site_description_ar_{{ row_id }}" name="custom_site_description_ar_{{ row_id }}" rows="3" maxlength="500" placeholder="{{ _('What people can do or find there') }}">{{ site.description_ar }}</textarea>
+            </div>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">
+        <i class="fa-solid fa-floppy-disk"></i><span>{{ form.submit.label.text }}</span>
+      </button>
+      <a class="btn btn-secondary" href="{{ url_for('dashboard', locale=get_locale()) }}">
+        <i class="fa-solid fa-xmark"></i><span>{{ _('Cancel') }}</span>
+      </a>
+    </div>
+  </form>
+</section>
+
+<template id="custom-site-template">
+  <article class="custom-site-row" data-custom-site-row>
+    <input type="hidden" name="custom_site_index" value="__index__">
+    <div class="card-topline">
+      <label class="check-row">
+        <input class="check-input" type="checkbox" name="custom_site_enabled___index__" value="1" checked>
+        <span>{{ _('Show this useful site') }}</span>
+      </label>
+      <button class="btn btn-secondary" type="button" data-remove-custom-site>
+        <i class="fa-solid fa-trash"></i><span>{{ _('Remove') }}</span>
+      </button>
+    </div>
+    <div class="form-grid">
+      <div class="field">
+        <label class="field-label" for="custom_site_title_en___index__">{{ _('English site name') }}</label>
+        <input class="control" id="custom_site_title_en___index__" name="custom_site_title_en___index__" maxlength="120" placeholder="{{ _('Example: Civil Registry') }}">
+      </div>
+      <div class="field">
+        <label class="field-label" for="custom_site_title_ar___index__">{{ _('Spanish site name') }}</label>
+        <input class="control" id="custom_site_title_ar___index__" name="custom_site_title_ar___index__" maxlength="120" placeholder="{{ _('Example: City records') }}">
+      </div>
+      <div class="field">
+        <label class="field-label" for="custom_site_url___index__">{{ _('Site link') }}</label>
+        <input class="control" id="custom_site_url___index__" name="custom_site_url___index__" maxlength="500" placeholder="https://example.org">
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="field">
+        <label class="field-label" for="custom_site_description_en___index__">{{ _('English description') }}</label>
+        <textarea class="control" id="custom_site_description_en___index__" name="custom_site_description_en___index__" rows="3" maxlength="500" placeholder="{{ _('What people can do or find there') }}"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label" for="custom_site_description_ar___index__">{{ _('Spanish description') }}</label>
+        <textarea class="control" id="custom_site_description_ar___index__" name="custom_site_description_ar___index__" rows="3" maxlength="500" placeholder="{{ _('What people can do or find there') }}"></textarea>
+      </div>
+    </div>
+  </article>
+</template>
+{% endblock %}

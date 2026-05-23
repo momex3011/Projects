@@ -1,0 +1,136 @@
+{% extends 'layout.html' %}
+{% from '_macros.html' import render_field, error_summary with context %}
+
+{% block page_title %}{{ proposal.title }}{% endblock %}
+
+{% block page_subtitle %}
+  <p class="page-subtitle">{{ proposal.summary or _('Proposal discussion and voting record.') }}</p>
+{% endblock %}
+
+{% block page_actions %}
+  <a class="btn btn-secondary" href="{{ url_for('proposals_list', locale=get_locale()) }}">
+    <i class="fa-solid fa-arrow-left"></i><span>{{ _('Proposals') }}</span>
+  </a>
+  {% if can_edit_proposal(proposal) %}
+    <a class="btn btn-secondary" href="{{ url_for('edit_proposal', locale=get_locale(), proposal_id=proposal.id) }}">
+      <i class="fa-solid fa-pen"></i><span>{{ _('Edit Proposal') }}</span>
+    </a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<section class="detail-layout">
+  <article class="detail-main">
+    <div class="card-topline">
+      <span class="status-badge {{ 'status-complete' if proposal.status == 'Closed' else 'status-progress' }}">{{ _(proposal.status) }}</span>
+      <span class="muted-chip">{{ proposal_visibility_label(proposal.visibility) }}</span>
+      <span class="muted-chip">{{ proposal_vote_visibility_label(proposal.vote_visibility) }}</span>
+    </div>
+    <div class="content-card slim-card">
+      <div class="section-heading">
+        <h2>{{ _('Proposal details') }}</h2>
+      </div>
+      <p class="pre-line">{{ proposal.body }}</p>
+    </div>
+
+    <section class="content-card slim-card">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">{{ _('Voting') }}</span>
+          <h2>{{ _('Cast your vote') }}</h2>
+        </div>
+      </div>
+
+      {% if can_vote and proposal.is_open_for_voting %}
+        <form method="POST" action="{{ url_for('proposal_vote', locale=get_locale(), proposal_id=proposal.id) }}" class="vote-form" novalidate>
+          {{ vote_form.hidden_tag() }}
+          {{ error_summary(vote_form) }}
+          <fieldset class="field choice-field">
+            <legend class="field-label">{{ vote_form.choice.label.text }}</legend>
+            <div class="vote-options three">
+              {% for option in vote_form.choice %}
+                <label class="vote-option">
+                  {{ option }}
+                  <span>{{ option.label.text }}</span>
+                </label>
+              {% endfor %}
+            </div>
+          </fieldset>
+          {{ render_field(vote_form.comment, rows=3, placeholder=_('Optional reason for the record')) }}
+          <button class="btn btn-primary full-width" type="submit" data-confirm="{{ _('Submit this proposal vote? You can update it while voting remains open.') }}">
+            <i class="fa-solid fa-check-to-slot"></i>
+            <span>{{ _('Update Proposal Vote') if existing_vote else _('Submit Proposal Vote') }}</span>
+          </button>
+        </form>
+        {% if existing_vote %}
+          <p class="hint">{{ _('Your current vote is') }} {{ _(existing_vote.choice) }}.</p>
+        {% endif %}
+      {% elif can_vote %}
+        <p class="hint">{{ _('Voting is closed for this proposal.') }}</p>
+      {% elif current_user.is_authenticated %}
+        <p class="hint">{{ _('Your role can view this proposal but cannot vote on it.') }}</p>
+      {% else %}
+        <p class="hint">{{ _('Log in with an eligible account to vote on this proposal.') }}</p>
+      {% endif %}
+    </section>
+  </article>
+
+  <aside class="detail-side">
+    <section class="side-panel">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">{{ _('Results') }}</span>
+          <h2>{{ _('Vote totals') }}</h2>
+        </div>
+      </div>
+      <div class="vote-results three">
+        <article><strong>{{ counts.Yes }}</strong><span>{{ _('Yes') }}</span></article>
+        <article><strong>{{ counts.No }}</strong><span>{{ _('No') }}</span></article>
+        <article><strong>{{ counts.Abstain }}</strong><span>{{ _('Abstain') }}</span></article>
+      </div>
+      <dl class="meta-list">
+        <div>
+          <dt>{{ _('Eligible voters') }}</dt>
+          <dd>{{ eligible_voters|length }}</dd>
+        </div>
+        <div>
+          <dt>{{ _('Not voted yet') }}</dt>
+          <dd>{{ non_voters|length }}</dd>
+        </div>
+        <div>
+          <dt>{{ _('Deadline') }}</dt>
+          <dd>{{ format_datetime(proposal.voting_deadline) }}</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="side-panel">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">{{ _('Accountability') }}</span>
+          <h2>{{ _('Voter record') }}</h2>
+        </div>
+      </div>
+      {% if proposal.vote_visibility == 'public' %}
+        <div class="voter-record">
+          {% for voter in eligible_voters %}
+            {% set vote = votes_by_user.get(voter.id) %}
+            <article class="timeline-item">
+              <strong>{{ display_user_name(voter) }}</strong>
+              <small>{{ role_label(voter.role) }}</small>
+              {% if vote %}
+                <p>{{ _('Voted') }}: <strong>{{ _(vote.choice) }}</strong></p>
+                {% if vote.comment %}<p>{{ vote.comment }}</p>{% endif %}
+              {% else %}
+                <p>{{ _('Not voted yet') }}</p>
+              {% endif %}
+            </article>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state">{{ _('This proposal uses anonymous results, so individual votes and non-voter names are hidden.') }}</div>
+      {% endif %}
+    </section>
+  </aside>
+</section>
+{% endblock %}

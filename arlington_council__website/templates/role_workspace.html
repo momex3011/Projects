@@ -1,0 +1,132 @@
+{% extends 'layout.html' %}
+{% from '_macros.html' import project_card with context %}
+
+{% block main_class %}main-wide dashboard-page{% endblock %}
+
+{% block page_title %}{{ workspace_title }}{% endblock %}
+{% block page_subtitle %}
+  <p class="page-subtitle">{{ workspace_description }}</p>
+{% endblock %}
+
+{% block content %}
+<section class="content-card admin-hub-panel">
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">{{ workspace_kicker }}</span>
+      <h2>{{ _('Choose a workspace area') }}</h2>
+      <p>{{ _('Private tools are grouped here so the public navigation stays consistent.') }}</p>
+    </div>
+  </div>
+  <div class="admin-hub-grid">
+    {% for link in workspace_links %}
+      <a class="admin-hub-card" href="{{ link.href }}">
+        <span class="admin-hub-icon"><i class="{{ link.icon }}" aria-hidden="true"></i></span>
+        <span>
+          <strong>{{ link.title }}</strong>
+          <small>{{ link.description }}</small>
+        </span>
+        <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+
+{% if pending_votes is defined %}
+  <section class="content-card">
+    <div class="section-heading">
+      <h2>{{ _('Projects waiting for your vote') }}</h2>
+    </div>
+    <div class="list-panel">
+      {% for project in pending_votes %}
+        <a class="list-row" href="{{ url_for('project', locale=get_locale(), project_id=project.id) }}">
+          <span>
+            <strong>{{ project.title }}</strong>
+            <small>{{ _('Voting ends') }} {{ format_datetime(project.voting_deadline) }}</small>
+          </span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      {% else %}
+        <div class="empty-state">{{ _('No projects currently need your vote.') }}</div>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}
+
+{% if projects is defined %}
+  <section class="content-card">
+    <div class="section-heading">
+      <h2>{{ project_title }}</h2>
+    </div>
+    <div class="project-grid">
+      {% for project in projects %}
+        {{ project_card(project) }}
+      {% else %}
+        <div class="empty-state wide">{{ _('No projects are assigned to you yet.') }}</div>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}
+
+{% if proposals is defined %}
+  <section class="content-card">
+    <div class="section-heading">
+      <h2>{{ _('Proposal activity') }}</h2>
+    </div>
+    <div class="list-panel">
+      {% for proposal in proposals %}
+        <a class="list-row" href="{{ url_for('proposal_detail', locale=get_locale(), proposal_id=proposal.id) }}">
+          <span>
+            <strong>{{ proposal.title }}</strong>
+            <small>{{ proposal_visibility_label(proposal.visibility) }} | {{ proposal_vote_visibility_label(proposal.vote_visibility) }}</small>
+          </span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      {% else %}
+        <div class="empty-state">{{ _('No proposals are available for your account yet.') }}</div>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}
+
+{% if suggestions is defined %}
+  <section class="content-card">
+    <div class="section-heading">
+      <h2>{{ _('Recent suggestions') }}</h2>
+    </div>
+    <div class="list-panel">
+      {% for suggestion in suggestions %}
+        <a class="list-row" href="{{ url_for('suggestions_inbox', locale=get_locale()) }}">
+          <span>
+            <strong>{{ suggestion.title }}</strong>
+            <small>{{ suggestion_target_label(suggestion.target_type) }} | {{ format_datetime(suggestion.created_at) }}</small>
+          </span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      {% else %}
+        <div class="empty-state">{{ _('No suggestions have been submitted yet.') }}</div>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}
+
+{% if posts is defined %}
+  <section class="content-card">
+    <div class="section-heading">
+      <h2>{{ _('Announcements and news') }}</h2>
+    </div>
+    <div class="list-panel">
+      {% for post in posts %}
+        <a class="list-row" href="{{ url_for('edit_home_post', locale=get_locale(), post_id=post.id) }}">
+          <span>
+            <strong>{{ post.title }}</strong>
+            <small>{{ home_post_type_label(post.post_type) }} | {{ format_datetime(post.created_at) }}</small>
+          </span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      {% else %}
+        <div class="empty-state">{{ _('No home page content has been created yet.') }}</div>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}
+{% endblock %}

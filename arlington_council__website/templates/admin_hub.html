@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+
+{% block main_class %}main-wide dashboard-page{% endblock %}
+
+{% block page_title %}{{ _('Admin') }}{% endblock %}
+{% block page_subtitle %}
+  <p class="page-subtitle">{{ _('One place for protected council management tools, so the main navigation stays simple.') }}</p>
+{% endblock %}
+
+{% block content %}
+<section class="content-card admin-hub-panel">
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">{{ _('Management') }}</span>
+      <h2>{{ _('Choose an admin area') }}</h2>
+      <p>{{ _('Open the exact workspace you need without searching through the public pages.') }}</p>
+    </div>
+  </div>
+  <div class="admin-hub-grid">
+    {% for link in admin_links %}
+      <a class="admin-hub-card" href="{{ link.href }}">
+        <span class="admin-hub-icon"><i class="{{ link.icon }}" aria-hidden="true"></i></span>
+        <span>
+          <strong>{{ link.title }}</strong>
+          <small>{{ link.description }}</small>
+        </span>
+        <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

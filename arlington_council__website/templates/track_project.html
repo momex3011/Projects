@@ -1,0 +1,85 @@
+{% extends 'layout.html' %}
+{% from '_macros.html' import status_badge, progress_bar, error_summary with context %}
+
+{% block page_title %}{{ _('Update Project Progress') }}{% endblock %}
+
+{% block page_actions %}
+  <a class="btn btn-secondary" href="{{ url_for('project', locale=get_locale(), project_id=project.id) }}">
+    <i class="fa-solid fa-arrow-left"></i><span>{{ _('Project') }}</span>
+  </a>
+{% endblock %}
+
+{% block content %}
+<section class="detail-layout">
+  <article class="detail-main">
+    <div class="card-topline">
+      {{ status_badge(project.status) }}
+      <span class="muted-chip">{{ display_user_name(project.tracker) }}</span>
+    </div>
+    <h2>{{ project.title }}</h2>
+    <p class="lead">{{ project.description }}</p>
+    <div class="progress-block">
+      <div>
+        <strong>{{ _('Timeline Progress') }}</strong>
+        <small>{{ format_datetime(project.start_date) }} - {{ format_datetime(project.end_date) }}</small>
+      </div>
+      {{ progress_bar(project.progress(), _('Project progress')) }}
+    </div>
+
+    <div class="split-forms">
+      {% if can_update_status %}
+        <form method="POST" action="{{ url_for('update_project_status', locale=get_locale(), project_id=project.id) }}" class="mini-form" novalidate>
+          {{ status_form.hidden_tag() }}
+          {{ error_summary(status_form) }}
+          <div class="field">
+            {{ status_form.status.label(class="field-label") }}
+            {{ status_form.status(class="control") }}
+          </div>
+          <button class="btn btn-primary" type="submit" data-confirm="{{ _('Update this project status?') }}">
+            <i class="fa-solid fa-rotate"></i><span>{{ _('Update Status') }}</span>
+          </button>
+        </form>
+      {% else %}
+        <div class="empty-state">{{ _('You can view this tracker workspace, but status updates are disabled for your account.') }}</div>
+      {% endif %}
+
+      {% if can_add_comment %}
+        <form method="POST" action="{{ url_for('add_comment', locale=get_locale(), project_id=project.id) }}" class="mini-form" novalidate>
+          {{ comment_form.hidden_tag() }}
+          {{ error_summary(comment_form) }}
+          <div class="field">
+            {{ comment_form.body.label(class="field-label") }}
+            {{ comment_form.body(class="control", rows="4", placeholder=_('Add a field update, blocker, or note')) }}
+          </div>
+          <button class="btn btn-secondary" type="submit">
+            <i class="fa-solid fa-message"></i><span>{{ _('Add Comment') }}</span>
+          </button>
+        </form>
+      {% else %}
+        <div class="empty-state">{{ _('Project update notes are disabled for your account.') }}</div>
+      {% endif %}
+    </div>
+  </article>
+
+  <aside class="detail-side">
+    <section class="side-panel">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">{{ _('Activity') }}</span>
+          <h2>{{ _('Updates') }}</h2>
+        </div>
+      </div>
+      <div class="timeline">
+        {% for comment in comments|sort(attribute='created_at', reverse=true) %}
+          <article class="timeline-item">
+            <p>{{ comment.body }}</p>
+            <small>{{ comment.author.username }} | {{ format_datetime(comment.created_at) }}</small>
+          </article>
+        {% else %}
+          <div class="empty-state">{{ _('No updates have been posted yet.') }}</div>
+        {% endfor %}
+      </div>
+    </section>
+  </aside>
+</section>
+{% endblock %}

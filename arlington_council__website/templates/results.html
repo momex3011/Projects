@@ -1,0 +1,35 @@
+{% extends 'layout.html' %}
+
+{% block page_title %}{{ _('Voting Results') }}{% endblock %}
+
+{% block page_actions %}
+  <a class="btn btn-secondary" href="{{ url_for('project', locale=get_locale(), project_id=project.id) }}">
+    <i class="fa-solid fa-arrow-left"></i><span>{{ _('Project') }}</span>
+  </a>
+{% endblock %}
+
+{% block content %}
+<section class="results-panel">
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">{{ _('Voting Results for') }}</span>
+      <h2>{{ project.title }}</h2>
+    </div>
+  </div>
+
+  {% if project.vote_type == 'anonymous' and current_user.role != Role.ADMIN %}
+    <div class="empty-state">{{ _('Results are hidden for anonymous votes.') }}</div>
+  {% else %}
+    <div class="vote-results">
+      <article>
+        <span>{{ _('Yes Votes') }}</span>
+        <strong>{{ yes_votes }}</strong>
+      </article>
+      <article>
+        <span>{{ _('No Votes') }}</span>
+        <strong>{{ no_votes }}</strong>
+      </article>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

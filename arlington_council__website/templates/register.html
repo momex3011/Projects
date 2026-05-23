@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+{% from '_macros.html' import render_field, error_summary with context %}
+
+{% block page_title %}{{ _('Register User') }}{% endblock %}
+
+{% block page_actions %}
+  <a class="btn btn-secondary" href="{{ url_for('manage_users', locale=get_locale()) }}">
+    <i class="fa-solid fa-arrow-left"></i><span>{{ _('Users') }}</span>
+  </a>
+{% endblock %}
+
+{% block content %}
+<section class="form-panel">
+  <form method="POST" class="stack-form" novalidate data-watch-changes>
+    {{ form.hidden_tag() }}
+    {{ error_summary(form) }}
+    <div class="form-grid">
+      {{ render_field(form.username, placeholder=_('Enter a username')) }}
+      {{ render_field(form.email, placeholder=_('Enter email address')) }}
+    </div>
+    <div class="form-grid">
+      {{ render_field(form.password, placeholder=_('Choose a password')) }}
+      {{ render_field(form.confirm_password, placeholder=_('Confirm password')) }}
+    </div>
+    {{ render_field(form.role) }}
+    <section class="permission-panel">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">{{ _('Role guide') }}</span>
+          <h2>{{ _('What each role can do') }}</h2>
+        </div>
+      </div>
+      <div class="role-description-grid">
+        {% for role_info in role_descriptions %}
+          <article class="role-description-card" data-role-card="{{ role_info.role }}">
+            <strong>{{ role_info.label }}</strong>
+            <p>{{ role_info.description }}</p>
+          </article>
+        {% endfor %}
+      </div>
+      <p class="hint">{{ _('You can use the role dropdown or click a role card to choose the account role.') }}</p>
+    </section>
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">
+        <i class="fa-solid fa-user-plus"></i><span>{{ _('Create User') }}</span>
+      </button>
+      <a class="btn btn-secondary" href="{{ url_for('manage_users', locale=get_locale()) }}">
+        <i class="fa-solid fa-xmark"></i><span>{{ _('Cancel') }}</span>
+      </a>
+    </div>
+  </form>
+</section>
+{% endblock %}

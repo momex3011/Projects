@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Arlington civic mark">
+  <rect width="128" height="128" rx="24" fill="#0064b1"/>
+  <path d="M18 88h92v12H18z" fill="#f58025"/>
+  <path d="M27 82V50l16-12 16 12v32H27zm42 0V35h14v47H69zm20 0V48h12v34H89z" fill="#fff"/>
+  <path d="M64 20l5.2 11 11.8 1.7-8.5 8.3 2 11.7L64 47.2 53.5 52.7l2-11.7-8.5-8.3 11.8-1.7L64 20z" fill="#f58025"/>
+  <path d="M18 107h92" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+</svg>

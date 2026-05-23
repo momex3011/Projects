@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="{{ get_locale() }}" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{{ title or _('Arlington City Council Portal') }}{% endblock %}</title>
+  <link rel="icon" href="{{ url_for('static', filename='arlington-civic-mark.svg') }}">
+  <script>
+    (function () {
+      try {
+        document.documentElement.dataset.theme = localStorage.getItem('theme') || 'light';
+      } catch (error) {
+        document.documentElement.dataset.theme = 'light';
+      }
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700;800&family=Libre+Franklin:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v='20260522-role-nav-1') }}">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <a class="skip-link" href="#main-content">{{ _('Skip to content') }}</a>
+
+  <header class="site-header">
+    <div class="nav-inner">
+      <a class="brand" href="{{ url_for('home_page', locale=get_locale()) }}">
+        <span class="brand-mark-small"></span>
+        <span>{{ _('Arlington City Council Portal') }}</span>
+      </a>
+
+      <nav class="nav-links" aria-label="{{ _('Primary navigation') }}">
+        <a href="{{ url_for('home_page', locale=get_locale()) }}" class="{{ 'active' if request.endpoint == 'home_page' else '' }}" {% if request.endpoint == 'home_page' %}aria-current="page"{% endif %}><i class="fa-solid fa-location-dot" aria-hidden="true"></i><span>{{ _('Home') }}</span></a>
+        <a href="{{ url_for('projects_list', locale=get_locale()) }}" class="{{ 'active' if request.endpoint in ['projects_list', 'project'] else '' }}" {% if request.endpoint in ['projects_list', 'project'] %}aria-current="page"{% endif %}><i class="fa-solid fa-route" aria-hidden="true"></i><span>{{ _('Projects') }}</span></a>
+        <a href="{{ url_for('proposals_list', locale=get_locale()) }}" class="{{ 'active' if request.endpoint in ['proposals_list', 'proposal_detail'] else '' }}" {% if request.endpoint in ['proposals_list', 'proposal_detail'] %}aria-current="page"{% endif %}><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i><span>{{ _('Proposals') }}</span></a>
+        <a href="{{ url_for('suggestions_page', locale=get_locale()) }}" class="{{ 'active' if request.endpoint == 'suggestions_page' else '' }}" {% if request.endpoint == 'suggestions_page' %}aria-current="page"{% endif %}><i class="fa-solid fa-comments" aria-hidden="true"></i><span>{{ _('Suggestions') }}</span></a>
+        <a href="{{ url_for('donation_campaigns', locale=get_locale()) }}" class="{{ 'active' if request.endpoint in ['donation_campaigns', 'donation_campaign', 'donate', 'donation_receipt'] else '' }}" {% if request.endpoint in ['donation_campaigns', 'donation_campaign', 'donate', 'donation_receipt'] %}aria-current="page"{% endif %}><i class="fa-solid fa-handshake-angle" aria-hidden="true"></i><span>{{ _('Donations') }}</span></a>
+        <a href="{{ url_for('calendar', locale=get_locale()) }}" class="{{ 'active' if request.endpoint == 'calendar' else '' }}" {% if request.endpoint == 'calendar' %}aria-current="page"{% endif %}><i class="fa-solid fa-clock" aria-hidden="true"></i><span>{{ _('Calendar') }}</span></a>
+        {% if current_user.is_authenticated %}
+          <a href="{{ role_workspace_url(get_locale()) }}" class="{{ 'active' if request.endpoint in role_workspace_endpoints() else '' }}" {% if request.endpoint in role_workspace_endpoints() %}aria-current="page"{% endif %}><i class="{{ role_workspace_icon() }}" aria-hidden="true"></i><span>{{ role_workspace_label() }}</span></a>
+          <form class="nav-inline-form" method="POST" action="{{ url_for('logout', locale=get_locale()) }}">
+            {{ g.delete_user_form.csrf_token }}
+            <button type="submit"><i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i><span>{{ _('Sign out') }}</span></button>
+          </form>
+        {% else %}
+          <a href="{{ url_for('login', locale=get_locale()) }}" class="{{ 'active' if request.endpoint == 'login' else '' }}" {% if request.endpoint == 'login' %}aria-current="page"{% endif %}><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i><span>{{ _('Login') }}</span></a>
+        {% endif %}
+      </nav>
+
+      <div class="nav-tools">
+        <button class="icon-btn header-icon" id="theme-toggle" type="button" aria-pressed="false" aria-label="{{ _('Switch to dark theme') }}" data-dark-label="{{ _('Switch to dark theme') }}" data-light-label="{{ _('Switch to light theme') }}">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+        {% if get_locale() == 'en' %}
+          <a class="language-pill" href="{{ url_for('set_language', locale='es') }}" aria-label="{{ _('Switch to Spanish') }}">ES</a>
+        {% else %}
+          <a class="language-pill" href="{{ url_for('set_language', locale='en') }}" aria-label="{{ _('Switch to English') }}">EN</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <main class="main {% block main_class %}{% endblock %}" id="main-content">
+    <header class="page-header">
+      <div>
+        <h1>{% block page_title %}{{ title or _('Dashboard') }}{% endblock %}</h1>
+        {% block page_subtitle %}{% endblock %}
+      </div>
+      <div class="page-actions">
+        {% block page_actions %}{% endblock %}
+      </div>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="alerts" aria-live="polite">
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}" role="{{ 'alert' if category in ['danger', 'warning'] else 'status' }}">
+              <span>{{ message }}</span>
+              <button class="alert-close" type="button" aria-label="{{ _('Dismiss message') }}">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <section>
+        <h2>{{ _('About Arlington City Council Portal') }}</h2>
+        <p>{{ _('A civic workspace for Arlington residents, council members, campus partners, and project teams across the Dallas-Fort Worth area to follow projects, proposals, donations, suggestions, and public updates.') }}</p>
+      </section>
+      <section>
+        <h2>{{ _('Quick Links') }}</h2>
+        <div class="footer-link-grid">
+          <a href="{{ url_for('home_page', locale=get_locale()) }}">{{ _('Home') }}</a>
+          <a href="{{ url_for('projects_list', locale=get_locale()) }}">{{ _('Projects') }}</a>
+          <a href="{{ url_for('proposals_list', locale=get_locale()) }}">{{ _('Proposals') }}</a>
+          <a href="{{ url_for('suggestions_page', locale=get_locale()) }}">{{ _('Suggestions') }}</a>
+          <a href="{{ url_for('donation_campaigns', locale=get_locale()) }}">{{ _('Donations') }}</a>
+          <a href="{{ url_for('calendar', locale=get_locale()) }}">{{ _('Calendar') }}</a>
+          <a href="{{ url_for('useful_sites_page', locale=get_locale()) }}">{{ _('Useful Sites') }}</a>
+          {% if current_user.is_authenticated and role_workspace_url(get_locale()) != url_for('home_page', locale=get_locale()) %}
+            <a href="{{ role_workspace_url(get_locale()) }}">{{ role_workspace_label() }}</a>
+          {% endif %}
+        </div>
+        <div class="footer-language">
+          <h2>{{ _('Language') }}</h2>
+          <a href="{{ url_for('set_language', locale='en') }}">EN</a>
+          <a href="{{ url_for('set_language', locale='es') }}">ES</a>
+        </div>
+      </section>
+      <section>
+        <h2>{{ _('Follow Us') }}</h2>
+        <div class="social-links">
+          {% if site_links.instagram_enabled and site_links.instagram_url %}
+            <a href="{{ site_links.instagram_url }}" aria-label="{{ _('Instagram') }}" {% if site_links.instagram_url != '#' %}target="_blank" rel="noopener noreferrer"{% endif %}><i class="fab fa-instagram"></i></a>
+          {% endif %}
+          {% if site_links.whatsapp_enabled and site_links.whatsapp_url %}
+            <a href="{{ site_links.whatsapp_url }}" aria-label="{{ _('WhatsApp') }}" {% if site_links.whatsapp_url != '#' %}target="_blank" rel="noopener noreferrer"{% endif %}><i class="fab fa-whatsapp"></i></a>
+          {% endif %}
+          {% if site_links.facebook_enabled and site_links.facebook_url %}
+            <a href="{{ site_links.facebook_url }}" aria-label="{{ _('Facebook') }}" {% if site_links.facebook_url != '#' %}target="_blank" rel="noopener noreferrer"{% endif %}><i class="fab fa-facebook"></i></a>
+          {% endif %}
+          {% if site_links.twitter_enabled and site_links.twitter_url %}
+            <a href="{{ site_links.twitter_url }}" aria-label="{{ _('Twitter/X') }}" {% if site_links.twitter_url != '#' %}target="_blank" rel="noopener noreferrer"{% endif %}><i class="fab fa-twitter"></i></a>
+          {% endif %}
+          {% if site_links.telegram_enabled and site_links.telegram_url %}
+            <a href="{{ site_links.telegram_url }}" aria-label="{{ _('Telegram') }}" {% if site_links.telegram_url != '#' %}target="_blank" rel="noopener noreferrer"{% endif %}><i class="fab fa-telegram"></i></a>
+          {% endif %}
+        </div>
+      </section>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='main.js', v='20260521-home-news-1') }}"></script>
+</body>
+</html>

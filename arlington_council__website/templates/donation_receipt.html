@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+
+{% block page_title %}{{ _('Donation Reference') }}{% endblock %}
+
+{% block page_subtitle %}
+  <p class="page-subtitle">{{ _('Keep this reference with your transfer or cash payment so the team can confirm it.') }}</p>
+{% endblock %}
+
+{% block page_actions %}
+  <a class="btn btn-secondary" href="{{ url_for('donation_campaign', locale=get_locale(), campaign_id=donation.campaign.id) }}">
+    <i class="fa-solid fa-arrow-left"></i><span>{{ _('Campaign') }}</span>
+  </a>
+{% endblock %}
+
+{% block content %}
+<section class="receipt-panel">
+  <div class="receipt-code">
+    <span class="eyebrow">{{ _('Payment Reference') }}</span>
+    <strong>{{ donation.payment_reference }}</strong>
+  </div>
+  <dl class="meta-grid">
+    <div>
+      <dt>{{ _('Campaign') }}</dt>
+      <dd>{{ donation.campaign.title }}</dd>
+    </div>
+    <div>
+      <dt>{{ _('Amount') }}</dt>
+      <dd>{{ money(donation.amount, donation.campaign.currency) }}</dd>
+    </div>
+    <div>
+      <dt>{{ _('Payment Method') }}</dt>
+      <dd>
+        {% if donation.payment_method == 'bank_transfer' %}
+          {{ _('Bank transfer') }}
+        {% elif donation.payment_method == 'cash' %}
+          {{ _('Cash payment') }}
+        {% else %}
+          {{ _('Online payment request') }}
+        {% endif %}
+      </dd>
+    </div>
+    <div>
+      <dt>{{ _('Status') }}</dt>
+      <dd>{{ donation_payment_status_label(donation.payment_status) }}</dd>
+    </div>
+    {% if donation.group %}
+      <div>
+        <dt>{{ _('Group') }}</dt>
+        <dd>{{ donation.group.name }}</dd>
+      </div>
+    {% endif %}
+  </dl>
+
+  <div class="content-card slim-card">
+    <div class="section-heading">
+      <h2>{{ _('Payment instructions') }}</h2>
+    </div>
+    <p class="payment-instructions">{{ donation.campaign.payment_instructions or _('A campaign administrator will contact you to confirm the payment method and mark the donation as confirmed.') }}</p>
+  </div>
+</section>
+{% endblock %}

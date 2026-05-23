@@ -1,0 +1,2890 @@
+# Translations template for PROJECT.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-05-22 18:08-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: app.py:123 app.py:320 app.py:1649 app.py:2125 app.py:3452
+#: templates/admin_hub.html:5
+msgid "Admin"
+msgstr ""
+
+#: app.py:124 app.py:321
+msgid "Council Member"
+msgstr ""
+
+#: app.py:125 app.py:322 app.py:1199 app.py:1276 app.py:1650
+#: templates/_macros.html:67 templates/project.html:42
+msgid "Project Tracker"
+msgstr ""
+
+#: app.py:126 app.py:323
+msgid "News Editor"
+msgstr ""
+
+#: app.py:148
+msgid "Create projects"
+msgstr ""
+
+#: app.py:149
+msgid "Create new public projects and set their core details."
+msgstr ""
+
+#: app.py:153
+msgid "Edit projects"
+msgstr ""
+
+#: app.py:154
+msgid ""
+"Change project descriptions, dates, categories, status, and voting "
+"deadlines."
+msgstr ""
+
+#: app.py:158
+msgid "Assign project trackers"
+msgstr ""
+
+#: app.py:159
+msgid "Choose which tracker is responsible for a project."
+msgstr ""
+
+#: app.py:163
+msgid "Track assigned projects"
+msgstr ""
+
+#: app.py:164
+msgid "Open the tracker workspace for projects assigned to this user."
+msgstr ""
+
+#: app.py:168
+msgid "Track any project"
+msgstr ""
+
+#: app.py:169
+msgid "Open the tracker workspace for any project, even if not assigned."
+msgstr ""
+
+#: app.py:173
+msgid "Update project status"
+msgstr ""
+
+#: app.py:174
+msgid "Move a project between pending, in progress, and completed."
+msgstr ""
+
+#: app.py:178
+msgid "Add project updates"
+msgstr ""
+
+#: app.py:179
+msgid "Post field updates, blockers, and notes on project activity."
+msgstr ""
+
+#: app.py:183
+msgid "Vote on projects"
+msgstr ""
+
+#: app.py:184
+msgid "Submit or update votes on project decisions before the deadline."
+msgstr ""
+
+#: app.py:188
+msgid "View vote results"
+msgstr ""
+
+#: app.py:189
+msgid "See project voting results and decision totals."
+msgstr ""
+
+#: app.py:193
+msgid "Create proposals"
+msgstr ""
+
+#: app.py:194
+msgid "Create council proposals and choose who can see and vote on them."
+msgstr ""
+
+#: app.py:198
+msgid "Vote on proposals"
+msgstr ""
+
+#: app.py:199
+msgid "Vote on eligible council proposals."
+msgstr ""
+
+#: app.py:203
+msgid "Manage home content"
+msgstr ""
+
+#: app.py:204
+msgid "Create and edit home page announcements and newspaper-style news posts."
+msgstr ""
+
+#: app.py:329
+msgid ""
+"Admins manage users, projects, donations, site links, and all council "
+"operations."
+msgstr ""
+
+#: app.py:330
+msgid ""
+"Council members review projects, vote on decisions, and create or vote on"
+" proposals."
+msgstr ""
+
+#: app.py:331
+msgid ""
+"Project trackers report progress on assigned projects, update status, and"
+" add field notes."
+msgstr ""
+
+#: app.py:332
+msgid ""
+"News editors prepare short public news posts with images for the home "
+"page."
+msgstr ""
+
+#: app.py:334
+msgid "This role uses the permissions selected below."
+msgstr ""
+
+#: app.py:733
+msgid "title"
+msgstr ""
+
+#: app.py:814
+msgid "Each useful site needs a name."
+msgstr ""
+
+#: app.py:816
+msgid "Each useful site needs a link."
+msgstr ""
+
+#: app.py:818
+msgid "Use a valid http, https, mailto, or tel link for each useful site."
+msgstr ""
+
+#: app.py:989
+msgid "Enter a valid email address."
+msgstr ""
+
+#: app.py:999
+msgid "Use a valid http, https, mailto, or tel link."
+msgstr ""
+
+#: app.py:1001
+msgid "Use a complete link, including the website address."
+msgstr ""
+
+#: app.py:1003
+msgid "Use a complete link target."
+msgstr ""
+
+#: app.py:1015
+msgid "Use a complete http or https image link, or upload a picture."
+msgstr ""
+
+#: app.py:1119
+msgid "Anonymous donor"
+msgstr ""
+
+#: app.py:1131 app.py:1148 app.py:1172 app.py:1252
+msgid "Username"
+msgstr ""
+
+#: app.py:1132 app.py:1149 app.py:1253 app.py:1407
+msgid "Email"
+msgstr ""
+
+#: app.py:1133 app.py:1173
+msgid "Password"
+msgstr ""
+
+#: app.py:1134
+msgid "Confirm Password"
+msgstr ""
+
+#: app.py:1135 app.py:1150 templates/manage_users.html:19
+msgid "Role"
+msgstr ""
+
+#: app.py:1136 templates/register.html:45
+msgid "Create User"
+msgstr ""
+
+#: app.py:1140 app.py:1163 app.py:1260
+msgid "That username is taken. Please choose a different one."
+msgstr ""
+
+#: app.py:1144 app.py:1168 app.py:1265
+msgid "That email is taken. Please choose a different one."
+msgstr ""
+
+#: app.py:1151 app.py:1254
+msgid "Contact Details"
+msgstr ""
+
+#: app.py:1152 templates/edit_user.html:34
+msgid "Permissions"
+msgstr ""
+
+#: app.py:1153
+msgid "New Password"
+msgstr ""
+
+#: app.py:1154 templates/edit_user.html:95
+msgid "Save User"
+msgstr ""
+
+#: app.py:1174
+msgid "Remember me"
+msgstr ""
+
+#: app.py:1175 app.py:2123 app.py:2426 templates/layout.html:48
+#: templates/login.html:4 templates/login.html:25
+msgid "Login"
+msgstr ""
+
+#: app.py:1179 app.py:1328 templates/home_content.html:54
+msgid "Title"
+msgstr ""
+
+#: app.py:1180
+msgid "Description"
+msgstr ""
+
+#: app.py:1181 app.py:1275 templates/projects_list.html:34
+msgid "Category"
+msgstr ""
+
+#: app.py:1182 app.py:1237 templates/project.html:46
+msgid "Voting Deadline"
+msgstr ""
+
+#: app.py:1183
+msgid "Start Date"
+msgstr ""
+
+#: app.py:1184
+msgid "End Date"
+msgstr ""
+
+#: app.py:1186 app.py:1271 templates/admin_donations.html:20
+#: templates/donation_receipt.html:43 templates/home_content.html:56
+#: templates/manage_donation_campaign.html:46
+msgid "Status"
+msgstr ""
+
+#: app.py:1187 app.py:1272 app.py:1289 app.py:1694 templates/dashboard.html:32
+msgid "Pending"
+msgstr ""
+
+#: app.py:1187 app.py:1272 app.py:1289
+msgid "In Progress"
+msgstr ""
+
+#: app.py:1187 app.py:1272 app.py:1289
+msgid "Completed"
+msgstr ""
+
+#: app.py:1191
+msgid "Save Project"
+msgstr ""
+
+#: app.py:1195
+msgid "End date must be after the start date."
+msgstr ""
+
+#: app.py:1200 app.py:3085 templates/assign_tracker.html:4
+#: templates/assign_tracker.html:25 templates/project.html:58
+msgid "Assign Project Tracker"
+msgstr ""
+
+#: app.py:1204
+msgid "Vote"
+msgstr ""
+
+#: app.py:1204 app.py:1244 templates/project.html:98 templates/project.html:124
+#: templates/proposal_detail.html:87 templates/proposals_list.html:41
+msgid "Yes"
+msgstr ""
+
+#: app.py:1204 app.py:1244 templates/project.html:99 templates/project.html:124
+#: templates/proposal_detail.html:88 templates/proposals_list.html:42
+msgid "No"
+msgstr ""
+
+#: app.py:1205 templates/project.html:120
+msgid "Submit Vote"
+msgstr ""
+
+#: app.py:1209
+msgid "Proposal Title"
+msgstr ""
+
+#: app.py:1210 app.py:1329
+msgid "Short Summary"
+msgstr ""
+
+#: app.py:1211
+msgid "Proposal Details"
+msgstr ""
+
+#: app.py:1213
+msgid "Who can see and vote"
+msgstr ""
+
+#: app.py:1215 app.py:1594
+msgid "Council members only"
+msgstr ""
+
+#: app.py:1216 app.py:1595
+msgid "Council members and trackers"
+msgstr ""
+
+#: app.py:1217 app.py:1596
+msgid "Public page with internal voting"
+msgstr ""
+
+#: app.py:1223 templates/proposals_list.html:32
+msgid "Vote transparency"
+msgstr ""
+
+#: app.py:1225 app.py:1602
+msgid "Anonymous results"
+msgstr ""
+
+#: app.py:1226 app.py:1603
+msgid "Public accountability"
+msgstr ""
+
+#: app.py:1232
+msgid "Proposal Status"
+msgstr ""
+
+#: app.py:1233
+msgid "Open"
+msgstr ""
+
+#: app.py:1233 app.py:1391 app.py:1566
+msgid "Closed"
+msgstr ""
+
+#: app.py:1238
+msgid "Save Proposal"
+msgstr ""
+
+#: app.py:1243
+msgid "Your Vote"
+msgstr ""
+
+#: app.py:1244 templates/proposal_detail.html:89
+#: templates/proposals_list.html:43
+msgid "Abstain"
+msgstr ""
+
+#: app.py:1247
+msgid "Optional Reason"
+msgstr ""
+
+#: app.py:1248 templates/proposal_detail.html:62
+msgid "Submit Proposal Vote"
+msgstr ""
+
+#: app.py:1255 templates/edit_profile.html:18
+msgid "Update Profile"
+msgstr ""
+
+#: app.py:1269
+msgid "Search Keywords"
+msgstr ""
+
+#: app.py:1272 app.py:1276 app.py:2000
+msgid "Any"
+msgstr ""
+
+#: app.py:1277 templates/projects_list.html:41
+msgid "Apply Filters"
+msgstr ""
+
+#: app.py:1281
+msgid "Name"
+msgstr ""
+
+#: app.py:1282
+msgid "Additional Info"
+msgstr ""
+
+#: app.py:1283 templates/project.html:67 templates/volunteer_form.html:4
+#: templates/volunteer_form.html:25
+msgid "Volunteer"
+msgstr ""
+
+#: app.py:1288
+msgid "New Status"
+msgstr ""
+
+#: app.py:1292 templates/track_project.html:39
+msgid "Update Status"
+msgstr ""
+
+#: app.py:1296 app.py:1297 templates/track_project.html:55
+msgid "Add Comment"
+msgstr ""
+
+#: app.py:1302
+msgid "Send suggestion to"
+msgstr ""
+
+#: app.py:1304 app.py:1557 app.py:2129
+msgid "Council"
+msgstr ""
+
+#: app.py:1305
+msgid "Project tracker on a project"
+msgstr ""
+
+#: app.py:1310 templates/assign_tracker.html:8 templates/assign_tracker.html:15
+#: templates/edit_project.html:8 templates/results.html:7
+#: templates/track_project.html:8 templates/volunteer_form.html:8
+msgid "Project"
+msgstr ""
+
+#: app.py:1310 app.py:2490
+msgid "Select a project"
+msgstr ""
+
+#: app.py:1311 templates/volunteer_form.html:22
+msgid "Your name"
+msgstr ""
+
+#: app.py:1312
+msgid "Contact information"
+msgstr ""
+
+#: app.py:1313
+msgid "Suggestion title"
+msgstr ""
+
+#: app.py:1314
+msgid "Suggestion details"
+msgstr ""
+
+#: app.py:1315
+msgid "Submit Suggestion"
+msgstr ""
+
+#: app.py:1319
+msgid "Choose the project this suggestion belongs to."
+msgstr ""
+
+#: app.py:1324
+msgid "Content Type"
+msgstr ""
+
+#: app.py:1325 app.py:1546
+msgid "Important announcement"
+msgstr ""
+
+#: app.py:1325 app.py:1524 app.py:1547
+msgid "News story"
+msgstr ""
+
+#: app.py:1330
+msgid "Body"
+msgstr ""
+
+#: app.py:1331
+msgid "Image URL"
+msgstr ""
+
+#: app.py:1333
+msgid "Upload picture"
+msgstr ""
+
+#: app.py:1334
+msgid "Upload a JPG, PNG, WebP, or GIF image."
+msgstr ""
+
+#: app.py:1336 templates/home.html:43 templates/home_content.html:70
+msgid "Published"
+msgstr ""
+
+#: app.py:1337
+msgid "Show on home page"
+msgstr ""
+
+#: app.py:1338
+msgid "Save Home Content"
+msgstr ""
+
+#: app.py:1342
+msgid "Show news section on the home page"
+msgstr ""
+
+#: app.py:1343
+msgid "Save Home Page Settings"
+msgstr ""
+
+#: app.py:1347
+msgid "Show Instagram"
+msgstr ""
+
+#: app.py:1348
+msgid "Instagram URL"
+msgstr ""
+
+#: app.py:1349 app.py:1353 app.py:1357 app.py:1361 app.py:1365
+#: templates/site_options.html:98 templates/site_options.html:148
+msgid "English description"
+msgstr ""
+
+#: app.py:1350 app.py:1354 app.py:1358 app.py:1362 app.py:1366
+#: templates/site_options.html:102 templates/site_options.html:152
+msgid "Spanish description"
+msgstr ""
+
+#: app.py:1351
+msgid "Show WhatsApp"
+msgstr ""
+
+#: app.py:1352
+msgid "WhatsApp URL"
+msgstr ""
+
+#: app.py:1355
+msgid "Show Facebook"
+msgstr ""
+
+#: app.py:1356
+msgid "Facebook URL"
+msgstr ""
+
+#: app.py:1359
+msgid "Show Twitter/X"
+msgstr ""
+
+#: app.py:1360
+msgid "Twitter/X URL"
+msgstr ""
+
+#: app.py:1363
+msgid "Show Telegram"
+msgstr ""
+
+#: app.py:1364
+msgid "Telegram URL"
+msgstr ""
+
+#: app.py:1367
+msgid "Save Site Links"
+msgstr ""
+
+#: app.py:1371
+msgid "Delete"
+msgstr ""
+
+#: app.py:1379
+msgid "Campaign Title"
+msgstr ""
+
+#: app.py:1380
+msgid "Beneficiary or Purpose"
+msgstr ""
+
+#: app.py:1381
+msgid "Campaign Description"
+msgstr ""
+
+#: app.py:1382
+msgid "Goal Amount"
+msgstr ""
+
+#: app.py:1384
+msgid "Currency"
+msgstr ""
+
+#: app.py:1390
+msgid "Campaign Status"
+msgstr ""
+
+#: app.py:1391 templates/dashboard.html:31 templates/home.html:28
+msgid "Active"
+msgstr ""
+
+#: app.py:1391
+msgid "Paused"
+msgstr ""
+
+#: app.py:1395
+msgid "Payment Instructions"
+msgstr ""
+
+#: app.py:1396
+msgid "Save Campaign"
+msgstr ""
+
+#: app.py:1400
+msgid "Group or Bloodline Name"
+msgstr ""
+
+#: app.py:1401
+msgid "Group Notes"
+msgstr ""
+
+#: app.py:1402
+msgid "Add Group"
+msgstr ""
+
+#: app.py:1406
+msgid "Donor Name"
+msgstr ""
+
+#: app.py:1408
+msgid "Phone"
+msgstr ""
+
+#: app.py:1409
+msgid "Donation Amount"
+msgstr ""
+
+#: app.py:1411
+msgid "Donation Attribution"
+msgstr ""
+
+#: app.py:1412
+msgid "Independent donation"
+msgstr ""
+
+#: app.py:1412
+msgid "Under a group or bloodline"
+msgstr ""
+
+#: app.py:1416
+msgid "Existing Group"
+msgstr ""
+
+#: app.py:1417
+msgid "New Group or Bloodline"
+msgstr ""
+
+#: app.py:1418
+msgid "Show my name publicly"
+msgstr ""
+
+#: app.py:1420 templates/donation_receipt.html:31
+msgid "Payment Method"
+msgstr ""
+
+#: app.py:1422 templates/donation_receipt.html:34
+msgid "Bank transfer"
+msgstr ""
+
+#: app.py:1423 templates/donation_receipt.html:36
+msgid "Cash payment"
+msgstr ""
+
+#: app.py:1424 templates/donation_receipt.html:38
+msgid "Online payment request"
+msgstr ""
+
+#: app.py:1429
+msgid "Optional Message"
+msgstr ""
+
+#: app.py:1430
+msgid "Create Donation Reference"
+msgstr ""
+
+#: app.py:1434 app.py:3303
+msgid "Choose a group or enter a new group name."
+msgstr ""
+
+#: app.py:1442 app.py:1454 app.py:1738 app.py:1749 app.py:2525 app.py:2578
+#: app.py:2639
+msgid "You do not have permission to access this page."
+msgstr ""
+
+#: app.py:1466
+msgid "You need proposal creation permission to create proposals."
+msgstr ""
+
+#: app.py:1479
+msgid "You do not have the required permission to access this page."
+msgstr ""
+
+#: app.py:1558
+msgid "Project tracker"
+msgstr ""
+
+#: app.py:1564
+msgid "New"
+msgstr ""
+
+#: app.py:1565
+msgid "Reviewed"
+msgstr ""
+
+#: app.py:1646
+msgid "Unassigned"
+msgstr ""
+
+#: app.py:1662
+msgid "You do not have permission to track this project."
+msgstr ""
+
+#: app.py:1681
+msgid "US dollars"
+msgstr ""
+
+#: app.py:1695 templates/admin_donations.html:21 templates/dashboard.html:33
+msgid "Confirmed"
+msgstr ""
+
+#: app.py:1696
+msgid "Rejected"
+msgstr ""
+
+#: app.py:2019
+msgid "Not scheduled"
+msgstr ""
+
+#: app.py:2087 app.py:2532
+msgid "Your assigned projects"
+msgstr ""
+
+#: app.py:2090 app.py:2529
+msgid "Projects you can track"
+msgstr ""
+
+#: app.py:2127
+msgid "Tracker"
+msgstr ""
+
+#: app.py:2131 app.py:2664 app.py:2665
+msgid "News Desk"
+msgstr ""
+
+#: app.py:2132
+msgid "Workspace"
+msgstr ""
+
+#: app.py:2344
+msgid "Home Page"
+msgstr ""
+
+#: app.py:2390 app.py:3410 templates/dashboard.html:6
+msgid "Donation Dashboard"
+msgstr ""
+
+#: app.py:2420
+#, python-format
+msgid "Welcome back, %(username)s."
+msgstr ""
+
+#: app.py:2425
+msgid "Login unsuccessful. Check the username and password, then try again."
+msgstr ""
+
+#: app.py:2435
+msgid "Could not sign you out. Please try again."
+msgstr ""
+
+#: app.py:2441
+msgid "You have been logged out."
+msgstr ""
+
+#: app.py:2450
+msgid "Please log in to access this page."
+msgstr ""
+
+#: app.py:2474 app.py:2537 templates/create_project.html:8
+#: templates/home.html:27 templates/layout.html:36 templates/layout.html:104
+#: templates/project.html:8 templates/projects_list.html:4
+msgid "Projects"
+msgstr ""
+
+#: app.py:2482 templates/layout.html:109 templates/useful_sites.html:3
+msgid "Useful Sites"
+msgstr ""
+
+#: app.py:2505 app.py:3375
+msgid "Suggestion submitted successfully. Thank you for helping improve the city."
+msgstr ""
+
+#: app.py:2507 templates/layout.html:38 templates/layout.html:106
+#: templates/suggestions.html:4 templates/suggestions_inbox.html:11
+msgid "Suggestions"
+msgstr ""
+
+#: app.py:2515
+msgid "You do not have permission to view suggestions."
+msgstr ""
+
+#: app.py:2518 app.py:2543 app.py:2591 app.py:3434
+#: templates/suggestions.html:13 templates/suggestions_inbox.html:3
+msgid "Suggestion Inbox"
+msgstr ""
+
+#: app.py:2538
+msgid "Open the public project list and jump into tracker pages when assigned."
+msgstr ""
+
+#: app.py:2544
+msgid "Review ideas sent to the responsible project tracker."
+msgstr ""
+
+#: app.py:2549 app.py:2597 app.py:2656 app.py:3440
+msgid "Profile"
+msgstr ""
+
+#: app.py:2550 app.py:2598 app.py:2657 app.py:3441
+msgid "Update your account contact information."
+msgstr ""
+
+#: app.py:2557 app.py:2558
+msgid "Tracker Workspace"
+msgstr ""
+
+#: app.py:2559
+msgid "Project operations"
+msgstr ""
+
+#: app.py:2560
+msgid ""
+"A focused space for assigned projects, field updates, and project-"
+"specific public suggestions."
+msgstr ""
+
+#: app.py:2585 templates/layout.html:37 templates/layout.html:105
+#: templates/proposal_detail.html:12 templates/proposal_form.html:12
+msgid "Proposals"
+msgstr ""
+
+#: app.py:2586
+msgid "Review council proposals and vote when eligible."
+msgstr ""
+
+#: app.py:2592
+msgid "Review public ideas sent to the council."
+msgstr ""
+
+#: app.py:2607 app.py:2800 templates/proposals_list.html:13
+msgid "New Proposal"
+msgstr ""
+
+#: app.py:2608
+msgid "Create a proposal and choose voting visibility."
+msgstr ""
+
+#: app.py:2616 app.py:2644 app.py:2692 app.py:3428
+#: templates/home_content.html:4 templates/home_post_form.html:11
+msgid "Home Content"
+msgstr ""
+
+#: app.py:2617
+msgid "Publish announcements and news for the public home page."
+msgstr ""
+
+#: app.py:2624 app.py:2625
+msgid "Council Workspace"
+msgstr ""
+
+#: app.py:2626
+msgid "Council decisions"
+msgstr ""
+
+#: app.py:2627
+msgid ""
+"A focused space for votes, proposals, resident suggestions, and council-"
+"facing work."
+msgstr ""
+
+#: app.py:2645
+msgid "Manage announcements and newspaper-style public updates."
+msgstr ""
+
+#: app.py:2650 app.py:2722 templates/home.html:14
+#: templates/home_content.html:11
+msgid "New Home Content"
+msgstr ""
+
+#: app.py:2651
+msgid "Create an announcement or picture-led news story."
+msgstr ""
+
+#: app.py:2666
+msgid "Public updates"
+msgstr ""
+
+#: app.py:2667
+msgid ""
+"A focused space for announcements, local news posts, and home page "
+"publishing."
+msgstr ""
+
+#: app.py:2677 app.py:2699 app.py:2729 app.py:2757
+msgid "You do not have permission to manage home page content."
+msgstr ""
+
+#: app.py:2681
+msgid "Only admins can change home page display settings."
+msgstr ""
+
+#: app.py:2686
+msgid "Home page settings updated."
+msgstr ""
+
+#: app.py:2704 app.py:2735
+msgid "This role can only create news stories."
+msgstr ""
+
+#: app.py:2720
+msgid "Home page content created."
+msgstr ""
+
+#: app.py:2748
+msgid "Home page content updated."
+msgstr ""
+
+#: app.py:2750
+msgid "Edit Home Content"
+msgstr ""
+
+#: app.py:2764
+msgid "Could not update this content. Please try again."
+msgstr ""
+
+#: app.py:2769
+msgid "Home page content visibility updated."
+msgstr ""
+
+#: app.py:2778 templates/proposals_list.html:4
+msgid "Council Proposals"
+msgstr ""
+
+#: app.py:2798
+msgid "Proposal created successfully."
+msgstr ""
+
+#: app.py:2808
+msgid "Please log in to view this proposal."
+msgstr ""
+
+#: app.py:2810
+msgid "You do not have permission to view this proposal."
+msgstr ""
+
+#: app.py:2843
+msgid ""
+"Only an admin or a proposal creator with proposal permission can edit "
+"this proposal."
+msgstr ""
+
+#: app.py:2846
+msgid "Update Proposal"
+msgstr ""
+
+#: app.py:2856
+msgid "Proposal updated successfully."
+msgstr ""
+
+#: app.py:2858 templates/proposal_detail.html:16
+msgid "Edit Proposal"
+msgstr ""
+
+#: app.py:2866
+msgid "You are not eligible to vote on this proposal."
+msgstr ""
+
+#: app.py:2869 templates/proposal_detail.html:69
+msgid "Voting is closed for this proposal."
+msgstr ""
+
+#: app.py:2879
+msgid "Proposal vote updated."
+msgstr ""
+
+#: app.py:2889
+msgid "Proposal vote submitted."
+msgstr ""
+
+#: app.py:2892
+msgid "Could not submit your proposal vote. Please choose an option."
+msgstr ""
+
+#: app.py:2899 app.py:3466 templates/admin_donations.html:4
+#: templates/donation_campaign_form.html:8
+#: templates/manage_donation_campaign.html:12
+msgid "Donation Campaigns"
+msgstr ""
+
+#: app.py:2925 app.py:3278
+msgid "This donation campaign is not accepting payments right now."
+msgstr ""
+
+#: app.py:2929
+msgid "No group"
+msgstr ""
+
+#: app.py:2957 app.py:3325
+msgid ""
+"Donation recorded. Please complete the payment using your reference "
+"number."
+msgstr ""
+
+#: app.py:2960 templates/dashboard.html:62 templates/donate.html:4
+#: templates/donation_campaign.html:16 templates/donation_campaigns.html:34
+msgid "Donate"
+msgstr ""
+
+#: app.py:2966 templates/donation_receipt.html:3
+msgid "Donation Reference"
+msgstr ""
+
+#: app.py:2973
+msgid "Create Project"
+msgstr ""
+
+#: app.py:2987
+msgid "New project created successfully!"
+msgstr ""
+
+#: app.py:2989 templates/projects_list.html:9
+msgid "New Project"
+msgstr ""
+
+#: app.py:3024 templates/project.html:63
+msgid "Update Project"
+msgstr ""
+
+#: app.py:3028
+msgid "Project updated successfully!"
+msgstr ""
+
+#: app.py:3030 templates/edit_project.html:4
+msgid "Edit Project"
+msgstr ""
+
+#: app.py:3038
+msgid "Voting deadline has passed for this project."
+msgstr ""
+
+#: app.py:3048
+msgid "Vote updated successfully!"
+msgstr ""
+
+#: app.py:3051
+msgid "Vote submitted successfully!"
+msgstr ""
+
+#: app.py:3054
+msgid "Could not submit your vote. Please try again."
+msgstr ""
+
+#: app.py:3063
+msgid "You do not have permission to view voting results."
+msgstr ""
+
+#: app.py:3066 templates/results.html:3
+msgid "Voting Results"
+msgstr ""
+
+#: app.py:3077
+msgid "Create a user with project tracking permission before assigning projects."
+msgstr ""
+
+#: app.py:3083
+#, python-format
+msgid "Project assigned to %(tracker_name)s!"
+msgstr ""
+
+#: app.py:3098
+msgid "Track Project"
+msgstr ""
+
+#: app.py:3115
+msgid "You do not have permission to update project status."
+msgstr ""
+
+#: app.py:3124
+#, python-format
+msgid "Status changed to %(status)s."
+msgstr ""
+
+#: app.py:3128
+msgid "Project status updated."
+msgstr ""
+
+#: app.py:3130
+msgid "Could not update project status."
+msgstr ""
+
+#: app.py:3141
+msgid "You do not have permission to add project updates."
+msgstr ""
+
+#: app.py:3147
+msgid "Comment added."
+msgstr ""
+
+#: app.py:3149
+msgid "Comment cannot be empty."
+msgstr ""
+
+#: app.py:3172 app.py:3246
+#, python-format
+msgid "Thank you for volunteering for %(project_title)s!"
+msgstr ""
+
+#: app.py:3174
+msgid "Volunteer for Project"
+msgstr ""
+
+#: app.py:3180 templates/calendar.html:10
+msgid "Project Calendar"
+msgstr ""
+
+#: app.py:3239 app.py:3292
+msgid "Please enter your name."
+msgstr ""
+
+#: app.py:3294
+msgid "Amount must be greater than zero."
+msgstr ""
+
+#: app.py:3356
+msgid "Select a project."
+msgstr ""
+
+#: app.py:3358
+msgid "Title is required."
+msgstr ""
+
+#: app.py:3360
+msgid "Please add a few details so the council can understand the suggestion."
+msgstr ""
+
+#: app.py:3392 app.py:3459 templates/manage_users.html:3
+msgid "Manage Users"
+msgstr ""
+
+#: app.py:3393
+msgid "Create users, edit roles, and adjust permissions."
+msgstr ""
+
+#: app.py:3398 app.py:3606 templates/manage_users.html:7
+#: templates/register.html:4
+msgid "Register User"
+msgstr ""
+
+#: app.py:3399
+msgid "Add a new admin, council member, tracker, or news editor."
+msgstr ""
+
+#: app.py:3404
+msgid "Donation Admin"
+msgstr ""
+
+#: app.py:3405
+msgid "Manage donation campaigns, giving groups, and payment confirmations."
+msgstr ""
+
+#: app.py:3411
+msgid ""
+"Review donation totals, pending payments, giving groups, and recent "
+"references."
+msgstr ""
+
+#: app.py:3416 app.py:3487 templates/admin_donations.html:8
+#: templates/dashboard.html:14 templates/donation_campaigns.html:13
+msgid "New Donation Campaign"
+msgstr ""
+
+#: app.py:3417
+msgid ""
+"Create a new donation request with groups, goals, and payment "
+"instructions."
+msgstr ""
+
+#: app.py:3422 app.py:3568 app.py:3587 templates/site_options.html:4
+msgid "Site Links"
+msgstr ""
+
+#: app.py:3423
+msgid "Edit footer social links, useful sites, and public link descriptions."
+msgstr ""
+
+#: app.py:3429
+msgid "Publish home page announcements and newspaper-style news posts."
+msgstr ""
+
+#: app.py:3435
+msgid "Review ideas sent to the council or to project trackers."
+msgstr ""
+
+#: app.py:3446
+msgid "Technical Admin"
+msgstr ""
+
+#: app.py:3447
+msgid "Open the protected database administration panel."
+msgstr ""
+
+#: app.py:3485
+msgid "Donation campaign created."
+msgstr ""
+
+#: app.py:3504
+msgid "Donation campaign updated."
+msgstr ""
+
+#: app.py:3506
+msgid "Edit Donation Campaign"
+msgstr ""
+
+#: app.py:3522
+msgid "Donation group added."
+msgstr ""
+
+#: app.py:3524
+msgid "Donation group already exists."
+msgstr ""
+
+#: app.py:3546
+msgid "Could not update donation status. Please try again."
+msgstr ""
+
+#: app.py:3550
+msgid "Donation status updated."
+msgstr ""
+
+#: app.py:3583
+msgid "Site links updated successfully."
+msgstr ""
+
+#: app.py:3604
+msgid "Account created successfully!"
+msgstr ""
+
+#: app.py:3616
+msgid "You cannot remove your own admin role while you are logged in."
+msgstr ""
+
+#: app.py:3619
+msgid "Keep at least one admin account before changing this role."
+msgstr ""
+
+#: app.py:3634
+msgid "User updated successfully."
+msgstr ""
+
+#: app.py:3638 templates/edit_user.html:4
+msgid "Edit User"
+msgstr ""
+
+#: app.py:3652
+msgid "Could not delete user. Please try again."
+msgstr ""
+
+#: app.py:3656
+msgid "You cannot delete your own account while logged in."
+msgstr ""
+
+#: app.py:3660
+msgid "User deleted successfully."
+msgstr ""
+
+#: app.py:3673
+msgid "Your profile has been updated!"
+msgstr ""
+
+#: app.py:3675 templates/edit_profile.html:4
+msgid "Edit Profile"
+msgstr ""
+
+#: app.py:3680
+msgid "Not Found"
+msgstr ""
+
+#: templates/_macros.html:23
+msgid "Please fix the highlighted fields."
+msgstr ""
+
+#: templates/_macros.html:60 templates/project.html:33
+#: templates/track_project.html:26
+msgid "Project progress"
+msgstr ""
+
+#: templates/_macros.html:63
+msgid "Start"
+msgstr ""
+
+#: templates/admin_dashboard.html:5
+msgid "Admin Dashboard"
+msgstr ""
+
+#: templates/admin_dashboard.html:9 templates/home.html:156
+msgid "Recent Projects"
+msgstr ""
+
+#: templates/admin_dashboard.html:16
+msgid "of voting period elapsed"
+msgstr ""
+
+#: templates/admin_dashboard.html:22
+msgid "No recent projects."
+msgstr ""
+
+#: templates/admin_dashboard.html:28
+msgid "Pending Votes"
+msgstr ""
+
+#: templates/admin_dashboard.html:34 templates/council_dashboard.html:13
+#: templates/home.html:127 templates/home.html:178
+#: templates/role_workspace.html:44
+msgid "Voting ends"
+msgstr ""
+
+#: templates/admin_dashboard.html:39
+msgid "No pending votes."
+msgstr ""
+
+#: templates/admin_donations.html:16
+msgid "Donation campaign management"
+msgstr ""
+
+#: templates/admin_donations.html:19 templates/donate.html:12
+#: templates/donation_receipt.html:11 templates/donation_receipt.html:23
+msgid "Campaign"
+msgstr ""
+
+#: templates/admin_donations.html:22 templates/donation_campaign.html:59
+msgid "Goal"
+msgstr ""
+
+#: templates/admin_donations.html:23 templates/home_content.html:58
+#: templates/manage_donation_campaign.html:47 templates/manage_users.html:21
+msgid "Actions"
+msgstr ""
+
+#: templates/admin_donations.html:31
+msgid "No beneficiary listed"
+msgstr ""
+
+#: templates/admin_donations.html:32 templates/dashboard.html:43
+#: templates/dashboard.html:59 templates/donation_campaign.html:41
+#: templates/donation_campaigns.html:31
+#: templates/manage_donation_campaign.html:27
+msgid "Campaign progress"
+msgstr ""
+
+#: templates/admin_donations.html:39
+#, python-format
+msgid "Manage %(name)s"
+msgstr ""
+
+#: templates/admin_donations.html:42 templates/home_content.html:76
+#: templates/manage_users.html:35
+#, python-format
+msgid "Edit %(name)s"
+msgstr ""
+
+#: templates/admin_donations.html:50 templates/dashboard.html:72
+msgid "No donation campaigns found."
+msgstr ""
+
+#: templates/admin_hub.html:7
+msgid ""
+"One place for protected council management tools, so the main navigation "
+"stays simple."
+msgstr ""
+
+#: templates/admin_hub.html:14
+msgid "Management"
+msgstr ""
+
+#: templates/admin_hub.html:15
+msgid "Choose an admin area"
+msgstr ""
+
+#: templates/admin_hub.html:16
+msgid ""
+"Open the exact workspace you need without searching through the public "
+"pages."
+msgstr ""
+
+#: templates/assign_tracker.html:17
+msgid ""
+"Choose the project tracker responsible for field updates and status "
+"changes."
+msgstr ""
+
+#: templates/assign_tracker.html:28 templates/create_project.html:38
+#: templates/donate.html:70 templates/donation_campaign_form.html:38
+#: templates/edit_profile.html:21 templates/edit_project.html:38
+#: templates/edit_user.html:98 templates/home_post_form.html:100
+#: templates/proposal_form.html:43 templates/register.html:48
+#: templates/site_options.html:114 templates/volunteer_form.html:28
+msgid "Cancel"
+msgstr ""
+
+#: templates/calendar.html:16
+msgid "Schedule"
+msgstr ""
+
+#: templates/calendar.html:17
+msgid "Project dates"
+msgstr ""
+
+#: templates/calendar.html:20
+msgid "Project calendar"
+msgstr ""
+
+#: templates/calendar.html:22
+msgid ""
+"Enable JavaScript to use the interactive calendar. Project dates are "
+"listed below."
+msgstr ""
+
+#: templates/calendar.html:34
+msgid "No project dates are scheduled yet."
+msgstr ""
+
+#: templates/council_dashboard.html:5
+msgid "Council Member Dashboard"
+msgstr ""
+
+#: templates/council_dashboard.html:7
+msgid "Projects to Vote On"
+msgstr ""
+
+#: templates/council_dashboard.html:18
+msgid "No projects currently open for voting."
+msgstr ""
+
+#: templates/create_project.html:4
+msgid "Create New Project"
+msgstr ""
+
+#: templates/create_project.html:15
+msgid "Safe setup"
+msgstr ""
+
+#: templates/create_project.html:16
+msgid "Create a project people can understand quickly"
+msgstr ""
+
+#: templates/create_project.html:17
+msgid ""
+"Use a clear title, plain-language description, and dates only when they "
+"are known. You can edit everything later."
+msgstr ""
+
+#: templates/create_project.html:22 templates/edit_project.html:22
+msgid "Enter project title"
+msgstr ""
+
+#: templates/create_project.html:23 templates/edit_project.html:23
+msgid "Describe the project details"
+msgstr ""
+
+#: templates/create_project.html:25 templates/edit_project.html:25
+msgid "Optional category"
+msgstr ""
+
+#: templates/dashboard.html:8
+msgid ""
+"A focused view for donation campaigns, payment status, giving groups, and"
+" recent donation activity."
+msgstr ""
+
+#: templates/dashboard.html:18
+msgid "Public donation page"
+msgstr ""
+
+#: templates/dashboard.html:25
+msgid "Donation operations"
+msgstr ""
+
+#: templates/dashboard.html:26
+msgid "Follow every campaign from public pledge to confirmed support."
+msgstr ""
+
+#: templates/dashboard.html:27
+msgid ""
+"Use this dashboard to see active campaigns, pending payment "
+"confirmations, group giving totals, and recent donor references without "
+"digging through each campaign."
+msgstr ""
+
+#: templates/dashboard.html:30
+msgid "Campaigns"
+msgstr ""
+
+#: templates/dashboard.html:34 templates/donation_campaign.html:63
+#: templates/manage_donation_campaign.html:106
+msgid "Groups"
+msgstr ""
+
+#: templates/dashboard.html:42
+msgid "Active campaigns"
+msgstr ""
+
+#: templates/dashboard.html:45
+msgid "View all campaigns"
+msgstr ""
+
+#: templates/dashboard.html:66 templates/donation_campaign.html:21
+msgid "Manage"
+msgstr ""
+
+#: templates/dashboard.html:80
+msgid "Confirmed totals"
+msgstr ""
+
+#: templates/dashboard.html:89 templates/donation_campaign.html:104
+msgid "No confirmed donations yet."
+msgstr ""
+
+#: templates/dashboard.html:96
+msgid "Top giving groups"
+msgstr ""
+
+#: templates/dashboard.html:108 templates/donation_campaign.html:85
+msgid "No groups have contributed yet."
+msgstr ""
+
+#: templates/dashboard.html:115
+msgid "Recent donation references"
+msgstr ""
+
+#: templates/dashboard.html:125 templates/manage_donation_campaign.html:75
+msgid "No donations recorded yet."
+msgstr ""
+
+#: templates/donate.html:18
+msgid "Donation steps"
+msgstr ""
+
+#: templates/donate.html:19
+msgid "Donation Details"
+msgstr ""
+
+#: templates/donate.html:20
+msgid "Reference and Payment Instructions"
+msgstr ""
+
+#: templates/donate.html:24
+msgid "Donation request"
+msgstr ""
+
+#: templates/donate.html:25
+msgid "Create a donation reference"
+msgstr ""
+
+#: templates/donate.html:26
+msgid ""
+"No money is collected on this page. You will receive a reference number, "
+"then complete payment using the campaign instructions."
+msgstr ""
+
+#: templates/donate.html:34
+msgid "Full name"
+msgstr ""
+
+#: templates/donate.html:39
+msgid "Optional phone number"
+msgstr ""
+
+#: templates/donate.html:56 templates/manage_donation_campaign.html:95
+msgid "Family, bloodline, neighborhood, or team"
+msgstr ""
+
+#: templates/donate.html:63
+msgid "Optional note for the campaign team"
+msgstr ""
+
+#: templates/donation_campaign.html:7
+msgid ""
+"Donors can contribute independently or under a group, family, or "
+"bloodline name."
+msgstr ""
+
+#: templates/donation_campaign.html:12 templates/donation_campaigns.html:4
+#: templates/layout.html:39 templates/layout.html:107
+msgid "Donations"
+msgstr ""
+
+#: templates/donation_campaign.html:38
+#: templates/manage_donation_campaign.html:24
+msgid "Campaign Goal"
+msgstr ""
+
+#: templates/donation_campaign.html:39
+#: templates/manage_donation_campaign.html:25
+msgid "confirmed of"
+msgstr ""
+
+#: templates/donation_campaign.html:45
+msgid "How donation confirmation works"
+msgstr ""
+
+#: templates/donation_campaign.html:47
+msgid ""
+"Choose an amount, create a reference number, complete payment using the "
+"listed instructions, and the council team will confirm the donation."
+msgstr ""
+
+#: templates/donation_campaign.html:51
+msgid "Confirmed Donations"
+msgstr ""
+
+#: templates/donation_campaign.html:55
+msgid "Pending Donations"
+msgstr ""
+
+#: templates/donation_campaign.html:73
+#: templates/manage_donation_campaign.html:88
+msgid "Group giving"
+msgstr ""
+
+#: templates/donation_campaign.html:74
+msgid "Families, bloodlines, and groups"
+msgstr ""
+
+#: templates/donation_campaign.html:93
+msgid "Recent support"
+msgstr ""
+
+#: templates/donation_campaign.html:94
+msgid "Confirmed donors"
+msgstr ""
+
+#: templates/donation_campaign_form.html:15
+msgid "Fundraising setup"
+msgstr ""
+
+#: templates/donation_campaign_form.html:16
+msgid "Create a clear donation request"
+msgstr ""
+
+#: templates/donation_campaign_form.html:17
+msgid ""
+"Use plain language, a realistic goal, and payment instructions that tell "
+"donors how their reference number will be confirmed."
+msgstr ""
+
+#: templates/donation_campaign_form.html:23
+msgid "Winter relief fund"
+msgstr ""
+
+#: templates/donation_campaign_form.html:24
+msgid "Families, neighborhood, or purpose"
+msgstr ""
+
+#: templates/donation_campaign_form.html:26
+msgid "Explain who this helps and why it matters"
+msgstr ""
+
+#: templates/donation_campaign_form.html:32
+msgid "Bank transfer details, office payment instructions, or contact steps"
+msgstr ""
+
+#: templates/donation_campaigns.html:7
+msgid ""
+"Support transparent community campaigns as an independent donor or under "
+"a family, bloodline, or group name."
+msgstr ""
+
+#: templates/donation_campaigns.html:37
+msgid "Details"
+msgstr ""
+
+#: templates/donation_campaigns.html:42
+msgid "No active donation campaigns are available yet."
+msgstr ""
+
+#: templates/donation_receipt.html:6
+msgid ""
+"Keep this reference with your transfer or cash payment so the team can "
+"confirm it."
+msgstr ""
+
+#: templates/donation_receipt.html:18
+msgid "Payment Reference"
+msgstr ""
+
+#: templates/donation_receipt.html:27
+#: templates/manage_donation_campaign.html:44
+msgid "Amount"
+msgstr ""
+
+#: templates/donation_receipt.html:48
+#: templates/manage_donation_campaign.html:45
+msgid "Group"
+msgstr ""
+
+#: templates/donation_receipt.html:56
+msgid "Payment instructions"
+msgstr ""
+
+#: templates/donation_receipt.html:58
+msgid ""
+"A campaign administrator will contact you to confirm the payment method "
+"and mark the donation as confirmed."
+msgstr ""
+
+#: templates/edit_profile.html:12
+msgid "Your username"
+msgstr ""
+
+#: templates/edit_profile.html:13
+msgid "Your email address"
+msgstr ""
+
+#: templates/edit_profile.html:15
+msgid "Optional contact information"
+msgstr ""
+
+#: templates/edit_project.html:15
+msgid "Project record"
+msgstr ""
+
+#: templates/edit_project.html:17
+msgid ""
+"Keep the status and dates accurate so everyone sees the same version of "
+"the work."
+msgstr ""
+
+#: templates/edit_user.html:8 templates/register.html:8
+msgid "Users"
+msgstr ""
+
+#: templates/edit_user.html:27
+msgid "Leave blank to keep current password"
+msgstr ""
+
+#: templates/edit_user.html:33
+msgid "Access control"
+msgstr ""
+
+#: templates/edit_user.html:35
+msgid ""
+"Most users should follow their role's default permissions. Turn this off "
+"only when this person needs extra access or a specific restriction."
+msgstr ""
+
+#: templates/edit_user.html:47 templates/register.html:41
+msgid ""
+"You can use the role dropdown or click a role card to choose the account "
+"role."
+msgstr ""
+
+#: templates/edit_user.html:50
+msgid "Admins always have every permission while their role stays Admin."
+msgstr ""
+
+#: templates/edit_user.html:55
+msgid "Use default permissions for this role"
+msgstr ""
+
+#: templates/edit_user.html:57
+msgid "Custom choices are locked while role defaults are on."
+msgstr ""
+
+#: templates/edit_user.html:65 templates/edit_user.html:67
+msgid "Role default: allowed"
+msgstr ""
+
+#: templates/edit_user.html:65 templates/edit_user.html:69
+msgid "Role default: blocked"
+msgstr ""
+
+#: templates/edit_user.html:76
+msgid "Follow role"
+msgstr ""
+
+#: templates/edit_user.html:80
+msgid "Always allow"
+msgstr ""
+
+#: templates/edit_user.html:84
+msgid "Always block"
+msgstr ""
+
+#: templates/home.html:6
+msgid "Arlington Civic Home"
+msgstr ""
+
+#: templates/home.html:8
+msgid ""
+"Follow Arlington projects, public proposals, UTA-area updates, donations,"
+" suggestions, and civic deadlines from one organized hub."
+msgstr ""
+
+#: templates/home.html:22
+msgid "Arlington + UTA civic work"
+msgstr ""
+
+#: templates/home.html:23
+msgid ""
+"A clear operating room for city projects, council decisions, and "
+"neighborhood action."
+msgstr ""
+
+#: templates/home.html:24
+msgid ""
+"Track public work across Arlington with project status, assigned owners, "
+"voting deadlines, volunteer paths, and resident-facing updates without "
+"digging through separate tools."
+msgstr ""
+
+#: templates/home.html:29
+msgid "Open votes"
+msgstr ""
+
+#: templates/home.html:30
+msgid "Council members"
+msgstr ""
+
+#: templates/home.html:31
+msgid "Trackers"
+msgstr ""
+
+#: templates/home.html:32 templates/project.html:50
+msgid "Volunteers"
+msgstr ""
+
+#: templates/home.html:37
+msgid "Important announcements"
+msgstr ""
+
+#: templates/home.html:52
+msgid "Start here"
+msgstr ""
+
+#: templates/home.html:53
+msgid "Open the main civic services"
+msgstr ""
+
+#: templates/home.html:59
+msgid "Track Arlington projects"
+msgstr ""
+
+#: templates/home.html:60
+msgid ""
+"Follow progress, dates, public status, voting windows, and assigned civic"
+" operators."
+msgstr ""
+
+#: templates/home.html:64
+msgid "Share a resident suggestion"
+msgstr ""
+
+#: templates/home.html:65
+msgid "Send ideas to the council or to the responsible project operator."
+msgstr ""
+
+#: templates/home.html:69
+msgid "Support local campaigns"
+msgstr ""
+
+#: templates/home.html:70
+msgid ""
+"Contribute independently or under a neighborhood, campus group, family, "
+"or organization."
+msgstr ""
+
+#: templates/home.html:74
+msgid "Check the calendar"
+msgstr ""
+
+#: templates/home.html:75
+msgid "See project dates and public deadlines in one place."
+msgstr ""
+
+#: templates/home.html:84
+msgid "Local newspaper"
+msgstr ""
+
+#: templates/home.html:85
+msgid "Latest news"
+msgstr ""
+
+#: templates/home.html:88
+msgid "Manage news"
+msgstr ""
+
+#: templates/home.html:111
+msgid "No news stories are published yet."
+msgstr ""
+
+#: templates/home.html:120 templates/role_workspace.html:37
+msgid "Projects waiting for your vote"
+msgstr ""
+
+#: templates/home.html:132 templates/role_workspace.html:49
+msgid "No projects currently need your vote."
+msgstr ""
+
+#: templates/home.html:147 templates/role_workspace.html:64
+msgid "No projects are assigned to you yet."
+msgstr ""
+
+#: templates/home.html:157
+msgid "View all projects"
+msgstr ""
+
+#: templates/home.html:163
+msgid "Create the first project to begin."
+msgstr ""
+
+#: templates/home.html:171
+msgid "Upcoming votes"
+msgstr ""
+
+#: templates/home.html:183
+msgid "No public voting deadlines are scheduled."
+msgstr ""
+
+#: templates/home.html:190
+msgid "Latest field updates"
+msgstr ""
+
+#: templates/home.html:200
+msgid "No tracker updates yet."
+msgstr ""
+
+#: templates/home_content.html:6
+msgid ""
+"Create important announcements and picture-led news sections for the "
+"public home page."
+msgstr ""
+
+#: templates/home_content.html:14
+msgid "View Home Page"
+msgstr ""
+
+#: templates/home_content.html:26
+msgid "Display settings"
+msgstr ""
+
+#: templates/home_content.html:27
+msgid "Home page sections"
+msgstr ""
+
+#: templates/home_content.html:28
+msgid "Turn the newspaper-style news section on or off without deleting posts."
+msgstr ""
+
+#: templates/home_content.html:45
+msgid "Editorial list"
+msgstr ""
+
+#: templates/home_content.html:46 templates/role_workspace.html:115
+msgid "Announcements and news"
+msgstr ""
+
+#: templates/home_content.html:51
+msgid "Home page content"
+msgstr ""
+
+#: templates/home_content.html:55
+msgid "Type"
+msgstr ""
+
+#: templates/home_content.html:57 templates/project.html:38
+msgid "Created By"
+msgstr ""
+
+#: templates/home_content.html:70
+msgid "Hidden"
+msgstr ""
+
+#: templates/home_content.html:71
+msgid "Not shown on home page"
+msgstr ""
+
+#: templates/home_content.html:81
+#, python-format
+msgid "Toggle visibility for %(name)s"
+msgstr ""
+
+#: templates/home_content.html:90 templates/role_workspace.html:127
+msgid "No home page content has been created yet."
+msgstr ""
+
+#: templates/home_post_form.html:6
+msgid ""
+"Announcements are for urgent council messages. News stories are smaller "
+"newspaper-style updates that can include an image."
+msgstr ""
+
+#: templates/home_post_form.html:22
+msgid "Example: Water network repair update"
+msgstr ""
+
+#: templates/home_post_form.html:24
+msgid "One clear sentence for the home page card"
+msgstr ""
+
+#: templates/home_post_form.html:28
+msgid "Story formatting"
+msgstr ""
+
+#: templates/home_post_form.html:29
+msgid "Paragraph style"
+msgstr ""
+
+#: templates/home_post_form.html:30
+msgid "Paragraph"
+msgstr ""
+
+#: templates/home_post_form.html:31
+msgid "Heading"
+msgstr ""
+
+#: templates/home_post_form.html:32
+msgid "Subheading"
+msgstr ""
+
+#: templates/home_post_form.html:34
+msgid "Font"
+msgstr ""
+
+#: templates/home_post_form.html:35
+msgid "Clean sans"
+msgstr ""
+
+#: templates/home_post_form.html:36
+msgid "Serif"
+msgstr ""
+
+#: templates/home_post_form.html:37
+msgid "Readable sans"
+msgstr ""
+
+#: templates/home_post_form.html:38
+msgid "Mono"
+msgstr ""
+
+#: templates/home_post_form.html:40
+msgid "Text size"
+msgstr ""
+
+#: templates/home_post_form.html:41
+msgid "Small"
+msgstr ""
+
+#: templates/home_post_form.html:42
+msgid "Normal"
+msgstr ""
+
+#: templates/home_post_form.html:43
+msgid "Large"
+msgstr ""
+
+#: templates/home_post_form.html:44
+msgid "Headline"
+msgstr ""
+
+#: templates/home_post_form.html:46
+msgid "Text color"
+msgstr ""
+
+#: templates/home_post_form.html:47
+msgid "Dark"
+msgstr ""
+
+#: templates/home_post_form.html:48
+msgid "Green"
+msgstr ""
+
+#: templates/home_post_form.html:49
+msgid "Red"
+msgstr ""
+
+#: templates/home_post_form.html:50
+msgid "Muted"
+msgstr ""
+
+#: templates/home_post_form.html:52
+msgid "Bold"
+msgstr ""
+
+#: templates/home_post_form.html:53
+msgid "Italic"
+msgstr ""
+
+#: templates/home_post_form.html:54
+msgid "Underline"
+msgstr ""
+
+#: templates/home_post_form.html:55
+msgid "Bulleted list"
+msgstr ""
+
+#: templates/home_post_form.html:56
+msgid "Numbered list"
+msgstr ""
+
+#: templates/home_post_form.html:57
+msgid "Align left"
+msgstr ""
+
+#: templates/home_post_form.html:58
+msgid "Align center"
+msgstr ""
+
+#: templates/home_post_form.html:59
+msgid "Align right"
+msgstr ""
+
+#: templates/home_post_form.html:60
+msgid "Clear formatting"
+msgstr ""
+
+#: templates/home_post_form.html:68
+msgid "Write the full announcement or news story in plain language"
+msgstr ""
+
+#: templates/home_post_form.html:71
+msgid "Select text, then use the toolbar to style the story body."
+msgstr ""
+
+#: templates/home_post_form.html:83
+msgid "https://example.com/photo.jpg"
+msgstr ""
+
+#: templates/layout.html:6 templates/layout.html:31
+msgid "Arlington City Council Portal"
+msgstr ""
+
+#: templates/layout.html:25
+msgid "Skip to content"
+msgstr ""
+
+#: templates/layout.html:34
+msgid "Primary navigation"
+msgstr ""
+
+#: templates/layout.html:35 templates/layout.html:103
+msgid "Home"
+msgstr ""
+
+#: templates/layout.html:40 templates/layout.html:108
+msgid "Calendar"
+msgstr ""
+
+#: templates/layout.html:45
+msgid "Sign out"
+msgstr ""
+
+#: templates/layout.html:53
+msgid "Switch to dark theme"
+msgstr ""
+
+#: templates/layout.html:53
+msgid "Switch to light theme"
+msgstr ""
+
+#: templates/layout.html:57
+msgid "Switch to Spanish"
+msgstr ""
+
+#: templates/layout.html:59
+msgid "Switch to English"
+msgstr ""
+
+#: templates/layout.html:68 templates/site_options.html:12
+msgid "Dashboard"
+msgstr ""
+
+#: templates/layout.html:82
+msgid "Dismiss message"
+msgstr ""
+
+#: templates/layout.html:97
+msgid "About Arlington City Council Portal"
+msgstr ""
+
+#: templates/layout.html:98
+msgid ""
+"A civic workspace for Arlington residents, council members, campus "
+"partners, and project teams across the Dallas-Fort Worth area to follow "
+"projects, proposals, donations, suggestions, and public updates."
+msgstr ""
+
+#: templates/layout.html:101
+msgid "Quick Links"
+msgstr ""
+
+#: templates/layout.html:115
+msgid "Language"
+msgstr ""
+
+#: templates/layout.html:121
+msgid "Follow Us"
+msgstr ""
+
+#: templates/layout.html:124
+msgid "Instagram"
+msgstr ""
+
+#: templates/layout.html:127
+msgid "WhatsApp"
+msgstr ""
+
+#: templates/layout.html:130
+msgid "Facebook"
+msgstr ""
+
+#: templates/layout.html:133
+msgid "Twitter/X"
+msgstr ""
+
+#: templates/layout.html:136
+msgid "Telegram"
+msgstr ""
+
+#: templates/login.html:9
+msgid "Secure Workspace"
+msgstr ""
+
+#: templates/login.html:10
+msgid "Sign in to manage council operations."
+msgstr ""
+
+#: templates/login.html:11
+msgid ""
+"Council members vote, trackers report progress, and admins keep projects "
+"moving from here."
+msgstr ""
+
+#: templates/login.html:16
+msgid "Enter your username"
+msgstr ""
+
+#: templates/login.html:17
+msgid "Enter your password"
+msgstr ""
+
+#: templates/manage_donation_campaign.html:7
+msgid "Manage groups, family names, and payment confirmations for this campaign."
+msgstr ""
+
+#: templates/manage_donation_campaign.html:15
+msgid "Edit Campaign"
+msgstr ""
+
+#: templates/manage_donation_campaign.html:33
+msgid "Payments"
+msgstr ""
+
+#: templates/manage_donation_campaign.html:34
+msgid "Donation records"
+msgstr ""
+
+#: templates/manage_donation_campaign.html:39
+msgid "Recorded donations"
+msgstr ""
+
+#: templates/manage_donation_campaign.html:42
+msgid "Reference"
+msgstr ""
+
+#: templates/manage_donation_campaign.html:43
+msgid "Donor"
+msgstr ""
+
+#: templates/manage_donation_campaign.html:54 templates/manage_users.html:32
+msgid "No contact details"
+msgstr ""
+
+#: templates/manage_donation_campaign.html:56
+msgid "Independent"
+msgstr ""
+
+#: templates/manage_donation_campaign.html:64
+#, python-format
+msgid "Change %(reference)s to %(status)s"
+msgstr ""
+
+#: templates/manage_donation_campaign.html:64
+#, python-format
+msgid "Change status for %(reference)s to %(status)s?"
+msgstr ""
+
+#: templates/manage_donation_campaign.html:89
+msgid "Add a group or bloodline"
+msgstr ""
+
+#: templates/manage_donation_campaign.html:96
+msgid "Optional group notes"
+msgstr ""
+
+#: templates/manage_donation_campaign.html:107
+msgid "Current totals"
+msgstr ""
+
+#: templates/manage_donation_campaign.html:117
+msgid "No groups added yet."
+msgstr ""
+
+#: templates/manage_users.html:15
+msgid "Users and roles"
+msgstr ""
+
+#: templates/manage_users.html:18
+msgid "User"
+msgstr ""
+
+#: templates/manage_users.html:20 templates/suggestions_inbox.html:43
+msgid "Contact"
+msgstr ""
+
+#: templates/manage_users.html:41
+msgid "Delete this user permanently? This cannot be undone."
+msgstr ""
+
+#: templates/manage_users.html:41
+#, python-format
+msgid "Delete %(name)s"
+msgstr ""
+
+#: templates/manage_users.html:51
+msgid "No users found."
+msgstr ""
+
+#: templates/project.html:12
+msgid "Edit"
+msgstr ""
+
+#: templates/project.html:30 templates/track_project.html:23
+msgid "Timeline Progress"
+msgstr ""
+
+#: templates/project.html:39
+msgid "Unknown"
+msgstr ""
+
+#: templates/project.html:76
+msgid "Need orientation?"
+msgstr ""
+
+#: templates/project.html:77
+msgid "What you can do here"
+msgstr ""
+
+#: templates/project.html:81
+msgid "Read the description, dates, status, and assigned project tracker."
+msgstr ""
+
+#: templates/project.html:82
+msgid "Users with voting permission can vote before the deadline."
+msgstr ""
+
+#: templates/project.html:83
+msgid "Residents can volunteer to support the project."
+msgstr ""
+
+#: templates/project.html:90
+msgid "Council Vote"
+msgstr ""
+
+#: templates/project.html:91
+msgid "Decision"
+msgstr ""
+
+#: templates/project.html:95
+msgid "Voting period"
+msgstr ""
+
+#: templates/project.html:117
+msgid "Voting deadline"
+msgstr ""
+
+#: templates/project.html:118
+msgid "Submit this vote? You can update it before the deadline."
+msgstr ""
+
+#: templates/project.html:120
+msgid "Update Vote"
+msgstr ""
+
+#: templates/project.html:124 templates/proposal_detail.html:66
+msgid "Your current vote is"
+msgstr ""
+
+#: templates/project.html:127
+msgid "Voting is closed for this project."
+msgstr ""
+
+#: templates/project.html:131
+msgid "View Results"
+msgstr ""
+
+#: templates/project.html:135
+msgid "Log in with an account that has voting permission to vote or view results."
+msgstr ""
+
+#: templates/project.html:142
+msgid "Field Notes"
+msgstr ""
+
+#: templates/project.html:143
+msgid "Tracker Updates"
+msgstr ""
+
+#: templates/project.html:153 templates/track_project.html:79
+msgid "No updates have been posted yet."
+msgstr ""
+
+#: templates/projects_list.html:18
+msgid "Project guide"
+msgstr ""
+
+#: templates/projects_list.html:19
+msgid "Find the project you need"
+msgstr ""
+
+#: templates/projects_list.html:21
+msgid ""
+"Use filters instead of remembering exact titles. Leave fields empty to "
+"see everything."
+msgstr ""
+
+#: templates/projects_list.html:26
+msgid "Search by title or description"
+msgstr ""
+
+#: templates/projects_list.html:45
+msgid "Reset"
+msgstr ""
+
+#: templates/projects_list.html:50
+#, python-format
+msgid "Showing %(count)s project results."
+msgstr ""
+
+#: templates/projects_list.html:58
+msgid "No projects found."
+msgstr ""
+
+#: templates/projects_list.html:63
+msgid "Project pages"
+msgstr ""
+
+#: templates/projects_list.html:66
+msgid "Previous"
+msgstr ""
+
+#: templates/projects_list.html:82
+msgid "Next"
+msgstr ""
+
+#: templates/proposal_detail.html:7
+msgid "Proposal discussion and voting record."
+msgstr ""
+
+#: templates/proposal_detail.html:31
+msgid "Proposal details"
+msgstr ""
+
+#: templates/proposal_detail.html:39
+msgid "Voting"
+msgstr ""
+
+#: templates/proposal_detail.html:40
+msgid "Cast your vote"
+msgstr ""
+
+#: templates/proposal_detail.html:59
+msgid "Optional reason for the record"
+msgstr ""
+
+#: templates/proposal_detail.html:60
+msgid "Submit this proposal vote? You can update it while voting remains open."
+msgstr ""
+
+#: templates/proposal_detail.html:62
+msgid "Update Proposal Vote"
+msgstr ""
+
+#: templates/proposal_detail.html:71
+msgid "Your role can view this proposal but cannot vote on it."
+msgstr ""
+
+#: templates/proposal_detail.html:73
+msgid "Log in with an eligible account to vote on this proposal."
+msgstr ""
+
+#: templates/proposal_detail.html:82
+msgid "Results"
+msgstr ""
+
+#: templates/proposal_detail.html:83
+msgid "Vote totals"
+msgstr ""
+
+#: templates/proposal_detail.html:93
+msgid "Eligible voters"
+msgstr ""
+
+#: templates/proposal_detail.html:97 templates/proposal_detail.html:125
+msgid "Not voted yet"
+msgstr ""
+
+#: templates/proposal_detail.html:101 templates/proposals_list.html:36
+msgid "Deadline"
+msgstr ""
+
+#: templates/proposal_detail.html:110
+msgid "Accountability"
+msgstr ""
+
+#: templates/proposal_detail.html:111
+msgid "Voter record"
+msgstr ""
+
+#: templates/proposal_detail.html:122
+msgid "Voted"
+msgstr ""
+
+#: templates/proposal_detail.html:131
+msgid ""
+"This proposal uses anonymous results, so individual votes and non-voter "
+"names are hidden."
+msgstr ""
+
+#: templates/proposal_form.html:7
+msgid ""
+"Define the proposal, voter audience, and whether individual votes are "
+"public or anonymous."
+msgstr ""
+
+#: templates/proposal_form.html:19
+msgid "Council decision"
+msgstr ""
+
+#: templates/proposal_form.html:20
+msgid "Prepare a proposal for voting"
+msgstr ""
+
+#: templates/proposal_form.html:21
+msgid ""
+"Use plain language, set a clear voter audience, and choose whether the "
+"voting record should be anonymous or public."
+msgstr ""
+
+#: templates/proposal_form.html:27
+msgid "Example: Approve the winter repair budget"
+msgstr ""
+
+#: templates/proposal_form.html:28
+msgid "One sentence that helps voters understand the decision"
+msgstr ""
+
+#: templates/proposal_form.html:29
+msgid ""
+"Explain the proposal, background, expected impact, and what a Yes vote "
+"means."
+msgstr ""
+
+#: templates/proposals_list.html:7
+msgid ""
+"Create clear proposals, choose who can participate, and record "
+"transparent or anonymous council votes."
+msgstr ""
+
+#: templates/proposals_list.html:40
+msgid "Proposal vote totals"
+msgstr ""
+
+#: templates/proposals_list.html:45 templates/role_workspace.html:73
+msgid "Proposal activity"
+msgstr ""
+
+#: templates/proposals_list.html:48 templates/role_workspace.html:85
+msgid "No proposals are available for your account yet."
+msgstr ""
+
+#: templates/proposals_list.html:53
+msgid "Proposal pages"
+msgstr ""
+
+#: templates/register.html:18
+msgid "Enter a username"
+msgstr ""
+
+#: templates/register.html:19
+msgid "Enter email address"
+msgstr ""
+
+#: templates/register.html:22
+msgid "Choose a password"
+msgstr ""
+
+#: templates/register.html:23
+msgid "Confirm password"
+msgstr ""
+
+#: templates/register.html:29
+msgid "Role guide"
+msgstr ""
+
+#: templates/register.html:30
+msgid "What each role can do"
+msgstr ""
+
+#: templates/results.html:15
+msgid "Voting Results for"
+msgstr ""
+
+#: templates/results.html:21
+msgid "Results are hidden for anonymous votes."
+msgstr ""
+
+#: templates/results.html:25
+msgid "Yes Votes"
+msgstr ""
+
+#: templates/results.html:29
+msgid "No Votes"
+msgstr ""
+
+#: templates/role_workspace.html:16
+msgid "Choose a workspace area"
+msgstr ""
+
+#: templates/role_workspace.html:17
+msgid "Private tools are grouped here so the public navigation stays consistent."
+msgstr ""
+
+#: templates/role_workspace.html:94
+msgid "Recent suggestions"
+msgstr ""
+
+#: templates/role_workspace.html:106 templates/suggestions_inbox.html:55
+msgid "No suggestions have been submitted yet."
+msgstr ""
+
+#: templates/site_options.html:7
+msgid "Control footer social icons and useful public links."
+msgstr ""
+
+#: templates/site_options.html:19
+msgid "Footer links"
+msgstr ""
+
+#: templates/site_options.html:20
+msgid "Edit footer social links"
+msgstr ""
+
+#: templates/site_options.html:21
+msgid ""
+"Turn an icon off when the council does not have that account or link yet."
+" Descriptions appear on the Useful Sites page."
+msgstr ""
+
+#: templates/site_options.html:39 templates/site_options.html:40
+msgid "How this link helps visitors"
+msgstr ""
+
+#: templates/site_options.html:48
+msgid "Useful sites"
+msgstr ""
+
+#: templates/site_options.html:49
+msgid "Edit public useful links"
+msgstr ""
+
+#: templates/site_options.html:50
+msgid ""
+"These links appear on the Useful Sites page for everyone with a globe "
+"icon and a short description."
+msgstr ""
+
+#: templates/site_options.html:53
+msgid "Add useful site"
+msgstr ""
+
+#: templates/site_options.html:59
+msgid "Please fix the useful site links."
+msgstr ""
+
+#: templates/site_options.html:76 templates/site_options.html:126
+msgid "Show this useful site"
+msgstr ""
+
+#: templates/site_options.html:79 templates/site_options.html:129
+msgid "Remove"
+msgstr ""
+
+#: templates/site_options.html:84 templates/site_options.html:134
+msgid "English site name"
+msgstr ""
+
+#: templates/site_options.html:85 templates/site_options.html:135
+msgid "Example: Civil Registry"
+msgstr ""
+
+#: templates/site_options.html:88 templates/site_options.html:138
+msgid "Spanish site name"
+msgstr ""
+
+#: templates/site_options.html:89 templates/site_options.html:139
+msgid "Example: City records"
+msgstr ""
+
+#: templates/site_options.html:92 templates/site_options.html:142
+msgid "Site link"
+msgstr ""
+
+#: templates/site_options.html:99 templates/site_options.html:103
+#: templates/site_options.html:149 templates/site_options.html:153
+msgid "What people can do or find there"
+msgstr ""
+
+#: templates/suggestions.html:7
+msgid ""
+"Share an idea with the council or send project-specific feedback to the "
+"responsible tracker."
+msgstr ""
+
+#: templates/suggestions.html:21
+msgid "Public suggestions"
+msgstr ""
+
+#: templates/suggestions.html:22
+msgid "Send a useful idea"
+msgstr ""
+
+#: templates/suggestions.html:23
+msgid ""
+"Choose the right destination so the council or project tracker can "
+"understand and act on your suggestion faster."
+msgstr ""
+
+#: templates/suggestions.html:38
+msgid "Optional"
+msgstr ""
+
+#: templates/suggestions.html:39
+msgid "Phone, email, or other contact method"
+msgstr ""
+
+#: templates/suggestions.html:41
+msgid "Short title for the suggestion"
+msgstr ""
+
+#: templates/suggestions.html:42
+msgid "Write the problem, idea, or improvement clearly"
+msgstr ""
+
+#: templates/suggestions_inbox.html:6
+msgid "Review public ideas sent to the council or to project trackers."
+msgstr ""
+
+#: templates/suggestions_inbox.html:19
+msgid "Resident feedback"
+msgstr ""
+
+#: templates/suggestions_inbox.html:20
+msgid "Suggestions sent to your team"
+msgstr ""
+
+#: templates/suggestions_inbox.html:39
+msgid "Submitted by"
+msgstr ""
+
+#: templates/suggestions_inbox.html:40
+msgid "Anonymous visitor"
+msgstr ""
+
+#: templates/suggestions_inbox.html:44
+msgid "Not provided"
+msgstr ""
+
+#: templates/suggestions_inbox.html:47
+msgid "Submitted"
+msgstr ""
+
+#: templates/track_project.html:4
+msgid "Update Project Progress"
+msgstr ""
+
+#: templates/track_project.html:38
+msgid "Update this project status?"
+msgstr ""
+
+#: templates/track_project.html:43
+msgid ""
+"You can view this tracker workspace, but status updates are disabled for "
+"your account."
+msgstr ""
+
+#: templates/track_project.html:52
+msgid "Add a field update, blocker, or note"
+msgstr ""
+
+#: templates/track_project.html:59
+msgid "Project update notes are disabled for your account."
+msgstr ""
+
+#: templates/track_project.html:68
+msgid "Activity"
+msgstr ""
+
+#: templates/track_project.html:69
+msgid "Updates"
+msgstr ""
+
+#: templates/useful_sites.html:6
+msgid "Helpful public links shared by the council for residents and visitors."
+msgstr ""
+
+#: templates/useful_sites.html:13
+msgid "Public directory"
+msgstr ""
+
+#: templates/useful_sites.html:14
+msgid "Find the right site quickly"
+msgstr ""
+
+#: templates/useful_sites.html:29
+msgid "Open site"
+msgstr ""
+
+#: templates/useful_sites.html:37
+msgid "No useful sites are available yet."
+msgstr ""
+
+#: templates/volunteer_form.html:15
+msgid "Volunteer for"
+msgstr ""
+
+#: templates/volunteer_form.html:17
+msgid ""
+"Share your name and any notes that help the council coordinate volunteer "
+"support."
+msgstr ""
+
+#: templates/volunteer_form.html:23
+msgid "Skills, availability, or contact details"
+msgstr ""
+
