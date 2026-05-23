@@ -1,0 +1,72 @@
+{% macro render_field(field, rows=None, placeholder=None) %}
+  {% set error_id = field.id ~ '-errors' %}
+  <div class="field">
+    {{ field.label(class="field-label") }}
+    {% if rows %}
+      {{ field(class="control", rows=rows, placeholder=placeholder or '', aria_invalid='true' if field.errors else 'false', aria_describedby=error_id if field.errors else '') }}
+    {% else %}
+      {{ field(class="control", placeholder=placeholder or '', aria_invalid='true' if field.errors else 'false', aria_describedby=error_id if field.errors else '') }}
+    {% endif %}
+    {% if field.errors %}
+      <div class="field-errors" id="{{ error_id }}">
+        {% for error in field.errors %}
+          <span>{{ error }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{% macro error_summary(form) %}
+  {% if form.errors %}
+    <div class="error-summary" role="alert">
+      <strong>{{ _('Please fix the highlighted fields.') }}</strong>
+      <ul>
+        {% for field_name, errors in form.errors.items() %}
+          {% set field = form[field_name] %}
+          {% for error in errors %}
+            <li><a href="#{{ field.id }}">{{ field.label.text }}: {{ error }}</a></li>
+          {% endfor %}
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+{% endmacro %}
+
+{% macro status_badge(status) %}
+  <span class="status-badge {{ status_class(status) }}">{{ _(status) }}</span>
+{% endmacro %}
+
+{% macro progress_bar(value, label='Progress') %}
+  {% set percent = '%.0f'|format(value or 0) %}
+  <div class="progress-row" role="progressbar" aria-label="{{ label }}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ percent }}">
+    <div class="progress-track">
+      <span class="progress-fill" style="width: {{ percent }}%"></span>
+    </div>
+    <span class="progress-value">{{ percent }}%</span>
+  </div>
+{% endmacro %}
+
+{% macro project_card(project) %}
+  <article class="project-card">
+    <div class="card-topline">
+      {{ status_badge(project.status) }}
+      {% if project.category %}
+        <span class="muted-chip">{{ project.category }}</span>
+      {% endif %}
+    </div>
+    <h3><a href="{{ url_for('project', locale=get_locale(), project_id=project.id) }}">{{ project.title }}</a></h3>
+    <p>{{ project.description|striptags|truncate(170) }}</p>
+    {{ progress_bar(project.progress(), _('Project progress')) }}
+    <dl class="meta-list compact">
+      <div>
+        <dt>{{ _('Start') }}</dt>
+        <dd>{{ format_datetime(project.start_date) }}</dd>
+      </div>
+      <div>
+        <dt>{{ _('Project Tracker') }}</dt>
+        <dd>{{ display_user_name(project.tracker) }}</dd>
+      </div>
+    </dl>
+  </article>
+{% endmacro %}

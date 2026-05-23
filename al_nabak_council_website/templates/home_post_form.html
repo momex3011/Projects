@@ -1,0 +1,105 @@
+{% extends 'layout.html' %}
+{% from '_macros.html' import render_field, error_summary with context %}
+
+{% block page_title %}{{ title }}{% endblock %}
+{% block page_subtitle %}
+  <p class="page-subtitle">{{ _('Announcements are for urgent council messages. News stories are smaller newspaper-style updates that can include an image.') }}</p>
+{% endblock %}
+
+{% block page_actions %}
+  <a class="btn btn-secondary" href="{{ url_for('home_content', locale=get_locale()) }}">
+    <i class="fa-solid fa-arrow-left"></i><span>{{ _('Home Content') }}</span>
+  </a>
+{% endblock %}
+
+{% block content %}
+<section class="form-panel">
+  <form method="POST" class="stack-form" enctype="multipart/form-data" novalidate data-watch-changes>
+    {{ form.hidden_tag() }}
+    {{ error_summary(form) }}
+    <div class="form-grid">
+      {{ render_field(form.post_type) }}
+      {{ render_field(form.title, placeholder=_('Example: Water network repair update')) }}
+    </div>
+    {{ render_field(form.summary, placeholder=_('One clear sentence for the home page card')) }}
+    <div class="field rich-text-field">
+      {{ form.body.label(class="field-label") }}
+      <div class="rich-editor" data-rich-editor data-target="{{ form.body.id }}">
+        <div class="rich-editor-toolbar" role="toolbar" aria-label="{{ _('Story formatting') }}">
+          <select class="control compact-control" data-rich-command="formatBlock" aria-label="{{ _('Paragraph style') }}">
+            <option value="p">{{ _('Paragraph') }}</option>
+            <option value="h2">{{ _('Heading') }}</option>
+            <option value="h3">{{ _('Subheading') }}</option>
+          </select>
+          <select class="control compact-control" data-rich-command="fontName" aria-label="{{ _('Font') }}">
+            <option value="Arial">{{ _('Clean sans') }}</option>
+            <option value="Georgia">{{ _('Serif') }}</option>
+            <option value="Tahoma">{{ _('Arabic friendly') }}</option>
+            <option value="Courier New">{{ _('Mono') }}</option>
+          </select>
+          <select class="control compact-control" data-rich-command="fontSize" aria-label="{{ _('Text size') }}">
+            <option value="2">{{ _('Small') }}</option>
+            <option value="3" selected>{{ _('Normal') }}</option>
+            <option value="4">{{ _('Large') }}</option>
+            <option value="5">{{ _('Headline') }}</option>
+          </select>
+          <select class="control compact-control" data-rich-command="foreColor" aria-label="{{ _('Text color') }}">
+            <option value="#1f2a24">{{ _('Dark') }}</option>
+            <option value="#00843d">{{ _('Green') }}</option>
+            <option value="#ce1126">{{ _('Red') }}</option>
+            <option value="#52665c">{{ _('Muted') }}</option>
+          </select>
+          <button class="editor-btn" type="button" data-rich-command="bold" aria-label="{{ _('Bold') }}"><i class="fa-solid fa-bold"></i></button>
+          <button class="editor-btn" type="button" data-rich-command="italic" aria-label="{{ _('Italic') }}"><i class="fa-solid fa-italic"></i></button>
+          <button class="editor-btn" type="button" data-rich-command="underline" aria-label="{{ _('Underline') }}"><i class="fa-solid fa-underline"></i></button>
+          <button class="editor-btn" type="button" data-rich-command="insertUnorderedList" aria-label="{{ _('Bulleted list') }}"><i class="fa-solid fa-list-ul"></i></button>
+          <button class="editor-btn" type="button" data-rich-command="insertOrderedList" aria-label="{{ _('Numbered list') }}"><i class="fa-solid fa-list-ol"></i></button>
+          <button class="editor-btn" type="button" data-rich-command="justifyLeft" aria-label="{{ _('Align left') }}"><i class="fa-solid fa-align-left"></i></button>
+          <button class="editor-btn" type="button" data-rich-command="justifyCenter" aria-label="{{ _('Align center') }}"><i class="fa-solid fa-align-center"></i></button>
+          <button class="editor-btn" type="button" data-rich-command="justifyRight" aria-label="{{ _('Align right') }}"><i class="fa-solid fa-align-right"></i></button>
+          <button class="editor-btn" type="button" data-rich-command="removeFormat" aria-label="{{ _('Clear formatting') }}"><i class="fa-solid fa-eraser"></i></button>
+        </div>
+        <div
+          class="rich-editor-surface control"
+          contenteditable="true"
+          role="textbox"
+          aria-multiline="true"
+          data-rich-surface
+          data-placeholder="{{ _('Write the full announcement or news story in plain language') }}"
+        >{{ form.body.data|rich_text }}</div>
+        {{ form.body(class="rich-editor-source", rows=8, hidden=True) }}
+        <p class="hint">{{ _('Select text, then use the toolbar to style the story body.') }}</p>
+      </div>
+      {% if form.body.errors %}
+        <div class="field-errors" id="{{ form.body.id }}-errors">
+          {% for error in form.body.errors %}
+            <span>{{ error }}</span>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+    <div class="form-grid">
+      {{ render_field(form.image_file) }}
+      {{ render_field(form.image_url, placeholder=_('https://example.com/photo.jpg')) }}
+    </div>
+    <div class="form-grid">
+      <label class="check-row">
+        {{ form.is_published(class="check-input") }}
+        <span>{{ form.is_published.label.text }}</span>
+      </label>
+      <label class="check-row">
+        {{ form.show_on_home(class="check-input") }}
+        <span>{{ form.show_on_home.label.text }}</span>
+      </label>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">
+        <i class="fa-solid fa-floppy-disk"></i><span>{{ form.submit.label.text }}</span>
+      </button>
+      <a class="btn btn-secondary" href="{{ url_for('home_content', locale=get_locale()) }}">
+        <i class="fa-solid fa-xmark"></i><span>{{ _('Cancel') }}</span>
+      </a>
+    </div>
+  </form>
+</section>
+{% endblock %}

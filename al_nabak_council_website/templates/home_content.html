@@ -1,0 +1,97 @@
+{% extends 'layout.html' %}
+{% from '_macros.html' import render_field, error_summary with context %}
+
+{% block page_title %}{{ _('Home Content') }}{% endblock %}
+{% block page_subtitle %}
+  <p class="page-subtitle">{{ _('Create important announcements and picture-led news sections for the public home page.') }}</p>
+{% endblock %}
+
+{% block page_actions %}
+  <a class="btn btn-primary" href="{{ url_for('new_home_post', locale=get_locale()) }}">
+    <i class="fa-solid fa-plus"></i><span>{{ _('New Home Content') }}</span>
+  </a>
+  <a class="btn btn-secondary" href="{{ url_for('home_page', locale=get_locale()) }}">
+    <i class="fa-solid fa-house"></i><span>{{ _('View Home Page') }}</span>
+  </a>
+{% endblock %}
+
+{% block content %}
+{% if current_user.role == Role.ADMIN %}
+  <section class="form-panel">
+    <form method="POST" class="stack-form" novalidate>
+      {{ settings_form.hidden_tag() }}
+      {{ error_summary(settings_form) }}
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">{{ _('Display settings') }}</span>
+          <h2>{{ _('Home page sections') }}</h2>
+          <p class="hint">{{ _('Turn the newspaper-style news section on or off without deleting posts.') }}</p>
+        </div>
+      </div>
+      <label class="check-row">
+        {{ settings_form.news_enabled(class="check-input") }}
+        <span>{{ settings_form.news_enabled.label.text }}</span>
+      </label>
+      <button class="btn btn-primary" type="submit">
+        <i class="fa-solid fa-floppy-disk"></i><span>{{ settings_form.submit.label.text }}</span>
+      </button>
+    </form>
+  </section>
+{% endif %}
+
+<section class="table-panel">
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">{{ _('Editorial list') }}</span>
+      <h2>{{ _('Announcements and news') }}</h2>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <caption>{{ _('Home page content') }}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{{ _('Title') }}</th>
+          <th scope="col">{{ _('Type') }}</th>
+          <th scope="col">{{ _('Status') }}</th>
+          <th scope="col">{{ _('Created By') }}</th>
+          <th scope="col">{{ _('Actions') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for post in posts %}
+          <tr>
+            <td>
+              <strong>{{ post.title }}</strong>
+              <small>{{ post.summary or post.body|striptags|truncate(110) }}</small>
+            </td>
+            <td><span class="muted-chip">{{ home_post_type_label(post.post_type) }}</span></td>
+            <td>
+              <span class="muted-chip">{{ _('Published') if post.is_published else _('Hidden') }}</span>
+              {% if not post.show_on_home %}<small>{{ _('Not shown on home page') }}</small>{% endif %}
+            </td>
+            <td>{{ display_user_name(post.creator) }}<small>{{ format_datetime(post.created_at) }}</small></td>
+            <td>
+              <div class="table-actions">
+                <a class="icon-btn" href="{{ url_for('edit_home_post', locale=get_locale(), post_id=post.id) }}" aria-label="{{ _('Edit %(name)s', name=post.title) }}">
+                  <i class="fa-solid fa-pen"></i>
+                </a>
+                <form method="POST" action="{{ url_for('toggle_home_post', locale=get_locale(), post_id=post.id) }}">
+                  {{ g.action_form.hidden_tag() }}
+                  <button class="icon-btn" type="submit" aria-label="{{ _('Toggle visibility for %(name)s', name=post.title) }}">
+                    <i class="fa-solid {{ 'fa-eye-slash' if post.is_published else 'fa-eye' }}"></i>
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="5">{{ _('No home page content has been created yet.') }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,206 @@
+{% extends 'layout.html' %}
+{% from '_macros.html' import project_card with context %}
+
+{% block main_class %}main-wide dashboard-page{% endblock %}
+
+{% block page_title %}{{ _('Home Page') }}{% endblock %}
+{% block page_subtitle %}
+  <p class="page-subtitle">{{ _('Follow council announcements, local news, projects, suggestions, donations, and public deadlines from one place.') }}</p>
+{% endblock %}
+
+{% block page_actions %}
+  {% if can_manage_home_content() %}
+    <a class="btn btn-primary" href="{{ url_for('new_home_post', locale=get_locale()) }}">
+      <i class="fa-solid fa-plus"></i><span>{{ _('New Home Content') }}</span>
+    </a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<section class="welcome-card dashboard-hero">
+  <div>
+    <span class="section-kicker">{{ _('Community work') }}</span>
+    <h2>{{ _('See what is happening in the city and what needs attention.') }}</h2>
+    <p>{{ _('Projects are listed with their status, dates, project tracker, voting deadline, and volunteer options so residents and council members can understand the work without digging around.') }}</p>
+  </div>
+  <div class="simple-stats">
+    <div><strong>{{ stats.projects or 0 }}</strong><span>{{ _('Projects') }}</span></div>
+    <div><strong>{{ stats.active_projects or 0 }}</strong><span>{{ _('Active') }}</span></div>
+    <div><strong>{{ stats.open_votes or 0 }}</strong><span>{{ _('Open votes') }}</span></div>
+    <div><strong>{{ stats.council_members or 0 }}</strong><span>{{ _('Council members') }}</span></div>
+    <div><strong>{{ stats.trackers or 0 }}</strong><span>{{ _('Trackers') }}</span></div>
+    <div><strong>{{ stats.volunteers or 0 }}</strong><span>{{ _('Volunteers') }}</span></div>
+  </div>
+</section>
+
+{% if announcements %}
+  <section class="home-announcements" aria-label="{{ _('Important announcements') }}">
+    {% for post in announcements %}
+      <article class="announcement-card">
+        <span class="eyebrow">{{ home_post_type_label(post.post_type) }}</span>
+        <h2>{{ post.title }}</h2>
+        {% if post.summary %}<p>{{ post.summary }}</p>{% endif %}
+        <small>{{ _('Published') }} {{ format_datetime(post.created_at) }}</small>
+      </article>
+    {% endfor %}
+  </section>
+{% endif %}
+
+<section class="content-card dashboard-actions">
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">{{ _('Start here') }}</span>
+      <h2>{{ _('Open the main services') }}</h2>
+    </div>
+  </div>
+  <div class="dashboard-action-grid">
+    <a class="dashboard-action" href="{{ url_for('projects_list', locale=get_locale()) }}">
+      <i class="fa-solid fa-folder-open"></i>
+      <strong>{{ _('Track city projects') }}</strong>
+      <span>{{ _('Follow progress, dates, voting status, and assigned trackers.') }}</span>
+    </a>
+    <a class="dashboard-action" href="{{ url_for('suggestions_page', locale=get_locale()) }}">
+      <i class="fa-solid fa-lightbulb"></i>
+      <strong>{{ _('Share a suggestion') }}</strong>
+      <span>{{ _('Send public ideas to the council or the responsible project tracker.') }}</span>
+    </a>
+    <a class="dashboard-action" href="{{ url_for('donation_campaigns', locale=get_locale()) }}">
+      <i class="fa-solid fa-hand-holding-dollar"></i>
+      <strong>{{ _('Support donations') }}</strong>
+      <span>{{ _('Contribute independently or under a family, bloodline, or group.') }}</span>
+    </a>
+    <a class="dashboard-action" href="{{ url_for('calendar', locale=get_locale()) }}">
+      <i class="fa-solid fa-calendar-days"></i>
+      <strong>{{ _('Check the calendar') }}</strong>
+      <span>{{ _('See project dates and public deadlines in one place.') }}</span>
+    </a>
+  </div>
+</section>
+
+{% if show_news_section %}
+  <section class="content-card news-section">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">{{ _('Local newspaper') }}</span>
+        <h2>{{ _('Latest news') }}</h2>
+      </div>
+      {% if can_manage_home_content() %}
+        <a href="{{ url_for('home_content', locale=get_locale()) }}">{{ _('Manage news') }}</a>
+      {% endif %}
+    </div>
+    <div class="news-grid">
+      {% for post in news_posts %}
+        <article class="news-card">
+          {% if post.image_url %}
+            <img src="{{ post.image_url }}" alt="{{ post.title }}">
+          {% else %}
+            <div class="news-image-placeholder"><i class="fa-solid fa-newspaper"></i></div>
+          {% endif %}
+          <div>
+            <span class="eyebrow">{{ home_post_type_label(post.post_type) }}</span>
+            <h3>{{ post.title }}</h3>
+            {% if post.summary %}
+              <p>{{ post.summary }}</p>
+            {% else %}
+              <div class="rich-text news-rich-preview">{{ post.body|rich_text }}</div>
+            {% endif %}
+            <small>{{ format_datetime(post.created_at) }}</small>
+          </div>
+        </article>
+      {% else %}
+        <div class="empty-state wide">{{ _('No news stories are published yet.') }}</div>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}
+
+{% if current_user.is_authenticated and current_user.has_permission(Permission.VOTE_PROJECT) %}
+  <section class="content-card">
+    <div class="section-heading">
+      <h2>{{ _('Projects waiting for your vote') }}</h2>
+    </div>
+    <div class="list-panel">
+      {% for project in g.projects_to_vote %}
+        <a class="list-row" href="{{ url_for('project', locale=get_locale(), project_id=project.id) }}">
+          <span>
+            <strong>{{ project.title }}</strong>
+            <small>{{ _('Voting ends') }} {{ format_datetime(project.voting_deadline) }}</small>
+          </span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      {% else %}
+        <div class="empty-state">{{ _('No projects currently need your vote.') }}</div>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}
+
+{% if current_user.is_authenticated and user_can_track_projects(current_user) %}
+  <section class="content-card">
+    <div class="section-heading">
+      <h2>{{ tracking_panel_title }}</h2>
+    </div>
+    <div class="project-grid">
+      {% for project in assigned_projects %}
+        {{ project_card(project) }}
+      {% else %}
+        <div class="empty-state wide">{{ _('No projects are assigned to you yet.') }}</div>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}
+
+<section class="dashboard-columns">
+  <div class="content-card dashboard-main-card">
+    <div class="section-heading">
+      <h2>{{ _('Recent Projects') }}</h2>
+      <a href="{{ url_for('projects_list', locale=get_locale()) }}">{{ _('View all projects') }}</a>
+    </div>
+    <div class="project-grid dashboard-project-grid">
+      {% for project in recent_projects %}
+        {{ project_card(project) }}
+      {% else %}
+        <div class="empty-state wide">{{ _('Create the first project to begin.') }}</div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <aside class="dashboard-side-stack">
+    <section class="content-card">
+      <div class="section-heading">
+        <h2>{{ _('Upcoming votes') }}</h2>
+      </div>
+      <div class="list-panel">
+        {% for project in pending_votes %}
+          <a class="list-row" href="{{ url_for('project', locale=get_locale(), project_id=project.id) }}">
+            <span>
+              <strong>{{ project.title }}</strong>
+              <small>{{ _('Voting ends') }} {{ format_datetime(project.voting_deadline) }}</small>
+            </span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        {% else %}
+          <div class="empty-state">{{ _('No public voting deadlines are scheduled.') }}</div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="content-card">
+      <div class="section-heading">
+        <h2>{{ _('Latest field updates') }}</h2>
+      </div>
+      <div class="timeline compact">
+        {% for comment in latest_comments %}
+          <article class="timeline-item">
+            <strong>{{ comment.project.title }}</strong>
+            <p>{{ comment.body }}</p>
+            <small>{{ comment.author.username }} | {{ format_datetime(comment.created_at) }}</small>
+          </article>
+        {% else %}
+          <div class="empty-state">{{ _('No tracker updates yet.') }}</div>
+        {% endfor %}
+      </div>
+    </section>
+  </aside>
+</section>
+{% endblock %}

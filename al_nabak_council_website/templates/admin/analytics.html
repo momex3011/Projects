@@ -1,0 +1,17 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+<div class="container">
+  <h1>Analytics</h1>
+  <div class="row">
+    {% for label, value in stats.items() %}
+      <div class="col-md-3">
+        <div class="card" style="padding: 1rem; margin-bottom: 1rem;">
+          <small>{{ label|replace('_', ' ')|title }}</small>
+          <h2>{{ value }}</h2>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

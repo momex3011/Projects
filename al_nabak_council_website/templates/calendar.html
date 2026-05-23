@@ -1,0 +1,70 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.min.js"></script>
+{% endblock %}
+
+{% block page_title %}{{ _('Project Calendar') }}{% endblock %}
+
+{% block content %}
+<section class="calendar-panel">
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">{{ _('Schedule') }}</span>
+      <h2>{{ _('Project dates') }}</h2>
+    </div>
+  </div>
+  <div id="calendar" aria-label="{{ _('Project calendar') }}"></div>
+  <noscript>
+    <div class="empty-state">{{ _('Enable JavaScript to use the interactive calendar. Project dates are listed below.') }}</div>
+  </noscript>
+  <div class="calendar-fallback">
+    {% for project in projects if project.start_date %}
+      <a class="list-row" href="{{ url_for('project', locale=get_locale(), project_id=project.id) }}">
+        <span>
+          <strong>{{ project.title }}</strong>
+          <small>{{ format_datetime(project.start_date) }}{% if project.end_date %} - {{ format_datetime(project.end_date) }}{% endif %}</small>
+        </span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    {% else %}
+      <div class="empty-state">{{ _('No project dates are scheduled yet.') }}</div>
+    {% endfor %}
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var calendarEl = document.getElementById('calendar');
+    if (!calendarEl || typeof FullCalendar === 'undefined') return;
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: window.matchMedia('(max-width: 700px)').matches ? 'listWeek' : 'dayGridMonth',
+      locale: '{{ get_locale() }}',
+      direction: document.documentElement.dir,
+      height: 'auto',
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,listWeek'
+      },
+      events: [
+        {% for project in projects if project.start_date %}
+          {
+            title: {{ project.title|tojson }},
+            start: '{{ project.start_date.strftime('%Y-%m-%d') }}',
+            {% if project.end_date %}end: '{{ project.end_date.strftime('%Y-%m-%d') }}',{% endif %}
+            url: '{{ url_for('project', locale=get_locale(), project_id=project.id) }}',
+            color: '{{ '#101312' if project.status == 'Completed' else '#007a3d' if project.status == 'In Progress' else '#ce1126' }}'
+          }{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ]
+    });
+
+    calendar.render();
+  });
+</script>
+{% endblock %}

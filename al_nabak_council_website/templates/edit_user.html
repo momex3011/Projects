@@ -1,0 +1,103 @@
+{% extends 'layout.html' %}
+{% from '_macros.html' import render_field, error_summary with context %}
+
+{% block page_title %}{{ _('Edit User') }}{% endblock %}
+
+{% block page_actions %}
+  <a class="btn btn-secondary" href="{{ url_for('manage_users', locale=get_locale()) }}">
+    <i class="fa-solid fa-arrow-left"></i><span>{{ _('Users') }}</span>
+  </a>
+{% endblock %}
+
+{% block content %}
+<section class="form-panel">
+  <div class="form-intro">
+    <span class="eyebrow">{{ role_label(user.role) }}</span>
+    <h2>{{ display_user_name(user) }}</h2>
+  </div>
+  <form method="POST" class="stack-form" novalidate data-watch-changes>
+    {{ form.hidden_tag() }}
+    {{ error_summary(form) }}
+    <div class="form-grid">
+      {{ render_field(form.username) }}
+      {{ render_field(form.email) }}
+    </div>
+    <div class="form-grid">
+      {{ render_field(form.role) }}
+      {{ render_field(form.password, placeholder=_('Leave blank to keep current password')) }}
+    </div>
+
+    <section class="permission-panel">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">{{ _('Access control') }}</span>
+          <h2>{{ _('Permissions') }}</h2>
+          <p class="hint">{{ _("Most users should follow their role's default permissions. Turn this off only when this person needs extra access or a specific restriction.") }}</p>
+        </div>
+      </div>
+
+      <div class="role-description-grid">
+        {% for role_info in role_descriptions %}
+          <article class="role-description-card {{ 'active' if user.role == role_info.role else '' }}" data-role-card="{{ role_info.role }}">
+            <strong>{{ role_info.label }}</strong>
+            <p>{{ role_info.description }}</p>
+          </article>
+        {% endfor %}
+      </div>
+      <p class="hint">{{ _('You can use the role dropdown or click a role card to choose the account role.') }}</p>
+
+      <p class="hint admin-permission-note" data-admin-permission-note {% if user.role != Role.ADMIN %}hidden{% endif %}>
+        {{ _('Admins always have every permission while their role stays Admin.') }}
+      </p>
+
+      <label class="check-row permission-default-toggle">
+        <input class="check-input" type="checkbox" name="use_default_permissions" value="1" data-permission-default-toggle {% if permission_config.use_defaults %}checked{% endif %}>
+        <span>{{ _('Use default permissions for this role') }}</span>
+      </label>
+      <p class="hint">{{ _('Custom choices are locked while role defaults are on.') }}</p>
+
+      <div class="permission-list" data-permission-overrides>
+        {% for permission in permission_rows %}
+          <article class="permission-row" data-permission-row data-default-admin="{{ '1' if permission.defaults[Role.ADMIN] else '0' }}" data-default-council_member="{{ '1' if permission.defaults[Role.COUNCIL_MEMBER] else '0' }}" data-default-tracker="{{ '1' if permission.defaults[Role.TRACKER] else '0' }}" data-default-news_editor="{{ '1' if permission.defaults[Role.NEWS_EDITOR] else '0' }}">
+            <div>
+              <strong>{{ permission.label }}</strong>
+              <p>{{ permission.description }}</p>
+              <small data-permission-default-text data-allowed-label="{{ _('Role default: allowed') }}" data-blocked-label="{{ _('Role default: blocked') }}">
+                {% if permission.default_enabled %}
+                  {{ _('Role default: allowed') }}
+                {% else %}
+                  {{ _('Role default: blocked') }}
+                {% endif %}
+              </small>
+            </div>
+            <div class="permission-state-group" role="group" aria-label="{{ permission.label }}">
+              <label>
+                <input type="radio" name="permission_state_{{ permission.key }}" value="default" {% if permission.state == 'default' %}checked{% endif %}>
+                <span>{{ _('Follow role') }}</span>
+              </label>
+              <label>
+                <input type="radio" name="permission_state_{{ permission.key }}" value="allow" {% if permission.state == 'allow' %}checked{% endif %}>
+                <span>{{ _('Always allow') }}</span>
+              </label>
+              <label>
+                <input type="radio" name="permission_state_{{ permission.key }}" value="deny" {% if permission.state == 'deny' %}checked{% endif %}>
+                <span>{{ _('Always block') }}</span>
+              </label>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    </section>
+
+    {{ render_field(form.contact_details, rows=4) }}
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">
+        <i class="fa-solid fa-floppy-disk"></i><span>{{ _('Save User') }}</span>
+      </button>
+      <a class="btn btn-secondary" href="{{ url_for('manage_users', locale=get_locale()) }}">
+        <i class="fa-solid fa-xmark"></i><span>{{ _('Cancel') }}</span>
+      </a>
+    </div>
+  </form>
+</section>
+{% endblock %}

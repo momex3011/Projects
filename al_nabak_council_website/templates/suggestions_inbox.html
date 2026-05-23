@@ -1,0 +1,58 @@
+{% extends 'layout.html' %}
+
+{% block page_title %}{{ _('Suggestion Inbox') }}{% endblock %}
+
+{% block page_subtitle %}
+  <p class="page-subtitle">{{ _('Review public ideas sent to the council or to project trackers.') }}</p>
+{% endblock %}
+
+{% block page_actions %}
+  <a class="btn btn-secondary" href="{{ url_for('suggestions_page', locale=get_locale()) }}">
+    <i class="fa-solid fa-lightbulb"></i><span>{{ _('Suggestions') }}</span>
+  </a>
+{% endblock %}
+
+{% block content %}
+<section class="content-card slim-card">
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">{{ _('Resident feedback') }}</span>
+      <h2>{{ _('Suggestions sent to your team') }}</h2>
+    </div>
+  </div>
+
+  {% if suggestions %}
+    <div class="suggestion-list">
+      {% for suggestion in suggestions %}
+        <article class="suggestion-card">
+          <div class="card-topline">
+            <span class="status-badge status-progress">{{ suggestion_status_label(suggestion.status) }}</span>
+            <span class="muted-chip">{{ suggestion_target_label(suggestion.target_type) }}</span>
+            {% if suggestion.project %}
+              <span class="muted-chip">{{ suggestion.project.title }}</span>
+            {% endif %}
+          </div>
+          <h3>{{ suggestion.title }}</h3>
+          <p class="pre-line">{{ suggestion.body }}</p>
+          <dl class="meta-list compact">
+            <div>
+              <dt>{{ _('Submitted by') }}</dt>
+              <dd>{{ suggestion.name or (display_user_name(suggestion.submitter) if suggestion.submitter else _('Anonymous visitor')) }}</dd>
+            </div>
+            <div>
+              <dt>{{ _('Contact') }}</dt>
+              <dd>{{ suggestion.contact or _('Not provided') }}</dd>
+            </div>
+            <div>
+              <dt>{{ _('Submitted') }}</dt>
+              <dd>{{ format_datetime(suggestion.created_at) }}</dd>
+            </div>
+          </dl>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">{{ _('No suggestions have been submitted yet.') }}</div>
+  {% endif %}
+</section>
+{% endblock %}

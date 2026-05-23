@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+{% from '_macros.html' import render_field, error_summary with context %}
+
+{% block page_title %}{{ _('Login') }}{% endblock %}
+
+{% block content %}
+<section class="auth-layout">
+  <div class="auth-copy">
+    <span class="eyebrow">{{ _('Secure Workspace') }}</span>
+    <h2>{{ _('Sign in to manage council operations.') }}</h2>
+    <p>{{ _('Council members vote, trackers report progress, and admins keep projects moving from here.') }}</p>
+  </div>
+  <form method="POST" class="form-panel auth-form" novalidate>
+    {{ form.hidden_tag() }}
+    {{ error_summary(form) }}
+    {{ render_field(form.username, placeholder=_('Enter your username')) }}
+    {{ render_field(form.password, placeholder=_('Enter your password')) }}
+    {% if form.remember_me is defined %}
+      <label class="check-row auth-remember">
+        {{ form.remember_me(class="check-input") }}
+        <span>{{ form.remember_me.label.text }}</span>
+      </label>
+    {% endif %}
+    <button class="btn btn-primary full-width" type="submit">
+      <i class="fa-solid fa-right-to-bracket"></i><span>{{ _('Login') }}</span>
+    </button>
+  </form>
+</section>
+{% endblock %}

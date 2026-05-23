@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+{% from '_macros.html' import render_field, error_summary with context %}
+
+{% block page_title %}{{ _('Create New Project') }}{% endblock %}
+
+{% block page_actions %}
+  <a class="btn btn-secondary" href="{{ url_for('projects_list', locale=get_locale()) }}">
+    <i class="fa-solid fa-arrow-left"></i><span>{{ _('Projects') }}</span>
+  </a>
+{% endblock %}
+
+{% block content %}
+<section class="form-panel">
+  <div class="form-intro">
+    <span class="eyebrow">{{ _('Safe setup') }}</span>
+    <h2>{{ _('Create a project people can understand quickly') }}</h2>
+    <p>{{ _('Use a clear title, plain-language description, and dates only when they are known. You can edit everything later.') }}</p>
+  </div>
+  <form method="POST" class="stack-form" novalidate data-watch-changes>
+    {{ form.hidden_tag() }}
+    {{ error_summary(form) }}
+    {{ render_field(form.title, placeholder=_('Enter project title')) }}
+    {{ render_field(form.description, rows=7, placeholder=_('Describe the project details')) }}
+    <div class="form-grid">
+      {{ render_field(form.category, placeholder=_('Optional category')) }}
+      {{ render_field(form.status) }}
+    </div>
+    <div class="form-grid three">
+      {{ render_field(form.start_date) }}
+      {{ render_field(form.voting_deadline) }}
+      {{ render_field(form.end_date) }}
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">
+        <i class="fa-solid fa-floppy-disk"></i><span>{{ form.submit.label.text }}</span>
+      </button>
+      <a class="btn btn-secondary" href="{{ url_for('projects_list', locale=get_locale()) }}">
+        <i class="fa-solid fa-xmark"></i><span>{{ _('Cancel') }}</span>
+      </a>
+    </div>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends 'layout.html' %}
+{% from '_macros.html' import progress_bar with context %}
+
+{% block page_title %}{{ _('Council Proposals') }}{% endblock %}
+
+{% block page_subtitle %}
+  <p class="page-subtitle">{{ _('Create clear proposals, choose who can participate, and record transparent or anonymous council votes.') }}</p>
+{% endblock %}
+
+{% block page_actions %}
+  {% if current_user.is_authenticated and current_user.has_permission(Permission.CREATE_PROPOSAL) %}
+    <a class="btn btn-primary" href="{{ url_for('new_proposal', locale=get_locale()) }}">
+      <i class="fa-solid fa-plus"></i><span>{{ _('New Proposal') }}</span>
+    </a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<section class="proposal-grid">
+  {% for proposal in proposals.items %}
+    {% set counts = proposal.vote_counts() %}
+    {% set total_votes = counts.Yes + counts.No + counts.Abstain %}
+    <article class="proposal-card">
+      <div class="card-topline">
+        <span class="status-badge {{ 'status-complete' if proposal.status == 'Closed' else 'status-progress' }}">{{ _(proposal.status) }}</span>
+        <span class="muted-chip">{{ proposal_visibility_label(proposal.visibility) }}</span>
+      </div>
+      <h2><a href="{{ url_for('proposal_detail', locale=get_locale(), proposal_id=proposal.id) }}">{{ proposal.title }}</a></h2>
+      <p>{{ proposal.summary or proposal.body|striptags|truncate(180) }}</p>
+      <dl class="meta-list compact">
+        <div>
+          <dt>{{ _('Vote transparency') }}</dt>
+          <dd>{{ proposal_vote_visibility_label(proposal.vote_visibility) }}</dd>
+        </div>
+        <div>
+          <dt>{{ _('Deadline') }}</dt>
+          <dd>{{ format_datetime(proposal.voting_deadline) }}</dd>
+        </div>
+      </dl>
+      <div class="vote-mini-results" aria-label="{{ _('Proposal vote totals') }}">
+        <span>{{ _('Yes') }}: {{ counts.Yes }}</span>
+        <span>{{ _('No') }}: {{ counts.No }}</span>
+        <span>{{ _('Abstain') }}: {{ counts.Abstain }}</span>
+      </div>
+      {{ progress_bar(100 if total_votes else 0, _('Proposal activity')) }}
+    </article>
+  {% else %}
+    <div class="empty-state wide">{{ _('No proposals are available for your account yet.') }}</div>
+  {% endfor %}
+</section>
+
+{% if proposals.pages > 1 %}
+  <nav class="pagination" aria-label="{{ _('Proposal pages') }}">
+    {% for page_number in proposals.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+      {% if page_number %}
+        <a class="{{ 'active' if page_number == proposals.page else '' }}" href="{{ url_for('proposals_list', locale=get_locale(), page=page_number) }}">{{ page_number }}</a>
+      {% else %}
+        <span>...</span>
+      {% endif %}
+    {% endfor %}
+  </nav>
+{% endif %}
+{% endblock %}

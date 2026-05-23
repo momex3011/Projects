@@ -1,0 +1,24 @@
+1. Flask-Babel must be installed:
+
+pip install Flask-Babel
+
+2. create babel.cfg in main project directory:
+[python: **.py]
+
+[jinja2: **/templates/**.html]
+
+3. compile initial pot file by running this command from your main project directory:
+pybabel extract -F <babel.cfg file here> -k _l -o messages.pot .
+
+4. Update/Create po files based on the .pot file:
+pybabel update -i <.pot file here> -d translations
+pybabel update -i translations/messages.pot -d translations
+
+5. comile translations using the following command in your main directory:
+pybabel compile -d <translations folder name here>
+pybabel compile -d translations
+
+
+
+>AR</a>
+>EN</a>

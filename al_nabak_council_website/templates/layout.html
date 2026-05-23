@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="{{ get_locale() }}" dir="{{ 'rtl' if get_locale() == 'ar' else 'ltr' }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{{ title or _('Al-Nabk City Civil Council') }}{% endblock %}</title>
+  <link rel="icon" href="{{ url_for('static', filename='Al-nabak-square-symbol.png') }}">
+  <script>
+    (function () {
+      try {
+        document.documentElement.dataset.theme = localStorage.getItem('theme') || 'light';
+        var storedTextSize = parseInt(localStorage.getItem('textSizeLevel') || '0', 10);
+        var textSizeLevel = Number.isNaN(storedTextSize) ? 0 : Math.max(-2, Math.min(3, storedTextSize));
+        document.documentElement.dataset.textSize = String(textSizeLevel);
+      } catch (error) {
+        document.documentElement.dataset.theme = 'light';
+        document.documentElement.dataset.textSize = '0';
+      }
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v='20260521-size-backend-1') }}">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <a class="skip-link" href="#main-content">{{ _('Skip to content') }}</a>
+
+  <header class="site-header">
+    <div class="nav-inner">
+      <a class="brand" href="{{ url_for('home_page', locale=get_locale()) }}">
+        <span class="brand-mark-small"></span>
+        <span>{{ _('Al-Nabk City Civil Council') }}</span>
+      </a>
+
+      <nav class="nav-links" aria-label="{{ _('Primary navigation') }}">
+        <a href="{{ url_for('home_page', locale=get_locale()) }}" class="{{ 'active' if request.endpoint == 'home_page' else '' }}" {% if request.endpoint == 'home_page' %}aria-current="page"{% endif %}><i class="fa-solid fa-house" aria-hidden="true"></i><span>{{ _('Home') }}</span></a>
+        {% if current_user.is_authenticated %}
+          <a href="{{ url_for('dashboard', locale=get_locale()) }}" class="{{ 'active' if request.endpoint == 'dashboard' else '' }}" {% if request.endpoint == 'dashboard' %}aria-current="page"{% endif %}><i class="fa-solid fa-chart-pie" aria-hidden="true"></i><span>{{ _('Dashboard') }}</span></a>
+        {% endif %}
+        <a href="{{ url_for('projects_list', locale=get_locale()) }}" class="{{ 'active' if request.endpoint in ['projects_list', 'project', 'new_project', 'edit_project', 'assign_tracker', 'track_project'] else '' }}" {% if request.endpoint in ['projects_list', 'project', 'new_project', 'edit_project', 'assign_tracker', 'track_project'] %}aria-current="page"{% endif %}><i class="fa-solid fa-folder-open" aria-hidden="true"></i><span>{{ _('Projects') }}</span></a>
+        <a href="{{ url_for('proposals_list', locale=get_locale()) }}" class="{{ 'active' if request.endpoint in ['proposals_list', 'new_proposal', 'proposal_detail', 'edit_proposal', 'proposal_vote'] else '' }}" {% if request.endpoint in ['proposals_list', 'new_proposal', 'proposal_detail', 'edit_proposal', 'proposal_vote'] %}aria-current="page"{% endif %}><i class="fa-solid fa-clipboard-list" aria-hidden="true"></i><span>{{ _('Proposals') }}</span></a>
+        <a href="{{ url_for('suggestions_page', locale=get_locale()) }}" class="{{ 'active' if request.endpoint == 'suggestions_page' else '' }}" {% if request.endpoint == 'suggestions_page' %}aria-current="page"{% endif %}><i class="fa-solid fa-lightbulb" aria-hidden="true"></i><span>{{ _('Suggestions') }}</span></a>
+        <a href="{{ url_for('donation_campaigns', locale=get_locale()) }}" class="{{ 'active' if request.endpoint in ['donation_campaigns', 'donation_campaign', 'donate', 'donation_receipt'] else '' }}" {% if request.endpoint in ['donation_campaigns', 'donation_campaign', 'donate', 'donation_receipt'] %}aria-current="page"{% endif %}><i class="fa-solid fa-hand-holding-dollar" aria-hidden="true"></i><span>{{ _('Donations') }}</span></a>
+        <a href="{{ url_for('calendar', locale=get_locale()) }}" class="{{ 'active' if request.endpoint == 'calendar' else '' }}" {% if request.endpoint == 'calendar' %}aria-current="page"{% endif %}><i class="fa-solid fa-calendar-days" aria-hidden="true"></i><span>{{ _('Calendar') }}</span></a>
+        {% if current_user.is_authenticated %}
+          {% if current_user.role == Role.ADMIN %}
+            <a href="{{ url_for('admin_hub', locale=get_locale()) }}" class="{{ 'active' if request.endpoint in ['admin_hub', 'manage_users', 'register', 'edit_user', 'admin_donations', 'new_donation_campaign', 'edit_donation_campaign', 'manage_donation_campaign', 'site_options', 'home_content', 'new_home_post', 'edit_home_post', 'suggestions_inbox'] else '' }}" {% if request.endpoint in ['admin_hub', 'manage_users', 'register', 'edit_user', 'admin_donations', 'new_donation_campaign', 'edit_donation_campaign', 'manage_donation_campaign', 'site_options', 'home_content', 'new_home_post', 'edit_home_post', 'suggestions_inbox'] %}aria-current="page"{% endif %}><i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i><span>{{ _('Admin') }}</span></a>
+          {% endif %}
+          {% if can_manage_home_content() and current_user.role != Role.ADMIN %}
+            <a href="{{ url_for('home_content', locale=get_locale()) }}" class="{{ 'active' if request.endpoint in ['home_content', 'new_home_post', 'edit_home_post'] else '' }}" {% if request.endpoint in ['home_content', 'new_home_post', 'edit_home_post'] %}aria-current="page"{% endif %}><i class="fa-solid fa-newspaper" aria-hidden="true"></i><span>{{ _('Home Content') }}</span></a>
+          {% endif %}
+          <a href="{{ url_for('edit_profile', locale=get_locale()) }}" class="{{ 'active' if request.endpoint == 'edit_profile' else '' }}" {% if request.endpoint == 'edit_profile' %}aria-current="page"{% endif %}><i class="fa-solid fa-user" aria-hidden="true"></i><span>{{ _('Profile') }}</span></a>
+          <form class="nav-inline-form" method="POST" action="{{ url_for('logout', locale=get_locale()) }}">
+            {{ g.delete_user_form.csrf_token }}
+            <button type="submit"><i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i><span>{{ _('Sign out') }}</span></button>
+          </form>
+        {% else %}
+          <a href="{{ url_for('login', locale=get_locale()) }}" class="{{ 'active' if request.endpoint == 'login' else '' }}" {% if request.endpoint == 'login' %}aria-current="page"{% endif %}><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i><span>{{ _('Login') }}</span></a>
+        {% endif %}
+      </nav>
+
+      <div class="nav-tools">
+        <div class="text-size-controls" role="group" aria-label="{{ _('Text size controls') }}" aria-describedby="text-size-status" data-text-size-status-prefix="{{ _('Text size level') }}">
+          <button class="text-size-btn" type="button" data-text-size-decrease aria-label="{{ _('Decrease text size') }}" title="{{ _('Decrease text size') }}">{{ 'أ-' if get_locale() == 'ar' else 'A-' }}</button>
+          <button class="text-size-btn text-size-reset" type="button" data-text-size-reset aria-label="{{ _('Reset text size') }}" title="{{ _('Reset text size') }}">{{ 'أ' if get_locale() == 'ar' else 'A' }}</button>
+          <button class="text-size-btn" type="button" data-text-size-increase aria-label="{{ _('Increase text size') }}" title="{{ _('Increase text size') }}">{{ 'أ+' if get_locale() == 'ar' else 'A+' }}</button>
+          <span class="sr-only" id="text-size-status" data-text-size-status aria-live="polite"></span>
+        </div>
+        <button class="icon-btn header-icon" id="theme-toggle" type="button" aria-pressed="false" aria-label="{{ _('Switch to dark theme') }}" data-dark-label="{{ _('Switch to dark theme') }}" data-light-label="{{ _('Switch to light theme') }}">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+        {% if get_locale() == 'en' %}
+          <a class="language-pill" href="{{ url_for('set_language', locale='ar') }}" aria-label="{{ _('Switch to Arabic') }}">AR</a>
+        {% else %}
+          <a class="language-pill" href="{{ url_for('set_language', locale='en') }}" aria-label="{{ _('Switch to English') }}">EN</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <main class="main {% block main_class %}{% endblock %}" id="main-content">
+    <header class="page-header">
+      <div>
+        <h1>{% block page_title %}{{ title or _('Dashboard') }}{% endblock %}</h1>
+        {% block page_subtitle %}{% endblock %}
+      </div>
+      <div class="page-actions">
+        {% block page_actions %}{% endblock %}
+      </div>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="alerts" aria-live="polite">
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}" role="{{ 'alert' if category in ['danger', 'warning'] else 'status' }}">
+              <span>{{ message }}</span>
+              <button class="alert-close" type="button" aria-label="{{ _('Dismiss message') }}">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <section>
+        <h2>{{ _('About Al-Nabk City Civil Council') }}</h2>
+        <p>{{ _('Welcome to the official website of the Al-Nabk City Civil Council. We work with residents to organize projects, support transparent decisions, and rebuild public services with community participation.') }}</p>
+      </section>
+      <section>
+        <h2>{{ _('Quick Links') }}</h2>
+        <div class="footer-link-grid">
+          <a href="{{ url_for('home_page', locale=get_locale()) }}">{{ _('Home') }}</a>
+          <a href="{{ url_for('projects_list', locale=get_locale()) }}">{{ _('Projects') }}</a>
+          <a href="{{ url_for('proposals_list', locale=get_locale()) }}">{{ _('Proposals') }}</a>
+          <a href="{{ url_for('suggestions_page', locale=get_locale()) }}">{{ _('Suggestions') }}</a>
+          <a href="{{ url_for('donation_campaigns', locale=get_locale()) }}">{{ _('Donations') }}</a>
+          <a href="{{ url_for('calendar', locale=get_locale()) }}">{{ _('Calendar') }}</a>
+          <a href="{{ url_for('useful_sites_page', locale=get_locale()) }}">{{ _('Useful Sites') }}</a>
+          {% if current_user.is_authenticated and current_user.role == Role.ADMIN %}
+            <a href="{{ url_for('admin_hub', locale=get_locale()) }}">{{ _('Admin') }}</a>
+          {% endif %}
+          {% if can_manage_home_content() and current_user.role != Role.ADMIN %}
+            <a href="{{ url_for('home_content', locale=get_locale()) }}">{{ _('Home Content') }}</a>
+          {% endif %}
+        </div>
+        <div class="footer-language">
+          <h2>{{ _('Language') }}</h2>
+          <a href="{{ url_for('set_language', locale='en') }}">EN</a>
+          <a href="{{ url_for('set_language', locale='ar') }}">AR</a>
+        </div>
+      </section>
+      <section>
+        <h2>{{ _('Follow Us') }}</h2>
+        <div class="social-links">
+          {% if site_links.instagram_enabled and site_links.instagram_url %}
+            <a href="{{ site_links.instagram_url }}" aria-label="{{ _('Instagram') }}" {% if site_links.instagram_url != '#' %}target="_blank" rel="noopener noreferrer"{% endif %}><i class="fab fa-instagram"></i></a>
+          {% endif %}
+          {% if site_links.whatsapp_enabled and site_links.whatsapp_url %}
+            <a href="{{ site_links.whatsapp_url }}" aria-label="{{ _('WhatsApp') }}" {% if site_links.whatsapp_url != '#' %}target="_blank" rel="noopener noreferrer"{% endif %}><i class="fab fa-whatsapp"></i></a>
+          {% endif %}
+          {% if site_links.facebook_enabled and site_links.facebook_url %}
+            <a href="{{ site_links.facebook_url }}" aria-label="{{ _('Facebook') }}" {% if site_links.facebook_url != '#' %}target="_blank" rel="noopener noreferrer"{% endif %}><i class="fab fa-facebook"></i></a>
+          {% endif %}
+          {% if site_links.twitter_enabled and site_links.twitter_url %}
+            <a href="{{ site_links.twitter_url }}" aria-label="{{ _('Twitter/X') }}" {% if site_links.twitter_url != '#' %}target="_blank" rel="noopener noreferrer"{% endif %}><i class="fab fa-twitter"></i></a>
+          {% endif %}
+          {% if site_links.telegram_enabled and site_links.telegram_url %}
+            <a href="{{ site_links.telegram_url }}" aria-label="{{ _('Telegram') }}" {% if site_links.telegram_url != '#' %}target="_blank" rel="noopener noreferrer"{% endif %}><i class="fab fa-telegram"></i></a>
+          {% endif %}
+        </div>
+      </section>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='main.js', v='20260521-home-news-1') }}"></script>
+</body>
+</html>

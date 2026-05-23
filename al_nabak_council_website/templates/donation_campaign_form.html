@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+{% from '_macros.html' import render_field, error_summary with context %}
+
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block page_actions %}
+  <a class="btn btn-secondary" href="{{ url_for('admin_donations', locale=get_locale()) }}">
+    <i class="fa-solid fa-arrow-left"></i><span>{{ _('Donation Campaigns') }}</span>
+  </a>
+{% endblock %}
+
+{% block content %}
+<section class="form-panel">
+  <div class="form-intro">
+    <span class="eyebrow">{{ _('Fundraising setup') }}</span>
+    <h2>{{ _('Create a clear donation request') }}</h2>
+    <p>{{ _('Use plain language, a realistic goal, and payment instructions that tell donors how their reference number will be confirmed.') }}</p>
+  </div>
+  <form method="POST" class="stack-form" novalidate data-watch-changes>
+    {{ form.hidden_tag() }}
+    {{ error_summary(form) }}
+    <div class="form-grid">
+      {{ render_field(form.title, placeholder=_('Winter relief fund')) }}
+      {{ render_field(form.beneficiary, placeholder=_('Families, neighborhood, or purpose')) }}
+    </div>
+    {{ render_field(form.description, rows=6, placeholder=_('Explain who this helps and why it matters')) }}
+    <div class="form-grid three">
+      {{ render_field(form.goal_amount, placeholder='10000.00') }}
+      {{ render_field(form.currency) }}
+      {{ render_field(form.status) }}
+    </div>
+    {{ render_field(form.payment_instructions, rows=5, placeholder=_('Bank transfer details, office payment instructions, or contact steps')) }}
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">
+        <i class="fa-solid fa-floppy-disk"></i><span>{{ form.submit.label.text }}</span>
+      </button>
+      <a class="btn btn-secondary" href="{{ url_for('admin_donations', locale=get_locale()) }}">
+        <i class="fa-solid fa-xmark"></i><span>{{ _('Cancel') }}</span>
+      </a>
+    </div>
+  </form>
+</section>
+{% endblock %}

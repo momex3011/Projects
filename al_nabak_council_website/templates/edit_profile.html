@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+{% from '_macros.html' import render_field, error_summary with context %}
+
+{% block page_title %}{{ _('Edit Profile') }}{% endblock %}
+
+{% block content %}
+<section class="form-panel">
+  <form method="POST" class="stack-form" novalidate data-watch-changes>
+    {{ form.hidden_tag() }}
+    {{ error_summary(form) }}
+    <div class="form-grid">
+      {{ render_field(form.username, placeholder=_('Your username')) }}
+      {{ render_field(form.email, placeholder=_('Your email address')) }}
+    </div>
+    {{ render_field(form.contact_details, rows=4, placeholder=_('Optional contact information')) }}
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">
+        <i class="fa-solid fa-floppy-disk"></i><span>{{ _('Update Profile') }}</span>
+      </button>
+      <a class="btn btn-secondary" href="{{ url_for('dashboard', locale=get_locale()) }}">
+        <i class="fa-solid fa-xmark"></i><span>{{ _('Cancel') }}</span>
+      </a>
+    </div>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+{% from '_macros.html' import render_field, error_summary with context %}
+
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block page_subtitle %}
+  <p class="page-subtitle">{{ _('Define the proposal, voter audience, and whether individual votes are public or anonymous.') }}</p>
+{% endblock %}
+
+{% block page_actions %}
+  <a class="btn btn-secondary" href="{{ url_for('proposals_list', locale=get_locale()) }}">
+    <i class="fa-solid fa-arrow-left"></i><span>{{ _('Proposals') }}</span>
+  </a>
+{% endblock %}
+
+{% block content %}
+<section class="form-panel">
+  <div class="form-intro">
+    <span class="eyebrow">{{ _('Council decision') }}</span>
+    <h2>{{ _('Prepare a proposal for voting') }}</h2>
+    <p>{{ _('Use plain language, set a clear voter audience, and choose whether the voting record should be anonymous or public.') }}</p>
+  </div>
+
+  <form method="POST" class="stack-form" novalidate data-watch-changes>
+    {{ form.hidden_tag() }}
+    {{ error_summary(form) }}
+    {{ render_field(form.title, placeholder=_('Example: Approve the winter repair budget')) }}
+    {{ render_field(form.summary, placeholder=_('One sentence that helps voters understand the decision')) }}
+    {{ render_field(form.body, rows=7, placeholder=_('Explain the proposal, background, expected impact, and what a Yes vote means.')) }}
+    <div class="form-grid">
+      {{ render_field(form.visibility) }}
+      {{ render_field(form.vote_visibility) }}
+    </div>
+    <div class="form-grid">
+      {{ render_field(form.status) }}
+      {{ render_field(form.voting_deadline) }}
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">
+        <i class="fa-solid fa-floppy-disk"></i><span>{{ form.submit.label.text }}</span>
+      </button>
+      <a class="btn btn-secondary" href="{{ url_for('proposals_list', locale=get_locale()) }}">
+        <i class="fa-solid fa-xmark"></i><span>{{ _('Cancel') }}</span>
+      </a>
+    </div>
+  </form>
+</section>
+{% endblock %}

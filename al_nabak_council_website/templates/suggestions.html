@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+{% from '_macros.html' import render_field, error_summary with context %}
+
+{% block page_title %}{{ _('Suggestions') }}{% endblock %}
+
+{% block page_subtitle %}
+  <p class="page-subtitle">{{ _('Share an idea with the council or send project-specific feedback to the responsible tracker.') }}</p>
+{% endblock %}
+
+{% block page_actions %}
+  {% if current_user.is_authenticated %}
+    <a class="btn btn-secondary" href="{{ url_for('suggestions_inbox', locale=get_locale()) }}">
+      <i class="fa-solid fa-inbox"></i><span>{{ _('Suggestion Inbox') }}</span>
+    </a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<section class="form-panel suggestion-panel">
+  <div class="form-intro">
+    <span class="eyebrow">{{ _('Public suggestions') }}</span>
+    <h2>{{ _('Send a useful idea') }}</h2>
+    <p>{{ _('Choose the right destination so the council or project tracker can understand and act on your suggestion faster.') }}</p>
+  </div>
+
+  <form method="POST" class="stack-form" novalidate data-watch-changes>
+    {{ form.hidden_tag() }}
+    {{ error_summary(form) }}
+
+    <div class="suggestion-route-card">
+      {{ render_field(form.target_type) }}
+      <div data-suggestion-project>
+        {{ render_field(form.project_id) }}
+      </div>
+    </div>
+
+    <div class="form-grid">
+      {{ render_field(form.name, placeholder=_('Optional')) }}
+      {{ render_field(form.contact, placeholder=_('Phone, email, or other contact method')) }}
+    </div>
+    {{ render_field(form.title, placeholder=_('Short title for the suggestion')) }}
+    {{ render_field(form.body, rows=6, placeholder=_('Write the problem, idea, or improvement clearly')) }}
+
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">
+        <i class="fa-solid fa-paper-plane"></i><span>{{ form.submit.label.text }}</span>
+      </button>
+    </div>
+  </form>
+</section>
+{% endblock %}

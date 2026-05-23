@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+{% from '_macros.html' import render_field, error_summary with context %}
+
+{% block page_title %}{{ _('Assign Project Tracker') }}{% endblock %}
+
+{% block page_actions %}
+  <a class="btn btn-secondary" href="{{ url_for('project', locale=get_locale(), project_id=project.id) }}">
+    <i class="fa-solid fa-arrow-left"></i><span>{{ _('Project') }}</span>
+  </a>
+{% endblock %}
+
+{% block content %}
+<section class="form-panel narrow">
+  <div class="form-intro">
+    <span class="eyebrow">{{ _('Project') }}</span>
+    <h2>{{ project.title }}</h2>
+    <p>{{ _('Choose the project tracker responsible for field updates and status changes.') }}</p>
+  </div>
+  <form method="POST" class="stack-form" novalidate data-watch-changes>
+    {{ form.hidden_tag() }}
+    {{ error_summary(form) }}
+    {{ render_field(form.tracker) }}
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">
+        <i class="fa-solid fa-user-check"></i><span>{{ _('Assign Project Tracker') }}</span>
+      </button>
+      <a class="btn btn-secondary" href="{{ url_for('project', locale=get_locale(), project_id=project.id) }}">
+        <i class="fa-solid fa-xmark"></i><span>{{ _('Cancel') }}</span>
+      </a>
+    </div>
+  </form>
+</section>
+{% endblock %}

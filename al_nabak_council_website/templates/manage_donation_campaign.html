@@ -1,0 +1,123 @@
+{% extends 'layout.html' %}
+{% from '_macros.html' import render_field, error_summary, progress_bar with context %}
+
+{% block page_title %}{{ campaign.title }}{% endblock %}
+
+{% block page_subtitle %}
+  <p class="page-subtitle">{{ _('Manage groups, family names, and payment confirmations for this campaign.') }}</p>
+{% endblock %}
+
+{% block page_actions %}
+  <a class="btn btn-secondary" href="{{ url_for('admin_donations', locale=get_locale()) }}">
+    <i class="fa-solid fa-arrow-left"></i><span>{{ _('Donation Campaigns') }}</span>
+  </a>
+  <a class="btn btn-primary" href="{{ url_for('edit_donation_campaign', locale=get_locale(), campaign_id=campaign.id) }}">
+    <i class="fa-solid fa-pen"></i><span>{{ _('Edit Campaign') }}</span>
+  </a>
+{% endblock %}
+
+{% block content %}
+<section class="detail-layout">
+  <article class="detail-main">
+    <div class="progress-block">
+      <div>
+        <strong>{{ _('Campaign Goal') }}</strong>
+        <small>{{ money(campaign.confirmed_total(), campaign.currency) }} {{ _('confirmed of') }} {{ money(campaign.goal_amount, campaign.currency) }}</small>
+      </div>
+      {{ progress_bar(campaign.progress(), _('Campaign progress')) }}
+    </div>
+
+    <section class="table-panel">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">{{ _('Payments') }}</span>
+          <h2>{{ _('Donation records') }}</h2>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <caption>{{ _('Recorded donations') }}</caption>
+          <thead>
+            <tr>
+              <th scope="col">{{ _('Reference') }}</th>
+              <th scope="col">{{ _('Donor') }}</th>
+              <th scope="col">{{ _('Amount') }}</th>
+              <th scope="col">{{ _('Group') }}</th>
+              <th scope="col">{{ _('Status') }}</th>
+              <th scope="col">{{ _('Actions') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for donation in donations %}
+              <tr>
+                <td><strong>{{ donation.payment_reference }}</strong><small>{{ format_datetime(donation.created_at) }}</small></td>
+                <td>{{ donation.donor_name }}<small>{{ donation.donor_email or donation.donor_phone or _('No contact details') }}</small></td>
+                <td>{{ money(donation.amount, campaign.currency) }}</td>
+                <td>{{ donation.group.name if donation.group else _('Independent') }}</td>
+                <td><span class="muted-chip">{{ donation_payment_status_label(donation.payment_status) }}</span></td>
+                <td>
+                  <div class="table-actions">
+                    {% for status, icon in [('Confirmed', 'fa-check'), ('Pending', 'fa-clock'), ('Rejected', 'fa-xmark')] %}
+                      {% if donation.payment_status != status %}
+                        <form method="POST" action="{{ url_for('update_donation_status', locale=get_locale(), campaign_id=campaign.id, donation_id=donation.id, status=status) }}">
+                          {{ g.action_form.hidden_tag() }}
+                          <button class="icon-btn" type="submit" aria-label="{{ _('Change %(reference)s to %(status)s', reference=donation.payment_reference, status=donation_payment_status_label(status)) }}" {% if status in ['Confirmed', 'Rejected'] %}data-confirm="{{ _('Change status for %(reference)s to %(status)s?', reference=donation.payment_reference, status=donation_payment_status_label(status)) }}"{% endif %}>
+                            <i class="fa-solid {{ icon }}"></i>
+                          </button>
+                        </form>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                </td>
+              </tr>
+            {% else %}
+              <tr>
+                <td colspan="6">{{ _('No donations recorded yet.') }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </article>
+
+  <aside class="detail-side">
+    <section class="side-panel">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">{{ _('Group giving') }}</span>
+          <h2>{{ _('Add a group or bloodline') }}</h2>
+        </div>
+      </div>
+      <form method="POST" class="mini-form" novalidate>
+        {{ group_form.hidden_tag() }}
+        {{ error_summary(group_form) }}
+        {{ render_field(group_form.name, placeholder=_('Family, bloodline, neighborhood, or team')) }}
+        {{ render_field(group_form.description, rows=3, placeholder=_('Optional group notes')) }}
+        <button class="btn btn-primary" type="submit">
+          <i class="fa-solid fa-plus"></i><span>{{ group_form.submit.label.text }}</span>
+        </button>
+      </form>
+    </section>
+
+    <section class="side-panel">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">{{ _('Groups') }}</span>
+          <h2>{{ _('Current totals') }}</h2>
+        </div>
+      </div>
+      <div class="timeline compact">
+        {% for group in groups %}
+          <article class="timeline-item donation-group-row">
+            <strong>{{ group.name }}</strong>
+            <span>{{ money(group.confirmed_total(), campaign.currency) }}</span>
+          </article>
+        {% else %}
+          <div class="empty-state">{{ _('No groups added yet.') }}</div>
+        {% endfor %}
+      </div>
+    </section>
+  </aside>
+</section>
+{% endblock %}
