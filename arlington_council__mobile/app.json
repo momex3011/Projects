@@ -1,0 +1,31 @@
+{
+  "expo": {
+    "name": "Arlington Civic",
+    "slug": "arlington-civic-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/arlington-civic-mark.png",
+    "userInterfaceStyle": "light",
+    "scheme": "arlingtoncivic",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "splash": {
+      "image": "./assets/arlington-civic-mark.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0064b1"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/arlington-civic-mark.png",
+        "backgroundColor": "#0064b1"
+      }
+    },
+    "extra": {
+      "apiBaseUrl": "http://127.0.0.1:5000"
+    }
+  }
+}
